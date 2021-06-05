@@ -12,7 +12,7 @@ import { TypeReturn } from './TypeReturn';
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
   return new Promise((res) => {
     http.get(
-      'https://raw.githubusercontent.com/ManticoreGamesInc/vscode-core/main/src/CoreLuaAPI.json',
+      'https://docs.coregames.com/assets/api/CoreLuaAPI.json',
       (response) => {
         let body = '';
         response.on('data', (chunk) => {
