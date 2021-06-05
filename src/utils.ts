@@ -15,7 +15,7 @@ export function typeMapping(type: string): string {
   }
 
   if (type === 'value') {
-    return 'table';
+    return 'any';
   }
 
   if (type.includes('Array<')) {

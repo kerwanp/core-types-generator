@@ -5,12 +5,12 @@
 --- @field public isDebugModeEnabled boolean True if this activity has debugging enabled in the AI Debugger. Useful for deciding whether to log additional information about specific activities.
 --- @field public isHighestPriority boolean True if this activity is the activity with the highest priority among its owner's list of activities. Note that this value does not update immediately when setting an activity's priority, but will be updated by the handler each tick when the handler evaluates its list of activities.
 --- @field public elapsedTime number If this activity is the highest priority for its handler, returns the length of time for which it has been highest priority. Otherwise returns the length of time since it was last highest priority, or since it was added to the handler.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class AIActivityHandler
 --- @field public isSelectedInDebugger boolean True if this activity handler is currently selected in the AI Debugger.
---- @field public type string 
+--- @field public type string
 --- @field AddActivity fun(self, name: string , functions: table ): AIActivity
 --- @field RemoveActivity fun(self, name: string )
 --- @field ClearActivities fun(self)
@@ -29,7 +29,7 @@
 --- @field public cooldownPhaseSettings AbilityPhaseSettings Config data for the Cooldown phase.
 --- @field public isEnabled boolean Turns an Ability on/off. It stays on the Player but is interrupted if `isEnabled` is set to `false` during an active Ability. True by default.
 --- @field public owner Object Assigning an owner applies the Ability to that Player.
---- @field public type string 
+--- @field public type string
 --- @field GetTargetData fun(self): AbilityTarget
 --- @field SetTargetData fun(self, target: AbilityTarget )
 --- @field GetCurrentPhase fun(self): AbilityPhase
@@ -47,7 +47,7 @@
 --- @field public preventsOtherAbilities boolean When true this phase prevents the Player from casting another Ability, unless that other Ability has canBePrevented set to False. True by default in Cast & Execute, false in Recovery & Cooldown.
 --- @field public isTargetDataUpdated boolean If `true`, there will be updated target information at the start of the phase. Otherwise, target information may be out of date.
 --- @field public facingMode AbilityFacingMode How and if this Ability rotates the Player during execution. Cast and Execute default to "Aim", other phases default to "None". Options are: AbilityFacingMode.NONE, AbilityFacingMode.MOVEMENT, AbilityFacingMode.AIM
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class AbilityTarget
@@ -55,7 +55,7 @@
 --- @field public hitObject Object Object under the reticle, or center of the screen if no reticle is displayed. Can be a Player, StaticMesh, etc.
 --- @field public spreadHalfAngle number Half-angle of cone of possible target space, in degrees.
 --- @field public spreadRandomSeed number Seed that can be used with RandomStream for deterministic RNG.
---- @field public type string 
+--- @field public type string
 --- @field GetOwnerMovementRotation fun(self): Rotation
 --- @field SetOwnerMovementRotation fun(self, rotation: Rotation )
 --- @field GetAimPosition fun(self): Vector3
@@ -73,7 +73,7 @@
 --- @field public animationStancePlaybackRate number The playback rate for the animation stance being played. Negative values will play the animation in reverse.
 --- @field public animationStanceShouldLoop boolean If `true`, the animation stance will keep playing in a loop. If `false` the animation will stop playing once completed.
 --- @field public playbackRateMultiplier number Rate multiplier for all animations played on the animated mesh. Setting this to `0` will stop all animations on the mesh.
---- @field public type string 
+--- @field public type string
 --- @field GetAnimationNames fun(self): table<number, string>
 --- @field GetAnimationStanceNames fun(self): table<number, string>
 --- @field GetSocketNames fun(self): table<number, string>
@@ -91,7 +91,7 @@
 --- @field public sourceHeight number The height of the plane from which light is emitted. Must be greater than 0.
 --- @field public barnDoorAngle number The angle of the barn doors, in degrees. Valid values are in the range from 0 to 90. Has no effect if `barnDoorLength` is 0.
 --- @field public barnDoorLength number The length of the barn doors. Must be non-negative.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Audio
@@ -112,7 +112,7 @@
 --- @field public fadeOutTime number Sets the fadeout time of the audio. When the audio is stopped, it will keep playing for this many seconds, as it fades out.
 --- @field public startTime number The start time of the audio track. Default is 0. Setting this to anything else means that the audio will skip ahead that many seconds when played.
 --- @field public stopTime number The stop time of the audio track. Default is 0. A positive value means that the audio will stop that many seconds from the start of the track, including any fade out time.
---- @field public type string 
+--- @field public type string
 --- @field Play fun(self)
 --- @field Stop fun(self)
 --- @field FadeIn fun(self, time: number )
@@ -138,9 +138,9 @@
 --- @field public currentYaw number The current yaw of the Player's free control.
 --- @field public minYaw number The minimum yaw for free control.
 --- @field public maxYaw number The maximum yaw for free control.
---- @field public lerpTime number 
---- @field public isUsingCameraRotation boolean 
---- @field public type string 
+--- @field public lerpTime number
+--- @field public isUsingCameraRotation boolean
+--- @field public type string
 --- @field GetPositionOffset fun(self): Vector3
 --- @field SetPositionOffset fun(self, positionOffset: Vector3 )
 --- @field GetRotationOffset fun(self): Rotation
@@ -152,7 +152,7 @@
 --- @field public g number The Green component of the Color.
 --- @field public b number The Blue component of the Color.
 --- @field public a number The Alpha (transparency) component of the Color.
---- @field public type string 
+--- @field public type string
 --- @field GetDesaturated fun(self, desaturation: number ): Color
 --- @field ToStandardHex fun(self): string
 --- @field ToLinearHex fun(self): string
@@ -160,7 +160,7 @@
 
 --- @class CoreFriendCollection
 --- @field public hasMoreResults boolean Returns `true` if there are more friends available to be requested.
---- @field public type string 
+--- @field public type string
 --- @field GetResults fun(self): table<number, CoreFriendCollectionEntry>
 --- @field GetMoreResults fun(self): CoreFriendCollection
 --- @field IsA fun(self, typeName: string ): boolean
@@ -168,7 +168,7 @@
 --- @class CoreFriendCollectionEntry
 --- @field public id string The ID of the friend.
 --- @field public name string The name of the friend.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class CoreGameCollectionEntry
@@ -177,7 +177,7 @@
 --- @field public name string The name of the game.
 --- @field public ownerId string The player ID of the creator who published the game.
 --- @field public ownerName string The player name of the creator who published the game.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class CoreGameInfo
@@ -190,7 +190,7 @@
 --- @field public isQueueEnabled boolean `true` if the game was published with queueing enabled.
 --- @field public screenshotCount number The number of screenshots published with the game.
 --- @field public hasWorldCapture boolean `true` if the game was published with a captured view of the world for use with portals.
---- @field public type string 
+--- @field public type string
 --- @field GetTags fun(self): table<number, string>
 --- @field IsA fun(self, typeName: string ): boolean
 
@@ -201,7 +201,7 @@
 --- @field public isTeamCollisionEnabled boolean If `false`, and the mesh has been assigned to a valid team, players on that team will not collide with the mesh.
 --- @field public isEnemyCollisionEnabled boolean If `false`, and the mesh has been assigned to a valid team, players on other teams will not collide with the mesh.
 --- @field public isCameraCollisionEnabled boolean If `false`, the mesh will not push against the camera. Useful for things like railings or transparent walls. This property is deprecated, use the `cameraCollision` property instead.
---- @field public type string 
+--- @field public type string
 --- @field GetColor fun(self): Color
 --- @field SetColor fun(self, color: Color )
 --- @field ResetColor fun(self)
@@ -210,9 +210,9 @@
 --- @class CoreObject
 --- @field public name string The object's name as seen in the Hierarchy.
 --- @field public id string The object's MUID.
---- @field public isVisible boolean 
+--- @field public isVisible boolean
 --- @field public visibility Visibility Turn on/off the rendering of an object and its children.
---- @field public isCollidable boolean 
+--- @field public isCollidable boolean
 --- @field public collision Collision Turn on/off the collision of an object and its children.
 --- @field public cameraCollision Collision Turn on/off the collision of the camera with an object and its children.
 --- @field public isEnabled boolean Turn on/off an object and its children completely.
@@ -223,7 +223,7 @@
 --- @field public isServerOnly boolean If `true`, this object was spawned on the server and is not replicated to clients.
 --- @field public parent CoreObject The object's parent object, may be nil.
 --- @field public sourceTemplateId string The ID of the template from which this `CoreObject` was instantiated. `nil` if the object did not come from a template.
---- @field public type string 
+--- @field public type string
 --- @field GetReference fun(self): CoreObjectReference
 --- @field GetTransform fun(self): Transform
 --- @field SetTransform fun(self, localTransform: Transform )
@@ -280,14 +280,14 @@
 --- @field StopScale fun(self)
 --- @field Destroy fun(self)
 --- @field GetCustomProperties fun(self): table
---- @field GetCustomProperty fun(self, propertyName: string ): table|boolean
---- @field SetNetworkedCustomProperty fun(self, propertyName: string , propertyValue: table ): boolean
+--- @field GetCustomProperty fun(self, propertyName: string ): any|boolean
+--- @field SetNetworkedCustomProperty fun(self, propertyName: string , propertyValue: any ): boolean
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class CoreObjectReference
 --- @field public id string The MUID of the referred object.
 --- @field public isAssigned boolean Returns true if this reference has been assigned a valid ID. This does not necessarily mean the object currently exists.
---- @field public type string 
+--- @field public type string
 --- @field GetObject fun(self): CoreObject
 --- @field WaitForObject fun(self, timeout: number ): CoreObject
 --- @field IsA fun(self, typeName: string ): boolean
@@ -296,7 +296,7 @@
 --- @field public id string The ID of the player.
 --- @field public name string The name of the player. This field does not reflect changes that may have been made to the `name` property of a `Player` currently in the game.
 --- @field public description string A description of the player, provided by the player in the About section of their profile.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Damage
@@ -304,19 +304,19 @@
 --- @field public reason DamageReason What is the context for this Damage? DamageReason.UNKNOWN (default value), DamageReason.COMBAT, DamageReason.FRIENDLY_FIRE, DamageReason.MAP, DamageReason.NPC.
 --- @field public sourceAbility Ability Reference to the Ability which caused the Damage. Setting this allows other systems to react to the damage event, e.g. a kill feed can show what killed a Player.
 --- @field public sourcePlayer Player Reference to the Player who caused the Damage. Setting this allows other systems to react to the damage event, e.g. a kill feed can show who killed a Player.
---- @field public type string 
+--- @field public type string
 --- @field GetHitResult fun(self): HitResult
 --- @field SetHitResult fun(self, hitResult: HitResult )
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Decal
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Equipment
 --- @field public owner Player Which Player the Equipment is attached to.
 --- @field public socket string Determines which point on the avatar's body this equipment will be attached. See [Socket Names](../api/animations.md#socket-names) for the list of possible values.
---- @field public type string 
+--- @field public type string
 --- @field GetAbilities fun(self): table<number, Ability>
 --- @field Equip fun(self, player: Player )
 --- @field Unequip fun(self)
@@ -324,43 +324,43 @@
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Event
---- @field public type string 
+--- @field public type string
 --- @field Connect fun(self, listener: function , additionalParameters: void  = nil): EventListener
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class EventListener
 --- @field public isConnected boolean Returns true if this listener is still connected to its event. false if the event owner was destroyed or if Disconnect was called.
---- @field public type string 
+--- @field public type string
 --- @field Disconnect fun(self)
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Folder
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class FourWheeledVehicle
 --- @field public turnRadius number Returns the radius, in centimeters, measured by the inner wheels of the vehicle while making a turn.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class HitResult
 --- @field public other Object Reference to a CoreObject or Player impacted.
 --- @field public socketName string If the hit was on a Player, `socketName` tells you which spot on the body was hit.
---- @field public type string 
+--- @field public type string
 --- @field GetImpactPosition fun(self): Vector3
 --- @field GetImpactNormal fun(self): Vector3
 --- @field GetTransform fun(self): Transform
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Hook
---- @field public type string 
+--- @field public type string
 --- @field Connect fun(self, listener: function , additionalParameters: void  = nil): HookListener
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class HookListener
 --- @field public isConnected boolean Returns `true` if this listener is still connected to its hook, `false` if the hook owner was destroyed or if `Disconnect` was called.
 --- @field public priority number The priority of this listener. When a given hook is fired, listeners with a higher priority are called first. Default value is `100`.
---- @field public type string 
+--- @field public type string
 --- @field Disconnect fun(self)
 --- @field IsA fun(self, typeName: string ): boolean
 
@@ -372,7 +372,7 @@
 --- @field public weaponOwner Player Reference to the Player who had the Weapon equipped at the time it was activated, ultimately leading to this interaction.
 --- @field public isHeadshot boolean True if the Weapon hit another player in the head.
 --- @field public travelDistance number The distance in cm between where the Weapon attack started until it impacted something.
---- @field public type string 
+--- @field public type string
 --- @field GetHitResult fun(self): HitResult
 --- @field GetHitResults fun(self): table<number, HitResult>
 --- @field IsA fun(self, typeName: string ): boolean
@@ -382,7 +382,7 @@
 --- @field public name string The name of the `Player` whose entry this is.
 --- @field public score number The Player's score.
 --- @field public additionalData string Optional additional data that was submitted along with the Player's score. (See `Leaderboards.SubmitPlayerScore()` for more information.)
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Light
@@ -393,29 +393,29 @@
 --- @field public temperature number Color temperature in Kelvin of the blackbody illuminant. White (D65) is 6500K.
 --- @field public team number Assigns the light to a team. Value range from 0 to 4. 0 is a neutral team.
 --- @field public isTeamColorUsed boolean If `true`, and the light has been assigned to a valid team, players on that team will see a blue light, while other players will see red.
---- @field public type string 
+--- @field public type string
 --- @field GetColor fun(self): Color
 --- @field SetColor fun(self, color: Color )
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class MergedModel
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class NetReference
 --- @field public isAssigned boolean Returns true if this reference has been assigned a value. This does not necessarily mean the reference is valid, but does mean it is at least not empty.
 --- @field public referenceType NetReferenceType Returns one of `NetReferenceType.LEADERBOARD`, `NetReferenceType.SHARED_STORAGE`, or `NetReferenceType.UNKNOWN` to indicate which type of NetReference this is.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class NetworkContext
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Object
 --- @field public serverUserData table Table in which users can store any data they want on the server.
 --- @field public clientUserData table Table in which users can store any data they want on the client.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Player
@@ -436,7 +436,7 @@
 --- @field public isMounted boolean True if the Player is mounted on another object.
 --- @field public isSwimming boolean True if the Player is swimming in water.
 --- @field public isWalking boolean True if the Player is in walking mode.
---- @field public isSliding boolean 
+--- @field public isSliding boolean
 --- @field public maxWalkSpeed number Maximum speed while the player is on the ground. Clients can only read. Default = 640.
 --- @field public stepHeight number Maximum height in centimeters the Player can step up. Range is 0-100. Default = 45.
 --- @field public maxAcceleration number Max Acceleration (rate of change of velocity). Clients can only read. Default = 1800.
@@ -451,8 +451,8 @@
 --- @field public currentFacingMode FacingMode Current mode applied to player, including possible overrides. Possible values are FacingMode.FACE_AIM_WHEN_ACTIVE, FacingMode.FACE_AIM_ALWAYS, and FacingMode.FACE_MOVEMENT. See desiredFacingMode for details.
 --- @field public desiredFacingMode FacingMode Which controls mode to use for this Player. May be overridden by certain movement modes like MovementMode.SWIMMING or when mounted. Possible values are FacingMode.FACE_AIM_WHEN_ACTIVE, FacingMode.FACE_AIM_ALWAYS, and FacingMode.FACE_MOVEMENT.
 --- @field public maxJumpCount number Max number of jumps, to enable multiple jumps. Set to 0 to disable jumping.
---- @field public flipOnMultiJump boolean 
---- @field public shouldFlipOnMultiJump boolean 
+--- @field public flipOnMultiJump boolean
+--- @field public shouldFlipOnMultiJump boolean
 --- @field public jumpVelocity number Vertical speed applied to Player when they jump. Default = 900.
 --- @field public gravityScale number Multiplier on gravity applied. Default = 1.9.
 --- @field public maxSwimSpeed number Maximum speed while the player is swimming. Default = 420.
@@ -473,7 +473,7 @@
 --- @field public occupiedVehicle Vehicle Returns the `Vehicle` that the player currently occupies, or `nil` if the player is not occupying a vehicle.
 --- @field public currentRotationRate number Reports the real rotation rate that results from any active mechanics/movement overrides.
 --- @field public defaultRotationRate number Determines how quickly the Player turns to match the camera's look. Set to -1 for immediate rotation. Currently only supports rotation around the Z-axis.
---- @field public type string 
+--- @field public type string
 --- @field GetWorldTransform fun(self): Transform
 --- @field SetWorldTransform fun(self, worldTransform: Transform )
 --- @field GetWorldPosition fun(self): Vector3
@@ -529,19 +529,19 @@
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class PlayerSettings
---- @field public type string 
+--- @field public type string
 --- @field ApplyToPlayer fun(self, player: Player )
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class PlayerStart
 --- @field public team number Determines which players are eligible to spawn/respawn at this point.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class PlayerTransferData
 --- @field public reason PlayerTransferReason Indicates how the player joined or left a game.
 --- @field public gameId string The ID of the game the player joined from or left to join. Returns `nil` if the player joined while not already connected to a game or left for a reason other than joining another game. Also returns `nil` if the player has opted out of sharing this information.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class PointLight
@@ -549,7 +549,7 @@
 --- @field public falloffExponent number Controls the radial falloff of the light when `hasNaturalFalloff` is false. 2.0 is almost linear and very unrealistic and around 8.0 it looks reasonable. With large exponents, the light has contribution to only a small area of its influence radius but still costs the same as low exponents.
 --- @field public sourceRadius number Radius of light source shape.
 --- @field public sourceLength number Length of light source shape.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Projectile
@@ -569,7 +569,7 @@
 --- @field public capsuleLength number Shape of the Projectile's collision. A value of zero will make it shaped like a Sphere. Default 44.
 --- @field public homingTarget Object The projectile accelerates towards its target. Homing targets are meant to be used with spawned projectiles and will not work with weapons.
 --- @field public homingAcceleration number Magnitude of acceleration towards the target. Default 10,000.
---- @field public type string 
+--- @field public type string
 --- @field GetWorldTransform fun(self): Transform
 --- @field GetWorldPosition fun(self): Vector3
 --- @field SetWorldPosition fun(self, worldPosition: Vector3 )
@@ -583,7 +583,7 @@
 --- @field public y number The `y` component of the Quaternion.
 --- @field public z number The `z` component of the Quaternion.
 --- @field public w number The `w` component of the Quaternion.
---- @field public type string 
+--- @field public type string
 --- @field GetRotation fun(self): Rotation
 --- @field GetForwardVector fun(self): Vector3
 --- @field GetRightVector fun(self): Vector3
@@ -592,7 +592,7 @@
 
 --- @class RandomStream
 --- @field public seed number The current seed used for RNG.
---- @field public type string 
+--- @field public type string
 --- @field GetInitialSeed fun(self): number
 --- @field Reset fun(self)
 --- @field Mutate fun(self)
@@ -606,20 +606,20 @@
 --- @field public x number The `x` component of the Rotation.
 --- @field public y number The `y` component of the Rotation.
 --- @field public z number The `z` component of the Rotation.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Script
 --- @field public context table Returns the table containing any non-local variables and functions created by the script. This can be used to call (or overwrite!) functions on another script.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class ScriptAsset
 --- @field public name string The name of the script in Project Content.
 --- @field public id string The script asset's MUID.
---- @field public type string 
+--- @field public type string
 --- @field GetCustomProperties fun(self): table
---- @field GetCustomProperty fun(self, propertyName: string ): table|boolean
+--- @field GetCustomProperty fun(self, propertyName: string ): any|boolean
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class SmartAudio
@@ -638,7 +638,7 @@
 --- @field public radius number Default 0. If non-zero, will override default 3D spatial parameters of the sound. Radius is the distance away from the sound position that will be played at 100% volume.
 --- @field public falloff number Default 0. If non-zero, will override default 3D spatial parameters of the sound. Falloff is the distance outside the radius over which the sound volume will gradually fall to zero.
 --- @field public isPlaying boolean Returns if the sound is currently playing.
---- @field public type string 
+--- @field public type string
 --- @field Play fun(self)
 --- @field Stop fun(self)
 --- @field FadeIn fun(self, time: number )
@@ -648,10 +648,10 @@
 --- @class SmartObject
 --- @field public team number Assigns the SmartObject to a team. Value range from 0 to 4. 0 is neutral team.
 --- @field public isTeamColorUsed boolean If `true`, and the SmartObject has been assigned to a valid team, players on that team will see one color, while other players will see another color. Requires a SmartObject that supports team colors.
---- @field public type string 
+--- @field public type string
 --- @field GetSmartProperties fun(self): table
---- @field GetSmartProperty fun(self, propertyName: string ): table|boolean
---- @field SetSmartProperty fun(self, propertyName: string , propertyValue: table ): boolean
+--- @field GetSmartProperty fun(self, propertyName: string ): any|boolean
+--- @field SetSmartProperty fun(self, propertyName: string , propertyValue: any ): boolean
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class SpotLight
@@ -661,29 +661,29 @@
 --- @field public sourceLength number Length of light source shape.
 --- @field public innerConeAngle number The angle (in degrees) of the cone within which the projected light achieves full brightness.
 --- @field public outerConeAngle number The outer angle (in degrees) of the cone of light emitted by this SpotLight.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class StaticMesh
 --- @field public isSimulatingDebrisPhysics boolean If `true`, physics will be enabled for the mesh.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Task
 --- @field public repeatInterval number For repeating Tasks, the number of seconds to wait after the Task completes before running it again. If set to 0, the Task will wait until the next frame.
 --- @field public repeatCount number If set to a non-negative number, the Task will execute that many times. A negative number indicates the Task should repeat indefinitely (until otherwise canceled). With the default of 0, the Task will execute once. With a value of 1, the script will repeat once, meaning it will execute twice.
 --- @field public id number A unique identifier for the task.
---- @field public type string 
+--- @field public type string
 --- @field Cancel fun(self)
 --- @field GetStatus fun(self): TaskStatus
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Terrain
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Transform
---- @field public type string 
+--- @field public type string
 --- @field GetRotation fun(self): Rotation
 --- @field SetRotation fun(self, rotation: Rotation )
 --- @field GetPosition fun(self): Vector3
@@ -702,7 +702,7 @@
 
 --- @class TreadedVehicle
 --- @field public turnSpeed number Returns the turn speed in degrees per second.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Trigger
@@ -711,7 +711,7 @@
 --- @field public team number Assigns the trigger to a team. Value range from 0 to 4. 0 is neutral team.
 --- @field public isTeamCollisionEnabled boolean If `false`, and the Trigger has been assigned to a valid team, players on that team will not overlap or interact with the Trigger.
 --- @field public isEnemyCollisionEnabled boolean If `false`, and the Trigger has been assigned to a valid team, players on enemy teams will not overlap or interact with the Trigger.
---- @field public type string 
+--- @field public type string
 --- @field IsOverlapping fun(self, OtherObject: Object ): boolean
 --- @field GetOverlappingObjects fun(self): table<number, Object>
 --- @field IsA fun(self, typeName: string ): boolean
@@ -721,7 +721,7 @@
 --- @field public fontSize number Returns the font size of the label text.
 --- @field public isInteractable boolean Returns whether the Button can interact with the cursor (click, hover, etc).
 --- @field public shouldClipToSize boolean Whether or not the button and its shadow should be clipped when exceeding the bounds of this control.
---- @field public type string 
+--- @field public type string
 --- @field SetImage fun(self, imageId: string )
 --- @field GetButtonColor fun(self): Color
 --- @field SetButtonColor fun(self, color: Color )
@@ -742,7 +742,7 @@
 
 --- @class UIContainer
 --- @field public opacity number Controls the opacity of the container's contents by multiplying the alpha component of descendants' colors. Note that other UIPanels and UIContainers in the hierarchy may also contribute their own opacity values. A resulting alpha value of 1 or greater is fully opaque, 0 is fully transparent.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class UIControl
@@ -753,14 +753,14 @@
 --- @field public rotationAngle number rotation angle of the control.
 --- @field public anchor UIPivot The pivot point on this control that attaches to its parent. Can be one of `UIPivot.TOP_LEFT`, `UIPivot.TOP_CENTER`, `UIPivot.TOP_RIGHT`, `UIPivot.MIDDLE_LEFT`, `UIPivot.MIDDLE_CENTER`, `UIPivot.MIDDLE_RIGHT`, `UIPivot.BOTTOM_LEFT`, `UIPivot.BOTTOM_CENTER`, `UIPivot.BOTTOM_RIGHT`, or `UIPivot.CUSTOM`.
 --- @field public dock UIPivot The pivot point on this control to which children attach. Can be one of `UIPivot.TOP_LEFT`, `UIPivot.TOP_CENTER`, `UIPivot.TOP_RIGHT`, `UIPivot.MIDDLE_LEFT`, `UIPivot.MIDDLE_CENTER`, `UIPivot.MIDDLE_RIGHT`, `UIPivot.BOTTOM_LEFT`, `UIPivot.BOTTOM_CENTER`, `UIPivot.BOTTOM_RIGHT`, or `UIPivot.CUSTOM`.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class UIImage
 --- @field public isTeamColorUsed boolean If `true`, the image will be tinted blue if its team matches the Player, or red if not.
 --- @field public team number the team of the image, used for `isTeamColorUsed`.
 --- @field public shouldClipToSize boolean Whether or not the image and its shadow should be clipped when exceeding the bounds of this control.
---- @field public type string 
+--- @field public type string
 --- @field GetColor fun(self): Color
 --- @field SetColor fun(self, color: Color )
 --- @field SetImage fun(self, : string|Player )
@@ -775,19 +775,19 @@
 --- @class UIPanel
 --- @field public shouldClipChildren number If `true`, children of this UIPanel will not draw outside of its bounds.
 --- @field public opacity number Controls the opacity of the panel's contents by multiplying the alpha component of descendants' colors. Note that other UIPanels and UIContainers in the hierarchy may also contribute their own opacity values. A resulting alpha value of 1 or greater is fully opaque, 0 is fully transparent.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class UIPerkPurchaseButton
 --- @field public isInteractable boolean Returns whether the button can interact with the cursor (click, hover, etc).
---- @field public type string 
+--- @field public type string
 --- @field SetPerkReference fun(self, perkReference: NetReference )
 --- @field GetPerkReference fun(self): NetReference
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class UIProgressBar
 --- @field public progress number From 0 to 1, how full the bar should be.
---- @field public type string 
+--- @field public type string
 --- @field GetFillColor fun(self): Color
 --- @field SetFillColor fun(self, color: Color )
 --- @field GetBackgroundColor fun(self): Color
@@ -798,7 +798,7 @@
 --- @field public orientation Orientation Determines whether the panel scrolls horizontally or vertically. Default is `Orientation.VERTICAL`.
 --- @field public scrollPosition number The position in UI space of the scroll panel content. Defaults to 0, which is scrolled to the top or left, depending on orientation. Set to the value of `contentLength` to scroll to the end.
 --- @field public contentLength number Returns the height or width of the scroll panel content, depending on orientation. This is the maximum value of `scrollPosition`.
---- @field public type string 
+--- @field public type string
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class UIText
@@ -807,7 +807,7 @@
 --- @field public justification TextJustify Determines the alignment of `text`. Possible values are: TextJustify.LEFT, TextJustify.RIGHT, and TextJustify.CENTER.
 --- @field public shouldWrapText boolean Whether or not text should be wrapped within the bounds of this control.
 --- @field public shouldClipText boolean Whether or not text should be clipped when exceeding the bounds of this control.
---- @field public type string 
+--- @field public type string
 --- @field GetColor fun(self): Color
 --- @field SetColor fun(self, color: Color )
 --- @field ComputeApproximateSize fun(self): Vector2
@@ -823,7 +823,7 @@
 --- @field public y number The `y` component of the Vector2.
 --- @field public size number The magnitude of the Vector2.
 --- @field public sizeSquared number The squared magnitude of the Vector2.
---- @field public type string 
+--- @field public type string
 --- @field GetNormalized fun(self): Vector2
 --- @field IsA fun(self, typeName: string ): boolean
 
@@ -833,7 +833,7 @@
 --- @field public z number The `z` component of the Vector3.
 --- @field public size number The magnitude of the Vector3.
 --- @field public sizeSquared number The squared magnitude of the Vector3.
---- @field public type string 
+--- @field public type string
 --- @field GetNormalized fun(self): Vector3
 --- @field IsA fun(self, typeName: string ): boolean
 
@@ -844,7 +844,7 @@
 --- @field public w number The `w` component of the Vector4.
 --- @field public size number The magnitude of the Vector4.
 --- @field public sizeSquared number The squared magnitude of the Vector4.
---- @field public type string 
+--- @field public type string
 --- @field GetNormalized fun(self): Vector4
 --- @field IsA fun(self, typeName: string ): boolean
 
@@ -864,7 +864,7 @@
 --- @field public driverAnimationStance string Returns the animation stance that will be applied to the driver while they occupy the vehicle.
 --- @field public enterTrigger Trigger Returns the Trigger a Player uses to occupy the vehicle.
 --- @field public camera Camera Returns the Camera used for the driver while they occupy the vehicle.
---- @field public type string 
+--- @field public type string
 --- @field GetPhysicsBodyOffset fun(self): Vector3
 --- @field GetPhysicsBodyScale fun(self): Vector3
 --- @field SetDriver fun(self, driver: Player )
@@ -875,7 +875,7 @@
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class Vfx
---- @field public type string 
+--- @field public type string
 --- @field Play fun(self, optionalParameters: table )
 --- @field Stop fun(self, optionalParameters: table )
 --- @field IsA fun(self, typeName: string ): boolean
@@ -890,7 +890,7 @@
 --- @field public isHitscan boolean If `false`, the Weapon will produce simulated Projectiles. If `true`, it will instead use instantaneous line traces to simulate shots.
 --- @field public range number Max travel distance of the Projectile (isHitscan = False) or range of the line trace (isHitscan = True).
 --- @field public damage number Damage applied to a Player when the weapon attack hits a player target. If set to zero, no damage is applied.
---- @field public directDamage number 
+--- @field public directDamage number
 --- @field public projectileTemplateId string Asset reference for the visual body of the Projectile, for non-hitscan Weapons.
 --- @field public muzzleFlashTemplateId string Asset reference for a Vfx to be attached to the muzzle point each time the Weapon attacks.
 --- @field public trailTemplateId string Asset reference for a trail Vfx to follow the trajectory of the shot.
@@ -918,14 +918,14 @@
 --- @field public spreadDecreaseSpeed number Speed at which the spread contracts back from its current value to the minimum cone size.
 --- @field public spreadIncreasePerShot number Amount the spread increases each time the Weapon attacks.
 --- @field public spreadPenaltyPerShot number Cumulative penalty to the spread size for successive attacks. Penalty cools off based on `spreadDecreaseSpeed`.
---- @field public type string 
+--- @field public type string
 --- @field HasAmmo fun(self): boolean
 --- @field Attack fun(self, target: CoreObject|Vector3|Player )
 --- @field IsA fun(self, typeName: string ): boolean
 
 --- @class WorldText
 --- @field public text string The text being displayed by this object.
---- @field public type string 
+--- @field public type string
 --- @field GetColor fun(self): Color
 --- @field SetColor fun(self, color: Color )
 --- @field SetFont fun(self, font: string )
@@ -1222,3 +1222,5 @@ UI = {}
 --- @field Raycast fun(startPosition: Vector3 , endPosition: Vector3 , optionalParameters: table ): HitResult
 World = {}
 
+--- @type CoreObject
+script = nil
