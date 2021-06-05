@@ -5,4 +5,4 @@ When working on Lua with Core Games, even with the referenced plugins for VSCode
 
 Type checking provide a good flexible autocomplete system and give you errors when you are trying to access undefined properties.
 
-![assets/gif1.gif]
+![](assets/gif1.gif)
