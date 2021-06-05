@@ -34,7 +34,7 @@ function generateClassesLines(classes: Class[]): string[] {
       );
     }
     for (const memberFunction of obj.MemberFunctions) {
-      typeClass.addFunction(generateFunction(obj.Name, memberFunction));
+      typeClass.addFunction(generateFunction(obj.Name, memberFunction, true));
     }
 
     lines.push(...typeClass.getLines());
@@ -54,8 +54,8 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
         typeClass.addField(new TypeField(event.Name, ['Event']));
       }
     }
-    for (const memberFunction of obj.StaticFunctions) {
-      typeClass.addFunction(generateFunction(obj.Name, memberFunction));
+    for (const staticFunctions of obj.StaticFunctions) {
+      typeClass.addFunction(generateFunction(obj.Name, staticFunctions, false));
     }
 
     lines.push(...typeClass.getLines());
@@ -78,8 +78,14 @@ function generateEnumsLines(enums: Enum[]) {
   return lines;
 }
 
-function generateFunction(className: string, func: Func): TypeFunction {
-  const typeFunction = new TypeFunction(`${className}:${func.Name}`);
+function generateFunction(
+  className: string,
+  func: Func,
+  member: boolean
+): TypeFunction {
+  const typeFunction = new TypeFunction(
+    `${className}${member ? ':' : '.'}${func.Name}`
+  );
   const signatures = generateSignatures(func.Signatures);
   for (const signature of signatures) {
     typeFunction.addSignature(signature);

@@ -1869,11 +1869,11 @@ Chat = {}
 --- @param message string 
 --- @param optionalParams table 
 --- @return BroadcastMessageResultCode|string 
-function Chat:BroadcastMessage(message, optionalParams) end
+function Chat.BroadcastMessage(message, optionalParams) end
 
 --- @param message string 
 --- @param optionalParams table 
-function Chat:LocalMessage(message, optionalParams) end
+function Chat.LocalMessage(message, optionalParams) end
 
 
 --- @class CoreDebug 
@@ -1882,26 +1882,26 @@ CoreDebug = {}
 --- @param startPosition Vector3 
 --- @param endPosition Vector3 
 --- @param parameters table 
-function CoreDebug:DrawLine(startPosition, endPosition, parameters) end
+function CoreDebug.DrawLine(startPosition, endPosition, parameters) end
 
 --- @overload fun(centerPosition: Vector3,scale: Vector3)
 --- @param centerPosition Vector3 
 --- @param scale Vector3 
 --- @param parameters table 
-function CoreDebug:DrawBox(centerPosition, scale, parameters) end
+function CoreDebug.DrawBox(centerPosition, scale, parameters) end
 
 --- @overload fun(centerPosition: Vector3,radius: number)
 --- @param centerPosition Vector3 
 --- @param radius number 
 --- @param parameters table 
-function CoreDebug:DrawSphere(centerPosition, radius, parameters) end
+function CoreDebug.DrawSphere(centerPosition, radius, parameters) end
 
 --- @return string 
-function CoreDebug:GetStackTrace() end
+function CoreDebug.GetStackTrace() end
 
 --- @overload fun(task: Task): string
 --- @return string 
-function CoreDebug:GetTaskStackTrace() end
+function CoreDebug.GetTaskStackTrace() end
 
 
 --- @class CoreMath 
@@ -1909,34 +1909,34 @@ CoreMath = {}
 --- @param x number 
 --- @param decimals number 
 --- @return number 
-function CoreMath:Round(x, decimals) end
+function CoreMath.Round(x, decimals) end
 
 --- @param from number 
 --- @param to number 
 --- @param progress number 
 --- @return number 
-function CoreMath:Lerp(from, to, progress) end
+function CoreMath.Lerp(from, to, progress) end
 
 --- @param x number 
 --- @param min number 
 --- @param max number 
 --- @return number 
-function CoreMath:Clamp(x, min, max) end
+function CoreMath.Clamp(x, min, max) end
 
 
 --- @class CorePlatform 
 CorePlatform = {}
 --- @param gameId string 
 --- @return CoreGameInfo 
-function CorePlatform:GetGameInfo(gameId) end
+function CorePlatform.GetGameInfo(gameId) end
 
 --- @param collectionId string 
 --- @return table<number, CoreGameCollectionEntry> 
-function CorePlatform:GetGameCollection(collectionId) end
+function CorePlatform.GetGameCollection(collectionId) end
 
 --- @param playerId string 
 --- @return CorePlayerProfile 
-function CorePlatform:GetPlayerProfile(playerId) end
+function CorePlatform.GetPlayerProfile(playerId) end
 
 
 --- @class CoreSocial 
@@ -1944,11 +1944,11 @@ CoreSocial = {}
 --- @overload fun(player: Player): boolean
 --- @param playerId string 
 --- @return boolean 
-function CoreSocial:IsFriendsWithLocalPlayer(playerId) end
+function CoreSocial.IsFriendsWithLocalPlayer(playerId) end
 
 --- @param player Player 
 --- @return CoreFriendCollection 
-function CoreSocial:GetFriends(player) end
+function CoreSocial.GetFriends(player) end
 
 
 --- @class CoreString 
@@ -1958,43 +1958,43 @@ CoreString = {}
 --- @overload fun(string: string,delimiter: string): any
 --- @param string string 
 --- @return any 
-function CoreString:Split(string) end
+function CoreString.Split(string) end
 
 --- @overload fun(delimiter: string): string
 --- @param delimiter string 
 --- @param strings any 
 --- @return string 
-function CoreString:Join(delimiter, strings) end
+function CoreString.Join(delimiter, strings) end
 
 --- @overload fun(string: string): string
 --- @param string string 
 --- @param trimmedStrings any 
 --- @return string 
-function CoreString:Trim(string, trimmedStrings) end
+function CoreString.Trim(string, trimmedStrings) end
 
 
 --- @class Environment 
 Environment = {}
 --- @return boolean 
-function Environment:IsClient() end
+function Environment.IsClient() end
 
 --- @return boolean 
-function Environment:IsServer() end
+function Environment.IsServer() end
 
 --- @return boolean 
-function Environment:IsMultiplayerPreview() end
+function Environment.IsMultiplayerPreview() end
 
 --- @return boolean 
-function Environment:IsSinglePlayerPreview() end
+function Environment.IsSinglePlayerPreview() end
 
 --- @return boolean 
-function Environment:IsPreview() end
+function Environment.IsPreview() end
 
 --- @return boolean 
-function Environment:IsLocalGame() end
+function Environment.IsLocalGame() end
 
 --- @return boolean 
-function Environment:IsHostedGame() end
+function Environment.IsHostedGame() end
 
 
 --- @class Events 
@@ -2004,38 +2004,38 @@ Events = {}
 --- @param listener function 
 --- @param additionalParameters any 
 --- @return EventListener 
-function Events:Connect(eventName, listener, additionalParameters) end
+function Events.Connect(eventName, listener, additionalParameters) end
 
 --- @overload fun(eventName: string,listener: function): EventListener
 --- @param eventName string 
 --- @param listener function 
 --- @param additionalParameters any 
 --- @return EventListener 
-function Events:ConnectForPlayer(eventName, listener, additionalParameters) end
+function Events.ConnectForPlayer(eventName, listener, additionalParameters) end
 
 --- @overload fun(eventName: string)
 --- @param eventName string 
 --- @param argumentList any 
-function Events:Broadcast(eventName, argumentList) end
+function Events.Broadcast(eventName, argumentList) end
 
 --- @overload fun(eventName: string): BroadcastEventResultCode|string
 --- @param eventName string 
 --- @param argumentList any 
 --- @return BroadcastEventResultCode|string 
-function Events:BroadcastToServer(eventName, argumentList) end
+function Events.BroadcastToServer(eventName, argumentList) end
 
 --- @overload fun(eventName: string): BroadcastEventResultCode|string
 --- @param eventName string 
 --- @param argumentList any 
 --- @return BroadcastEventResultCode|string 
-function Events:BroadcastToAllPlayers(eventName, argumentList) end
+function Events.BroadcastToAllPlayers(eventName, argumentList) end
 
 --- @overload fun(player: Player,eventName: string): BroadcastEventResultCode|string
 --- @param player Player 
 --- @param eventName string 
 --- @param argumentList any 
 --- @return BroadcastEventResultCode|string 
-function Events:BroadcastToPlayer(player, eventName, argumentList) end
+function Events.BroadcastToPlayer(player, eventName, argumentList) end
 
 
 --- @class Game 
@@ -2047,64 +2047,64 @@ function Events:BroadcastToPlayer(player, eventName, argumentList) end
 --- @field teamScoreChangedEvent Event 
 Game = {}
 --- @return Player 
-function Game:GetLocalPlayer() end
+function Game.GetLocalPlayer() end
 
 --- @param playerId string 
 --- @return Player 
-function Game:FindPlayer(playerId) end
+function Game.FindPlayer(playerId) end
 
 --- @param optionalParams table 
 --- @return table<number, Player> 
-function Game:GetPlayers(optionalParams) end
-
---- @param worldPosition Vector3 
---- @param radius number 
---- @param optionalParams table 
---- @return table<number, Player> 
-function Game:FindPlayersInCylinder(worldPosition, radius, optionalParams) end
+function Game.GetPlayers(optionalParams) end
 
 --- @param worldPosition Vector3 
 --- @param radius number 
 --- @param optionalParams table 
 --- @return table<number, Player> 
-function Game:FindPlayersInSphere(worldPosition, radius, optionalParams) end
+function Game.FindPlayersInCylinder(worldPosition, radius, optionalParams) end
+
+--- @param worldPosition Vector3 
+--- @param radius number 
+--- @param optionalParams table 
+--- @return table<number, Player> 
+function Game.FindPlayersInSphere(worldPosition, radius, optionalParams) end
 
 --- @param worldPosition Vector3 
 --- @param optionalParameters table 
 --- @return Player 
-function Game:FindNearestPlayer(worldPosition, optionalParameters) end
+function Game.FindNearestPlayer(worldPosition, optionalParameters) end
 
-function Game:StartRound() end
+function Game.StartRound() end
 
-function Game:EndRound() end
+function Game.EndRound() end
 
 --- @param team number 
 --- @return number 
-function Game:GetTeamScore(team) end
+function Game.GetTeamScore(team) end
 
 --- @param team number 
 --- @param score number 
-function Game:SetTeamScore(team, score) end
+function Game.SetTeamScore(team, score) end
 
 --- @param team number 
 --- @param scoreChange number 
-function Game:IncreaseTeamScore(team, scoreChange) end
+function Game.IncreaseTeamScore(team, scoreChange) end
 
 --- @param team number 
 --- @param scoreChange number 
-function Game:DecreaseTeamScore(team, scoreChange) end
+function Game.DecreaseTeamScore(team, scoreChange) end
 
-function Game:ResetTeamScores() end
+function Game.ResetTeamScores() end
 
-function Game:StopAcceptingPlayers() end
+function Game.StopAcceptingPlayers() end
 
 --- @return boolean 
-function Game:IsAcceptingPlayers() end
+function Game.IsAcceptingPlayers() end
 
 --- @overload fun(gameInfo: CoreGameInfo)
 --- @overload fun(gameId: string)
 --- @param gameCollectionEntry CoreGameCollectionEntry 
-function Game:TransferAllPlayersToGame(gameCollectionEntry) end
+function Game.TransferAllPlayersToGame(gameCollectionEntry) end
 
 
 --- @class Leaderboards 
@@ -2113,51 +2113,51 @@ Leaderboards = {}
 --- @param player Player 
 --- @param score number 
 --- @param additionalData string 
-function Leaderboards:SubmitPlayerScore(leaderboardReference, player, score, additionalData) end
+function Leaderboards.SubmitPlayerScore(leaderboardReference, player, score, additionalData) end
 
 --- @param leaderboardReference NetReference 
 --- @param leaderboardType LeaderboardType 
 --- @return table 
-function Leaderboards:GetLeaderboard(leaderboardReference, leaderboardType) end
+function Leaderboards.GetLeaderboard(leaderboardReference, leaderboardType) end
 
 --- @return boolean 
-function Leaderboards:HasLeaderboards() end
+function Leaderboards.HasLeaderboards() end
 
 
 --- @class Storage 
 Storage = {}
 --- @param data table 
 --- @return number 
-function Storage:SizeOfData(data) end
+function Storage.SizeOfData(data) end
 
 --- @param player Player 
 --- @return table 
-function Storage:GetPlayerData(player) end
+function Storage.GetPlayerData(player) end
 
---- @param player Player 
---- @param data table 
---- @return StorageResultCode|string 
-function Storage:SetPlayerData(player, data) end
-
---- @param sharedStorageKey NetReference 
---- @param player Player 
---- @return table 
-function Storage:GetSharedPlayerData(sharedStorageKey, player) end
-
---- @param sharedStorageKey NetReference 
 --- @param player Player 
 --- @param data table 
 --- @return StorageResultCode|string 
-function Storage:SetSharedPlayerData(sharedStorageKey, player, data) end
+function Storage.SetPlayerData(player, data) end
+
+--- @param sharedStorageKey NetReference 
+--- @param player Player 
+--- @return table 
+function Storage.GetSharedPlayerData(sharedStorageKey, player) end
+
+--- @param sharedStorageKey NetReference 
+--- @param player Player 
+--- @param data table 
+--- @return StorageResultCode|string 
+function Storage.SetSharedPlayerData(sharedStorageKey, player, data) end
 
 --- @param playerId string 
 --- @return table 
-function Storage:GetOfflinePlayerData(playerId) end
+function Storage.GetOfflinePlayerData(playerId) end
 
 --- @param sharedStorageKey NetReference 
 --- @param playerId string 
 --- @return table 
-function Storage:GetSharedOfflinePlayerData(sharedStorageKey, playerId) end
+function Storage.GetSharedOfflinePlayerData(sharedStorageKey, playerId) end
 
 
 --- @class Teams 
@@ -2165,12 +2165,12 @@ Teams = {}
 --- @param team1 number 
 --- @param team2 number 
 --- @return boolean 
-function Teams:AreTeamsFriendly(team1, team2) end
+function Teams.AreTeamsFriendly(team1, team2) end
 
 --- @param team1 number 
 --- @param team2 number 
 --- @return boolean 
-function Teams:AreTeamsEnemies(team1, team2) end
+function Teams.AreTeamsEnemies(team1, team2) end
 
 
 --- @class UI 
@@ -2179,92 +2179,92 @@ UI = {}
 --- @param text string 
 --- @param worldPosition Vector3 
 --- @param optionalParameters table 
-function UI:ShowFlyUpText(text, worldPosition, optionalParameters) end
+function UI.ShowFlyUpText(text, worldPosition, optionalParameters) end
 
 --- @overload fun(sourcePlayer: Player)
 --- @overload fun(sourceWorldPosition: Vector3)
 --- @param sourceObject CoreObject 
-function UI:ShowDamageDirection(sourceObject) end
+function UI.ShowDamageDirection(sourceObject) end
 
 --- @param worldPosition Vector3 
 --- @return Vector2 
-function UI:GetScreenPosition(worldPosition) end
+function UI.GetScreenPosition(worldPosition) end
 
 --- @return Vector2 
-function UI:GetScreenSize() end
+function UI.GetScreenSize() end
 
 --- @param message string 
 --- @param color Color 
-function UI:PrintToScreen(message, color) end
+function UI.PrintToScreen(message, color) end
 
 --- @return Vector2 
-function UI:GetCursorPosition() end
+function UI.GetCursorPosition() end
 
 --- @return HitResult 
-function UI:GetCursorHitResult() end
+function UI.GetCursorHitResult() end
 
 --- @overload fun(pointOnPlane: Vector3): Vector3
 --- @param pointOnPlane Vector3 
 --- @param planeNormal Vector3 
 --- @return Vector3 
-function UI:GetCursorPlaneIntersection(pointOnPlane, planeNormal) end
+function UI.GetCursorPlaneIntersection(pointOnPlane, planeNormal) end
 
 --- @return boolean 
-function UI:IsCursorVisible() end
+function UI.IsCursorVisible() end
 
 --- @param isVisible boolean 
-function UI:SetCursorVisible(isVisible) end
+function UI.SetCursorVisible(isVisible) end
 
 --- @return boolean 
-function UI:IsCursorLockedToViewport() end
+function UI.IsCursorLockedToViewport() end
 
 --- @param isLocked boolean 
-function UI:SetCursorLockedToViewport(isLocked) end
+function UI.SetCursorLockedToViewport(isLocked) end
 
 --- @return boolean 
-function UI:CanCursorInteractWithUI() end
+function UI.CanCursorInteractWithUI() end
 
 --- @param canInteract boolean 
-function UI:SetCanCursorInteractWithUI(canInteract) end
+function UI.SetCanCursorInteractWithUI(canInteract) end
 
 --- @return boolean 
-function UI:IsReticleVisible() end
+function UI.IsReticleVisible() end
 
 --- @param isVisible boolean 
-function UI:SetReticleVisible(isVisible) end
+function UI.SetReticleVisible(isVisible) end
 
 
 --- @class World 
 World = {}
 --- @return CoreObject 
-function World:GetRootObject() end
+function World.GetRootObject() end
 
 --- @param id string 
 --- @return CoreObject 
-function World:FindObjectById(id) end
+function World.FindObjectById(id) end
 
 --- @param name string 
 --- @return CoreObject 
-function World:FindObjectByName(name) end
+function World.FindObjectByName(name) end
 
 --- @param name string 
 --- @return table<number, CoreObject> 
-function World:FindObjectsByName(name) end
+function World.FindObjectsByName(name) end
 
 --- @param typeName string 
 --- @return table<number, CoreObject> 
-function World:FindObjectsByType(typeName) end
+function World.FindObjectsByType(typeName) end
 
 --- @param assetId string 
 --- @param optionalParameters table 
 --- @return CoreObject 
-function World:SpawnAsset(assetId, optionalParameters) end
+function World.SpawnAsset(assetId, optionalParameters) end
 
 --- @param startPosition Vector3 
 --- @param endPosition Vector3 
 --- @param optionalParameters table 
 --- @return HitResult 
-function World:Raycast(startPosition, endPosition, optionalParameters) end
+function World.Raycast(startPosition, endPosition, optionalParameters) end
 
 
 --- @class AbilityFacingMode 
