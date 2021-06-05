@@ -1,4 +1,19 @@
-# Core Games API - Lua Types
+# Core Games API - Unofficial Lua Types
+
+## WIP Disclaimer
+This project is still a work in progress and need some improvements :
+- [ ] Use the [CoreGameAPI.json](https://docs.coregames.com/assets/api/CoreLuaAPI.json) file
+- [ ] Change output file `core-games-api.def.lua` (currently using the one on Github)
+- [ ] Implements global `script` (not defined in CoreGameAPI)
+- [ ] Generate file structure with full implementation
+    - [ ] Namespaces
+    - [ ] Classes
+    - [ ] Enums
+- [ ] Better Event Type with use of Generics
+- [ ] Optional function parameters
+- [ ] Create daily release system
+- [ ] Provide a better documentation
+- [ ] Improve code structure
 
 ## Why ?
 When working on Lua with Core Games, even with the referenced plugins for VSCode it does not provide a good type checking.
