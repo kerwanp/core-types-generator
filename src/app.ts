@@ -1,18 +1,13 @@
 import http from 'https';
-import {
-  AnnotationType,
-  Class,
-  CoreLuaAPI,
-  Enum,
-  Func,
-  Property
-} from './models';
+import { Class, CoreLuaAPI, Enum, Func, Namespace, Signature } from './models';
 import fs from 'fs';
-import { getAnnotation, typeMapping } from './utils';
-import { getNamespaces } from './namespaces';
-import { getFunction } from './signature';
-
-let result = '';
+import { arrayToString, typeMapping } from './utils';
+import { TypeClass } from './TypeClass';
+import { TypeField } from './TypeField';
+import { TypeFunction } from './TypeFunction';
+import { TypeSignature } from './TypeSignature';
+import { TypeParameter } from './TypeParameter';
+import { TypeReturn } from './TypeReturn';
 
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
   return new Promise((res) => {
@@ -29,76 +24,106 @@ async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
   });
 }
 
-// function appendComment(content: string) {
-//   return `--- ${content}\n`;
-// }
-
-function breakLine() {
-  result += `\n`;
-}
-
-// function getAnnotation(name: AnnotationType, ...args: string[]): string {
-//   appendComment(`@${name} ${args.join(' ')}`);
-// }
-
-function generateClasses(classes: Class[]) {
+function generateClassesLines(classes: Class[]): string[] {
+  const lines = [];
   for (const obj of classes) {
-    result += getAnnotation(AnnotationType.CLASS, obj.Name);
-    generateProperties(obj.Properties);
-    generateMemberFunctions(obj.MemberFunctions);
-    breakLine();
-  }
-}
-
-function generateProperties(properties: Property[]) {
-  for (const property of properties) {
-    result += getAnnotation(
-      AnnotationType.FIELD,
-      'public',
-      property.Name,
-      typeMapping(property.Type),
-      property.Description
-    );
-  }
-}
-
-function generateMemberFunctions(memberFunctions: Func[]) {
-  for (const memberFunction of memberFunctions) {
-    result += getAnnotation(
-      AnnotationType.FIELD,
-      memberFunction.Name,
-      getFunction(memberFunction, true)
-    );
-  }
-}
-
-function generateEnums(enums: Enum[]) {
-  for (const obj of enums) {
-    result += getAnnotation(AnnotationType.CLASS, obj.Name);
-    for (const property of obj.Values) {
-      result += getAnnotation(
-        AnnotationType.FIELD,
-        property.Name,
-        property.Value
+    const typeClass = new TypeClass(false, obj.Name);
+    for (const property of obj.Properties) {
+      typeClass.addField(
+        new TypeField(property.Name, [typeMapping(property.Type)])
       );
     }
-    result += `${obj.Name} = {}\n`;
-    breakLine();
+    for (const memberFunction of obj.MemberFunctions) {
+      typeClass.addFunction(generateFunction(obj.Name, memberFunction));
+    }
+
+    lines.push(...typeClass.getLines());
+    lines.push('');
   }
+
+  return lines;
+}
+
+function generateNamespacesLines(namespaces: Namespace[]): string[] {
+  const lines = [];
+  for (const obj of namespaces) {
+    const typeClass = new TypeClass(true, obj.Name);
+
+    if (obj.StaticEvents) {
+      for (const event of obj.StaticEvents) {
+        typeClass.addField(new TypeField(event.Name, ['Event']));
+      }
+    }
+    for (const memberFunction of obj.StaticFunctions) {
+      typeClass.addFunction(generateFunction(obj.Name, memberFunction));
+    }
+
+    lines.push(...typeClass.getLines());
+    lines.push('');
+  }
+
+  return lines;
+}
+
+function generateEnumsLines(enums: Enum[]) {
+  const lines = [];
+  for (const obj of enums) {
+    const typeClass = new TypeClass(true, obj.Name);
+    for (const field of obj.Values) {
+      const typeField = new TypeField(field.Name, [field.Value]);
+      typeClass.addField(typeField);
+    }
+    lines.push(...typeClass.getLines());
+  }
+  return lines;
+}
+
+function generateFunction(className: string, func: Func): TypeFunction {
+  const typeFunction = new TypeFunction(`${className}:${func.Name}`);
+  const signatures = generateSignatures(func.Signatures);
+  for (const signature of signatures) {
+    typeFunction.addSignature(signature);
+  }
+  return typeFunction;
+}
+
+function generateSignatures(signatures: Signature[]): TypeSignature[] {
+  const typeSignatures = [];
+  for (const signature of signatures) {
+    const typeSignature = new TypeSignature();
+    for (const parameter of signature.Parameters) {
+      typeSignature.addParameter(
+        new TypeParameter(
+          parameter.Name,
+          [typeMapping(parameter.Type)],
+          parameter.IsVariadic ?? false
+        )
+      );
+    }
+
+    if (signature.Returns.length > 0) {
+      const typeReturn = new TypeReturn();
+      for (const ret of signature.Returns) {
+        typeReturn.addtype(typeMapping(ret.Type));
+      }
+      typeSignature.addReturn(typeReturn);
+    }
+
+    typeSignatures.push(typeSignature);
+  }
+  return typeSignatures;
 }
 
 async function run() {
   const coreLuaAPI = await getCoreLuaAPI();
-  generateClasses(coreLuaAPI.Classes);
-  generateEnums(coreLuaAPI.Enums);
+  const lines = [];
 
-  result += getNamespaces(coreLuaAPI.Namespaces);
+  lines.push(...generateClassesLines(coreLuaAPI.Classes));
+  lines.push(...['', '', '', '', '']);
+  lines.push(...generateNamespacesLines(coreLuaAPI.Namespaces));
+  lines.push(...generateEnumsLines(coreLuaAPI.Enums));
 
-  for (const key of Object.keys(coreLuaAPI)) {
-    console.log(key);
-  }
-
-  fs.writeFileSync('core-types.lua', result);
+  fs.writeFileSync('core-games-api.def.lua', arrayToString(lines));
 }
 
 run();

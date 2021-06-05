@@ -1,15 +1,18 @@
-import { AnnotationType } from './models';
-
-export function getComment(content: string): string {
-  return `--- ${content}\n`;
+export function arrayToString(rows: string[]): string {
+  // TODO : Remove line breaks
+  return rows.filter((row) => row !== undefined && row !== null).join('\n');
 }
 
-export function getAnnotation(type: AnnotationType, ...args: string[]): string {
+export function getComment(content: string): string {
+  return `--- ${content}`;
+}
+
+export function getAnnotation(type: string, ...args: string[]): string {
   return getComment(`@${type} ${args.join(' ')}`);
 }
 
 export function typeMapping(type: string): string {
-  if (type === undefined) return 'void';
+  if (type === undefined) return 'any';
   if (type === 'integer') {
     return 'number';
   }
@@ -19,7 +22,6 @@ export function typeMapping(type: string): string {
   }
 
   if (type.includes('Array<')) {
-    console.log(type);
     type = type.replace('Array<', 'table<number, ');
   }
 
