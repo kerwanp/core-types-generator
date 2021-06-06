@@ -6,52 +6,83 @@ export class TypeClass {
   public constructor(
     private isGlobal: boolean,
     private name: string,
-    private functions: TypeFunction[] = [],
-    private fields: TypeField[] = [],
+    private baseClass?: string,
+    private staticFunctions: TypeFunction[] = [],
+    private memberFunctions: TypeFunction[] = [],
+    private memberFields: TypeField[] = [],
+    private staticFields: TypeField[] = [],
     private description?: string
   ) {}
 
-  public addFunction(typeFunction: TypeFunction) {
-    this.functions.push(typeFunction);
+  public addFunction(typeFunction: TypeFunction, isStatic = false) {
+    if (isStatic) {
+      this.staticFunctions.push(typeFunction);
+    } else {
+      this.memberFunctions.push(typeFunction);
+    }
   }
 
-  public addField(field: TypeField) {
-    this.fields.push(field);
+  public addField(field: TypeField, isStatic = false) {
+    if (isStatic) {
+      this.staticFields.push(field);
+    } else {
+      this.memberFields.push(field);
+    }
   }
 
-  private getFunctionsLines(): string[] {
+  private getFunctionsLines(isStatic = false): string[] {
     const lines = [];
-    for (const typeFunction of this.functions) {
+    for (const typeFunction of isStatic
+      ? this.staticFunctions
+      : this.memberFunctions) {
+      if (!isStatic) {
+        typeFunction.name = typeFunction.name.replace(
+          `${this.name}`,
+          `${this.name}Instance`
+        );
+      }
       lines.push(...typeFunction.getLines());
     }
     return lines;
   }
 
-  private getFieldsLines(): string[] {
+  private getFieldsLines(isStatic = false): string[] {
     const lines = [];
-    for (const field of this.fields) {
+    for (const field of isStatic ? this.staticFields : this.memberFields) {
       lines.push(field.toAnnotation());
     }
     return lines;
   }
 
-  private toAnnotation() {
-    return getAnnotation('class', this.name, this.description);
+  private toAnnotation(isStatic = false) {
+    const name = isStatic ? `Global${this.name}` : `${this.name}`;
+    return getAnnotation(
+      'class',
+      `${name}${this.baseClass ? ' : ' + this.baseClass : ''}`,
+      this.description
+    );
   }
 
-  private toDefinition() {
-    if (this.isGlobal) {
+  private toDefinition(isStatic = false) {
+    if (isStatic) {
       return `${this.name} = {}`;
     }
-    return `local ${this.name} = {}`;
+    return `local ${this.name}Instance = {}`;
   }
 
   public getLines() {
     const lines = [];
-    lines.push(this.toAnnotation());
-    lines.push(...this.getFieldsLines());
-    lines.push(this.toDefinition());
-    lines.push(...this.getFunctionsLines());
+
+    lines.push(this.toAnnotation(false));
+    lines.push(...this.getFieldsLines(false));
+    lines.push(this.toDefinition(false));
+    lines.push(...this.getFunctionsLines(false));
+
+    lines.push(this.toAnnotation(true));
+    lines.push(...this.getFieldsLines(true));
+    lines.push(this.toDefinition(true));
+    lines.push(...this.getFunctionsLines(true));
+
     return lines;
   }
 }

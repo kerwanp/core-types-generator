@@ -1,13 +1,19 @@
 import http from 'https';
 import { Class, CoreLuaAPI, Enum, Func, Namespace, Signature } from './models';
 import fs from 'fs';
-import { arrayToString, typeMapping } from './utils';
+import {
+  arrayToString,
+  getAnnotation,
+  reservedNamesMapping,
+  typeMapping
+} from './utils';
 import { TypeClass } from './TypeClass';
 import { TypeField } from './TypeField';
 import { TypeFunction } from './TypeFunction';
 import { TypeSignature } from './TypeSignature';
 import { TypeParameter } from './TypeParameter';
 import { TypeReturn } from './TypeReturn';
+import { TypeEnum } from './TypeEnum';
 
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
   return new Promise((res) => {
@@ -27,7 +33,32 @@ async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
 function generateClassesLines(classes: Class[]): string[] {
   const lines = [];
   for (const obj of classes) {
-    const typeClass = new TypeClass(false, obj.Name);
+    const typeClass = new TypeClass(
+      false,
+      obj.Name,
+      obj.BaseType !== 'Object' ? obj.BaseType : undefined
+    );
+    if (obj.Events) {
+      for (const event of obj.Events) {
+        typeClass.addField(new TypeField(event.Name, ['Event']));
+      }
+    }
+    if (obj.StaticFunctions) {
+      for (const staticFunctions of obj.StaticFunctions) {
+        typeClass.addFunction(
+          generateFunction(obj.Name, staticFunctions, false),
+          true
+        );
+      }
+    }
+    if (obj.Constructors) {
+      for (const construct of obj.Constructors) {
+        typeClass.addFunction(
+          generateFunction(obj.Name, construct, false),
+          true
+        );
+      }
+    }
     for (const property of obj.Properties) {
       typeClass.addField(
         new TypeField(property.Name, [typeMapping(property.Type)])
@@ -51,11 +82,14 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 
     if (obj.StaticEvents) {
       for (const event of obj.StaticEvents) {
-        typeClass.addField(new TypeField(event.Name, ['Event']));
+        typeClass.addField(new TypeField(event.Name, ['Event']), true);
       }
     }
     for (const staticFunctions of obj.StaticFunctions) {
-      typeClass.addFunction(generateFunction(obj.Name, staticFunctions, false));
+      typeClass.addFunction(
+        generateFunction(obj.Name, staticFunctions, false),
+        true
+      );
     }
 
     lines.push(...typeClass.getLines());
@@ -68,12 +102,11 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 function generateEnumsLines(enums: Enum[]) {
   const lines = [];
   for (const obj of enums) {
-    const typeClass = new TypeClass(true, obj.Name);
+    const typeEnum = new TypeEnum(obj.Name);
     for (const field of obj.Values) {
-      const typeField = new TypeField(field.Name, [field.Value]);
-      typeClass.addField(typeField);
+      typeEnum.addValue(field.Name, field.Value);
     }
-    lines.push(...typeClass.getLines());
+    lines.push(...typeEnum.getLines());
   }
   return lines;
 }
@@ -100,9 +133,9 @@ function generateSignatures(signatures: Signature[]): TypeSignature[] {
     for (const parameter of signature.Parameters) {
       typeSignature.addParameter(
         new TypeParameter(
-          parameter.Name,
+          reservedNamesMapping(parameter.Name),
           [typeMapping(parameter.Type)],
-          parameter.IsVariadic ?? false
+          (parameter.IsVariadic || parameter.IsOptional) ?? false
         )
       );
     }
@@ -127,7 +160,10 @@ async function run() {
   lines.push(...generateClassesLines(coreLuaAPI.Classes));
   lines.push(...['', '', '', '', '']);
   lines.push(...generateNamespacesLines(coreLuaAPI.Namespaces));
+  lines.push(...['', '', '', '', '']);
   lines.push(...generateEnumsLines(coreLuaAPI.Enums));
+  lines.push(getAnnotation('type', 'CoreObject'));
+  lines.push('script = nil');
 
   fs.writeFileSync('core-games-api.def.lua', arrayToString(lines));
 }

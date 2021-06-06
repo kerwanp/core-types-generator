@@ -6,39 +6,51 @@
 --- @field isHighestPriority boolean 
 --- @field elapsedTime number 
 --- @field type string 
-local AIActivity = {}
+local AIActivityInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function AIActivity:IsA(typeName) end
+function AIActivityInstance:IsA(typeName) end
 
+--- @class GlobalAIActivity 
+AIActivity = {}
 
---- @class AIActivityHandler 
+--- @class AIActivityHandler : CoreObject 
 --- @field isSelectedInDebugger boolean 
 --- @field type string 
-local AIActivityHandler = {}
+local AIActivityHandlerInstance = {}
+--- @overload fun(name: string): AIActivity
 --- @param name string 
 --- @param functions table 
 --- @return AIActivity 
-function AIActivityHandler:AddActivity(name, functions) end
+function AIActivityHandlerInstance:AddActivity(name, functions) end
 
 --- @param name string 
-function AIActivityHandler:RemoveActivity(name) end
+function AIActivityHandlerInstance:RemoveActivity(name) end
 
-function AIActivityHandler:ClearActivities() end
+function AIActivityHandlerInstance:ClearActivities() end
 
 --- @return table<number, AIActivity> 
-function AIActivityHandler:GetActivities() end
+function AIActivityHandlerInstance:GetActivities() end
 
 --- @param name string 
 --- @return AIActivity 
-function AIActivityHandler:FindActivity(name) end
+function AIActivityHandlerInstance:FindActivity(name) end
 
 --- @param typeName string 
 --- @return boolean 
-function AIActivityHandler:IsA(typeName) end
+function AIActivityHandlerInstance:IsA(typeName) end
 
+--- @class GlobalAIActivityHandler : CoreObject 
+AIActivityHandler = {}
 
---- @class Ability 
+--- @class Ability : CoreObject 
+--- @field readyEvent Event 
+--- @field castEvent Event 
+--- @field executeEvent Event 
+--- @field recoveryEvent Event 
+--- @field cooldownEvent Event 
+--- @field interruptedEvent Event 
+--- @field tickEvent Event 
 --- @field actionBinding string 
 --- @field canActivateWhileDead boolean 
 --- @field animation string 
@@ -50,29 +62,31 @@ function AIActivityHandler:IsA(typeName) end
 --- @field isEnabled boolean 
 --- @field owner Object 
 --- @field type string 
-local Ability = {}
+local AbilityInstance = {}
 --- @return AbilityTarget 
-function Ability:GetTargetData() end
+function AbilityInstance:GetTargetData() end
 
 --- @param target AbilityTarget 
-function Ability:SetTargetData(target) end
+function AbilityInstance:SetTargetData(target) end
 
 --- @return AbilityPhase 
-function Ability:GetCurrentPhase() end
+function AbilityInstance:GetCurrentPhase() end
 
 --- @return number 
-function Ability:GetPhaseTimeRemaining() end
+function AbilityInstance:GetPhaseTimeRemaining() end
 
-function Ability:Interrupt() end
+function AbilityInstance:Interrupt() end
 
-function Ability:Activate() end
+function AbilityInstance:Activate() end
 
-function Ability:AdvancePhase() end
+function AbilityInstance:AdvancePhase() end
 
 --- @param typeName string 
 --- @return boolean 
-function Ability:IsA(typeName) end
+function AbilityInstance:IsA(typeName) end
 
+--- @class GlobalAbility : CoreObject 
+Ability = {}
 
 --- @class AbilityPhaseSettings 
 --- @field duration number 
@@ -83,11 +97,13 @@ function Ability:IsA(typeName) end
 --- @field isTargetDataUpdated boolean 
 --- @field facingMode AbilityFacingMode 
 --- @field type string 
-local AbilityPhaseSettings = {}
+local AbilityPhaseSettingsInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function AbilityPhaseSettings:IsA(typeName) end
+function AbilityPhaseSettingsInstance:IsA(typeName) end
 
+--- @class GlobalAbilityPhaseSettings 
+AbilityPhaseSettings = {}
 
 --- @class AbilityTarget 
 --- @field hitPlayer Player 
@@ -95,102 +111,113 @@ function AbilityPhaseSettings:IsA(typeName) end
 --- @field spreadHalfAngle number 
 --- @field spreadRandomSeed number 
 --- @field type string 
-local AbilityTarget = {}
+local AbilityTargetInstance = {}
 --- @return Rotation 
-function AbilityTarget:GetOwnerMovementRotation() end
+function AbilityTargetInstance:GetOwnerMovementRotation() end
 
 --- @param rotation Rotation 
-function AbilityTarget:SetOwnerMovementRotation(rotation) end
+function AbilityTargetInstance:SetOwnerMovementRotation(rotation) end
 
 --- @return Vector3 
-function AbilityTarget:GetAimPosition() end
+function AbilityTargetInstance:GetAimPosition() end
 
 --- @param worldPosition Vector3 
-function AbilityTarget:SetAimPosition(worldPosition) end
+function AbilityTargetInstance:SetAimPosition(worldPosition) end
 
 --- @return Vector3 
-function AbilityTarget:GetAimDirection() end
+function AbilityTargetInstance:GetAimDirection() end
 
 --- @param direction Vector3 
-function AbilityTarget:SetAimDirection(direction) end
+function AbilityTargetInstance:SetAimDirection(direction) end
 
 --- @return Vector3 
-function AbilityTarget:GetHitPosition() end
+function AbilityTargetInstance:GetHitPosition() end
 
 --- @param worldPosition Vector3 
-function AbilityTarget:SetHitPosition(worldPosition) end
+function AbilityTargetInstance:SetHitPosition(worldPosition) end
 
 --- @return HitResult 
-function AbilityTarget:GetHitResult() end
+function AbilityTargetInstance:GetHitResult() end
 
 --- @param hitResult HitResult 
-function AbilityTarget:SetHitResult(hitResult) end
+function AbilityTargetInstance:SetHitResult(hitResult) end
 
 --- @param typeName string 
 --- @return boolean 
-function AbilityTarget:IsA(typeName) end
+function AbilityTargetInstance:IsA(typeName) end
+
+--- @class GlobalAbilityTarget 
+AbilityTarget = {}
+--- @return AbilityTarget 
+function AbilityTarget.New() end
 
 
---- @class AnimatedMesh 
+--- @class AnimatedMesh : CoreMesh 
+--- @field animationEvent Event 
 --- @field animationStance string 
 --- @field animationStancePlaybackRate number 
 --- @field animationStanceShouldLoop boolean 
 --- @field playbackRateMultiplier number 
 --- @field type string 
-local AnimatedMesh = {}
+local AnimatedMeshInstance = {}
 --- @return table<number, string> 
-function AnimatedMesh:GetAnimationNames() end
+function AnimatedMeshInstance:GetAnimationNames() end
 
 --- @return table<number, string> 
-function AnimatedMesh:GetAnimationStanceNames() end
+function AnimatedMeshInstance:GetAnimationStanceNames() end
 
 --- @return table<number, string> 
-function AnimatedMesh:GetSocketNames() end
+function AnimatedMeshInstance:GetSocketNames() end
 
 --- @param animationName string 
 --- @return table<number, string> 
-function AnimatedMesh:GetAnimationEventNames(animationName) end
+function AnimatedMeshInstance:GetAnimationEventNames(animationName) end
 
 --- @param objectToAttach CoreObject 
 --- @param socket string 
-function AnimatedMesh:AttachCoreObject(objectToAttach, socket) end
+function AnimatedMeshInstance:AttachCoreObject(objectToAttach, socket) end
 
+--- @overload fun(animationName: string)
 --- @param animationName string 
 --- @param optionalParameters table 
-function AnimatedMesh:PlayAnimation(animationName, optionalParameters) end
+function AnimatedMeshInstance:PlayAnimation(animationName, optionalParameters) end
 
-function AnimatedMesh:StopAnimations() end
+function AnimatedMeshInstance:StopAnimations() end
 
 --- @param animationName string 
 --- @return number 
-function AnimatedMesh:GetAnimationDuration(animationName) end
+function AnimatedMeshInstance:GetAnimationDuration(animationName) end
 
 --- @param slotIndex number 
 --- @param assetId string 
-function AnimatedMesh:SetMeshForSlot(slotIndex, assetId) end
+function AnimatedMeshInstance:SetMeshForSlot(slotIndex, assetId) end
 
 --- @param slotIndex number 
 --- @return string 
-function AnimatedMesh:GetMeshForSlot(slotIndex) end
+function AnimatedMeshInstance:GetMeshForSlot(slotIndex) end
 
 --- @param typeName string 
 --- @return boolean 
-function AnimatedMesh:IsA(typeName) end
+function AnimatedMeshInstance:IsA(typeName) end
 
+--- @class GlobalAnimatedMesh : CoreMesh 
+AnimatedMesh = {}
 
---- @class AreaLight 
+--- @class AreaLight : Light 
 --- @field sourceWidth number 
 --- @field sourceHeight number 
 --- @field barnDoorAngle number 
 --- @field barnDoorLength number 
 --- @field type string 
-local AreaLight = {}
+local AreaLightInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function AreaLight:IsA(typeName) end
+function AreaLightInstance:IsA(typeName) end
 
+--- @class GlobalAreaLight : Light 
+AreaLight = {}
 
---- @class Audio 
+--- @class Audio : CoreObject 
 --- @field isSpatializationEnabled boolean 
 --- @field isAttenuationEnabled boolean 
 --- @field isOcclusionEnabled boolean 
@@ -209,23 +236,25 @@ function AreaLight:IsA(typeName) end
 --- @field startTime number 
 --- @field stopTime number 
 --- @field type string 
-local Audio = {}
-function Audio:Play() end
+local AudioInstance = {}
+function AudioInstance:Play() end
 
-function Audio:Stop() end
-
---- @param time number 
-function Audio:FadeIn(time) end
+function AudioInstance:Stop() end
 
 --- @param time number 
-function Audio:FadeOut(time) end
+function AudioInstance:FadeIn(time) end
+
+--- @param time number 
+function AudioInstance:FadeOut(time) end
 
 --- @param typeName string 
 --- @return boolean 
-function Audio:IsA(typeName) end
+function AudioInstance:IsA(typeName) end
 
+--- @class GlobalAudio : CoreObject 
+Audio = {}
 
---- @class Camera 
+--- @class Camera : CoreObject 
 --- @field followPlayer Player 
 --- @field isOrthographic boolean 
 --- @field fieldOfView number 
@@ -247,23 +276,25 @@ function Audio:IsA(typeName) end
 --- @field lerpTime number 
 --- @field isUsingCameraRotation boolean 
 --- @field type string 
-local Camera = {}
+local CameraInstance = {}
 --- @return Vector3 
-function Camera:GetPositionOffset() end
+function CameraInstance:GetPositionOffset() end
 
 --- @param positionOffset Vector3 
-function Camera:SetPositionOffset(positionOffset) end
+function CameraInstance:SetPositionOffset(positionOffset) end
 
 --- @return Rotation 
-function Camera:GetRotationOffset() end
+function CameraInstance:GetRotationOffset() end
 
 --- @param rotationOffset Rotation 
-function Camera:SetRotationOffset(rotationOffset) end
+function CameraInstance:SetRotationOffset(rotationOffset) end
 
 --- @param typeName string 
 --- @return boolean 
-function Camera:IsA(typeName) end
+function CameraInstance:IsA(typeName) end
 
+--- @class GlobalCamera : CoreObject 
+Camera = {}
 
 --- @class Color 
 --- @field r number 
@@ -271,46 +302,78 @@ function Camera:IsA(typeName) end
 --- @field b number 
 --- @field a number 
 --- @field type string 
-local Color = {}
+local ColorInstance = {}
 --- @param desaturation number 
 --- @return Color 
-function Color:GetDesaturated(desaturation) end
+function ColorInstance:GetDesaturated(desaturation) end
 
 --- @return string 
-function Color:ToStandardHex() end
+function ColorInstance:ToStandardHex() end
 
 --- @return string 
-function Color:ToLinearHex() end
+function ColorInstance:ToLinearHex() end
 
 --- @param typeName string 
 --- @return boolean 
-function Color:IsA(typeName) end
+function ColorInstance:IsA(typeName) end
+
+--- @class GlobalColor 
+Color = {}
+--- @return Color 
+function Color.Random() end
+
+--- @param from Color 
+--- @param to Color 
+--- @param progress number 
+--- @return Color 
+function Color.Lerp(from, to, progress) end
+
+--- @param hexString string 
+--- @return Color 
+function Color.FromStandardHex(hexString) end
+
+--- @param hexString string 
+--- @return Color 
+function Color.FromLinearHex(hexString) end
+
+--- @overload fun(rgbaVector: Vector4): Color
+--- @overload fun(rgbVector: Vector3): Color
+--- @overload fun(red: number,green: number,blue: number,alpha: number): Color
+--- @overload fun(red: number,green: number,blue: number): Color
+--- @overload fun(): Color
+--- @param color Color 
+--- @return Color 
+function Color.New(color) end
 
 
 --- @class CoreFriendCollection 
 --- @field hasMoreResults boolean 
 --- @field type string 
-local CoreFriendCollection = {}
+local CoreFriendCollectionInstance = {}
 --- @return table<number, CoreFriendCollectionEntry> 
-function CoreFriendCollection:GetResults() end
+function CoreFriendCollectionInstance:GetResults() end
 
 --- @return CoreFriendCollection 
-function CoreFriendCollection:GetMoreResults() end
+function CoreFriendCollectionInstance:GetMoreResults() end
 
 --- @param typeName string 
 --- @return boolean 
-function CoreFriendCollection:IsA(typeName) end
+function CoreFriendCollectionInstance:IsA(typeName) end
 
+--- @class GlobalCoreFriendCollection 
+CoreFriendCollection = {}
 
 --- @class CoreFriendCollectionEntry 
 --- @field id string 
 --- @field name string 
 --- @field type string 
-local CoreFriendCollectionEntry = {}
+local CoreFriendCollectionEntryInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function CoreFriendCollectionEntry:IsA(typeName) end
+function CoreFriendCollectionEntryInstance:IsA(typeName) end
 
+--- @class GlobalCoreFriendCollectionEntry 
+CoreFriendCollectionEntry = {}
 
 --- @class CoreGameCollectionEntry 
 --- @field id string 
@@ -319,11 +382,13 @@ function CoreFriendCollectionEntry:IsA(typeName) end
 --- @field ownerId string 
 --- @field ownerName string 
 --- @field type string 
-local CoreGameCollectionEntry = {}
+local CoreGameCollectionEntryInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function CoreGameCollectionEntry:IsA(typeName) end
+function CoreGameCollectionEntryInstance:IsA(typeName) end
 
+--- @class GlobalCoreGameCollectionEntry 
+CoreGameCollectionEntry = {}
 
 --- @class CoreGameInfo 
 --- @field id string 
@@ -336,16 +401,18 @@ function CoreGameCollectionEntry:IsA(typeName) end
 --- @field screenshotCount number 
 --- @field hasWorldCapture boolean 
 --- @field type string 
-local CoreGameInfo = {}
+local CoreGameInfoInstance = {}
 --- @return table<number, string> 
-function CoreGameInfo:GetTags() end
+function CoreGameInfoInstance:GetTags() end
 
 --- @param typeName string 
 --- @return boolean 
-function CoreGameInfo:IsA(typeName) end
+function CoreGameInfoInstance:IsA(typeName) end
 
+--- @class GlobalCoreGameInfo 
+CoreGameInfo = {}
 
---- @class CoreMesh 
+--- @class CoreMesh : CoreObject 
 --- @field meshAssetId string 
 --- @field team number 
 --- @field isTeamColorUsed boolean 
@@ -353,21 +420,29 @@ function CoreGameInfo:IsA(typeName) end
 --- @field isEnemyCollisionEnabled boolean 
 --- @field isCameraCollisionEnabled boolean 
 --- @field type string 
-local CoreMesh = {}
+local CoreMeshInstance = {}
 --- @return Color 
-function CoreMesh:GetColor() end
+function CoreMeshInstance:GetColor() end
 
 --- @param color Color 
-function CoreMesh:SetColor(color) end
+function CoreMeshInstance:SetColor(color) end
 
-function CoreMesh:ResetColor() end
+function CoreMeshInstance:ResetColor() end
 
 --- @param typeName string 
 --- @return boolean 
-function CoreMesh:IsA(typeName) end
+function CoreMeshInstance:IsA(typeName) end
 
+--- @class GlobalCoreMesh : CoreObject 
+CoreMesh = {}
 
 --- @class CoreObject 
+--- @field childAddedEvent Event 
+--- @field childRemovedEvent Event 
+--- @field descendantAddedEvent Event 
+--- @field descendantRemovedEvent Event 
+--- @field destroyEvent Event 
+--- @field networkedPropertyChangedEvent Event 
 --- @field name string 
 --- @field id string 
 --- @field isVisible boolean 
@@ -384,148 +459,148 @@ function CoreMesh:IsA(typeName) end
 --- @field parent CoreObject 
 --- @field sourceTemplateId string 
 --- @field type string 
-local CoreObject = {}
+local CoreObjectInstance = {}
 --- @return CoreObjectReference 
-function CoreObject:GetReference() end
+function CoreObjectInstance:GetReference() end
 
 --- @return Transform 
-function CoreObject:GetTransform() end
+function CoreObjectInstance:GetTransform() end
 
 --- @param localTransform Transform 
-function CoreObject:SetTransform(localTransform) end
+function CoreObjectInstance:SetTransform(localTransform) end
 
 --- @return Vector3 
-function CoreObject:GetPosition() end
+function CoreObjectInstance:GetPosition() end
 
 --- @param localPosition Vector3 
-function CoreObject:SetPosition(localPosition) end
+function CoreObjectInstance:SetPosition(localPosition) end
 
 --- @return Rotation 
-function CoreObject:GetRotation() end
+function CoreObjectInstance:GetRotation() end
 
 --- @param localRotation Rotation 
-function CoreObject:SetRotation(localRotation) end
+function CoreObjectInstance:SetRotation(localRotation) end
 
 --- @return Vector3 
-function CoreObject:GetScale() end
+function CoreObjectInstance:GetScale() end
 
 --- @param localScale Vector3 
-function CoreObject:SetScale(localScale) end
+function CoreObjectInstance:SetScale(localScale) end
 
 --- @return Transform 
-function CoreObject:GetWorldTransform() end
+function CoreObjectInstance:GetWorldTransform() end
 
 --- @param worldTransform Transform 
-function CoreObject:SetWorldTransform(worldTransform) end
+function CoreObjectInstance:SetWorldTransform(worldTransform) end
 
 --- @return Vector3 
-function CoreObject:GetWorldPosition() end
+function CoreObjectInstance:GetWorldPosition() end
 
 --- @param worldPosition Vector3 
-function CoreObject:SetWorldPosition(worldPosition) end
+function CoreObjectInstance:SetWorldPosition(worldPosition) end
 
 --- @return Rotation 
-function CoreObject:GetWorldRotation() end
+function CoreObjectInstance:GetWorldRotation() end
 
 --- @param worldRotation Rotation 
-function CoreObject:SetWorldRotation(worldRotation) end
+function CoreObjectInstance:SetWorldRotation(worldRotation) end
 
 --- @return Vector3 
-function CoreObject:GetWorldScale() end
+function CoreObjectInstance:GetWorldScale() end
 
 --- @param worldScale Vector3 
-function CoreObject:SetWorldScale(worldScale) end
+function CoreObjectInstance:SetWorldScale(worldScale) end
 
 --- @return Vector3 
-function CoreObject:GetVelocity() end
+function CoreObjectInstance:GetVelocity() end
 
 --- @param velocity Vector3 
-function CoreObject:SetVelocity(velocity) end
+function CoreObjectInstance:SetVelocity(velocity) end
 
 --- @return Vector3 
-function CoreObject:GetAngularVelocity() end
+function CoreObjectInstance:GetAngularVelocity() end
 
 --- @param angularVelocity Vector3 
-function CoreObject:SetAngularVelocity(angularVelocity) end
+function CoreObjectInstance:SetAngularVelocity(angularVelocity) end
 
 --- @param localAngularVelocity Vector3 
-function CoreObject:SetLocalAngularVelocity(localAngularVelocity) end
+function CoreObjectInstance:SetLocalAngularVelocity(localAngularVelocity) end
 
 --- @return table<number, CoreObject> 
-function CoreObject:GetChildren() end
+function CoreObjectInstance:GetChildren() end
 
 --- @param player Player 
 --- @param socketName string 
-function CoreObject:AttachToPlayer(player, socketName) end
+function CoreObjectInstance:AttachToPlayer(player, socketName) end
 
-function CoreObject:AttachToLocalView() end
+function CoreObjectInstance:AttachToLocalView() end
 
-function CoreObject:Detach() end
+function CoreObjectInstance:Detach() end
 
 --- @return string 
-function CoreObject:GetAttachedToSocketName() end
+function CoreObjectInstance:GetAttachedToSocketName() end
 
 --- @return boolean 
-function CoreObject:IsVisibleInHierarchy() end
+function CoreObjectInstance:IsVisibleInHierarchy() end
 
 --- @return boolean 
-function CoreObject:IsCollidableInHierarchy() end
+function CoreObjectInstance:IsCollidableInHierarchy() end
 
 --- @return boolean 
-function CoreObject:IsCameraCollidableInHierarchy() end
+function CoreObjectInstance:IsCameraCollidableInHierarchy() end
 
 --- @return boolean 
-function CoreObject:IsEnabledInHierarchy() end
+function CoreObjectInstance:IsEnabledInHierarchy() end
 
 --- @param name string 
 --- @return CoreObject 
-function CoreObject:FindAncestorByName(name) end
+function CoreObjectInstance:FindAncestorByName(name) end
 
 --- @param name string 
 --- @return CoreObject 
-function CoreObject:FindChildByName(name) end
+function CoreObjectInstance:FindChildByName(name) end
 
 --- @param name string 
 --- @return CoreObject 
-function CoreObject:FindDescendantByName(name) end
+function CoreObjectInstance:FindDescendantByName(name) end
 
 --- @param name string 
 --- @return table<number, CoreObject> 
-function CoreObject:FindDescendantsByName(name) end
+function CoreObjectInstance:FindDescendantsByName(name) end
 
 --- @param typeName string 
 --- @return CoreObject 
-function CoreObject:FindAncestorByType(typeName) end
+function CoreObjectInstance:FindAncestorByType(typeName) end
 
 --- @param typeName string 
 --- @return CoreObject 
-function CoreObject:FindChildByType(typeName) end
+function CoreObjectInstance:FindChildByType(typeName) end
 
 --- @param typeName string 
 --- @return CoreObject 
-function CoreObject:FindDescendantByType(typeName) end
+function CoreObjectInstance:FindDescendantByType(typeName) end
 
 --- @param typeName string 
 --- @return table<number, CoreObject> 
-function CoreObject:FindDescendantsByType(typeName) end
+function CoreObjectInstance:FindDescendantsByType(typeName) end
 
 --- @return CoreObject 
-function CoreObject:FindTemplateRoot() end
+function CoreObjectInstance:FindTemplateRoot() end
 
 --- @param coreObject CoreObject 
 --- @return boolean 
-function CoreObject:IsAncestorOf(coreObject) end
+function CoreObjectInstance:IsAncestorOf(coreObject) end
 
 --- @overload fun(worldPosition: Vector3,duration: number)
 --- @param position Vector3 
 --- @param duration number 
 --- @param isLocalPosition boolean 
-function CoreObject:MoveTo(position, duration, isLocalPosition) end
+function CoreObjectInstance:MoveTo(position, duration, isLocalPosition) end
 
 --- @overload fun(worldVelocity: Vector3)
 --- @param worldVelocity Vector3 
 --- @param isLocalVelocity boolean 
-function CoreObject:MoveContinuous(worldVelocity, isLocalVelocity) end
+function CoreObjectInstance:MoveContinuous(worldVelocity, isLocalVelocity) end
 
 --- @overload fun(target: Player,speed: number)
 --- @overload fun(target: Player)
@@ -535,9 +610,9 @@ function CoreObject:MoveContinuous(worldVelocity, isLocalVelocity) end
 --- @param target Player 
 --- @param speed number 
 --- @param minimumDistance number 
-function CoreObject:Follow(target, speed, minimumDistance) end
+function CoreObjectInstance:Follow(target, speed, minimumDistance) end
 
-function CoreObject:StopMove() end
+function CoreObjectInstance:StopMove() end
 
 --- @overload fun(worldRotation: Quaternion,duration: number)
 --- @overload fun(rotation: Rotation,duration: number,isLocalRotation: boolean)
@@ -545,7 +620,7 @@ function CoreObject:StopMove() end
 --- @param rotation Quaternion 
 --- @param duration number 
 --- @param isLocalRotation boolean 
-function CoreObject:RotateTo(rotation, duration, isLocalRotation) end
+function CoreObjectInstance:RotateTo(rotation, duration, isLocalRotation) end
 
 --- @overload fun(angularVelocity: Vector3)
 --- @overload fun(quaternionSpeed: Quaternion,multiplier: number,isLocalQuaternionSpeed: boolean)
@@ -556,10 +631,10 @@ function CoreObject:RotateTo(rotation, duration, isLocalRotation) end
 --- @overload fun(rotationSpeed: Rotation)
 --- @param angularVelocity Vector3 
 --- @param isLocalAngularVelocity boolean 
-function CoreObject:RotateContinuous(angularVelocity, isLocalAngularVelocity) end
+function CoreObjectInstance:RotateContinuous(angularVelocity, isLocalAngularVelocity) end
 
 --- @param worldPosition Vector3 
-function CoreObject:LookAt(worldPosition) end
+function CoreObjectInstance:LookAt(worldPosition) end
 
 --- @overload fun(target: Player,speed: number)
 --- @overload fun(target: Player,isPitchLocked: boolean)
@@ -571,73 +646,80 @@ function CoreObject:LookAt(worldPosition) end
 --- @param target Player 
 --- @param isPitchLocked boolean 
 --- @param speed number 
-function CoreObject:LookAtContinuous(target, isPitchLocked, speed) end
+function CoreObjectInstance:LookAtContinuous(target, isPitchLocked, speed) end
 
 --- @overload fun()
 --- @param isPitchLocked boolean 
-function CoreObject:LookAtLocalView(isPitchLocked) end
+function CoreObjectInstance:LookAtLocalView(isPitchLocked) end
 
-function CoreObject:StopRotate() end
+function CoreObjectInstance:StopRotate() end
 
 --- @overload fun(worldScale: Vector3,duration: number)
 --- @param scale Vector3 
 --- @param duration number 
 --- @param isScaleLocal boolean 
-function CoreObject:ScaleTo(scale, duration, isScaleLocal) end
+function CoreObjectInstance:ScaleTo(scale, duration, isScaleLocal) end
 
 --- @overload fun(scaleRate: Vector3)
 --- @param scaleRate Vector3 
 --- @param isLocalScaleRate boolean 
-function CoreObject:ScaleContinuous(scaleRate, isLocalScaleRate) end
+function CoreObjectInstance:ScaleContinuous(scaleRate, isLocalScaleRate) end
 
-function CoreObject:StopScale() end
+function CoreObjectInstance:StopScale() end
 
-function CoreObject:Destroy() end
+function CoreObjectInstance:Destroy() end
 
 --- @return table 
-function CoreObject:GetCustomProperties() end
+function CoreObjectInstance:GetCustomProperties() end
 
 --- @param propertyName string 
 --- @return any|boolean 
-function CoreObject:GetCustomProperty(propertyName) end
+function CoreObjectInstance:GetCustomProperty(propertyName) end
 
 --- @param propertyName string 
 --- @param propertyValue any 
 --- @return boolean 
-function CoreObject:SetNetworkedCustomProperty(propertyName, propertyValue) end
+function CoreObjectInstance:SetNetworkedCustomProperty(propertyName, propertyValue) end
 
 --- @param typeName string 
 --- @return boolean 
-function CoreObject:IsA(typeName) end
+function CoreObjectInstance:IsA(typeName) end
 
+--- @class GlobalCoreObject 
+CoreObject = {}
 
 --- @class CoreObjectReference 
 --- @field id string 
 --- @field isAssigned boolean 
 --- @field type string 
-local CoreObjectReference = {}
+local CoreObjectReferenceInstance = {}
 --- @return CoreObject 
-function CoreObjectReference:GetObject() end
+function CoreObjectReferenceInstance:GetObject() end
 
+--- @overload fun(): CoreObject
 --- @param timeout number 
 --- @return CoreObject 
-function CoreObjectReference:WaitForObject(timeout) end
+function CoreObjectReferenceInstance:WaitForObject(timeout) end
 
 --- @param typeName string 
 --- @return boolean 
-function CoreObjectReference:IsA(typeName) end
+function CoreObjectReferenceInstance:IsA(typeName) end
 
+--- @class GlobalCoreObjectReference 
+CoreObjectReference = {}
 
 --- @class CorePlayerProfile 
 --- @field id string 
 --- @field name string 
 --- @field description string 
 --- @field type string 
-local CorePlayerProfile = {}
+local CorePlayerProfileInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function CorePlayerProfile:IsA(typeName) end
+function CorePlayerProfileInstance:IsA(typeName) end
 
+--- @class GlobalCorePlayerProfile 
+CorePlayerProfile = {}
 
 --- @class Damage 
 --- @field amount number 
@@ -645,133 +727,160 @@ function CorePlayerProfile:IsA(typeName) end
 --- @field sourceAbility Ability 
 --- @field sourcePlayer Player 
 --- @field type string 
-local Damage = {}
+local DamageInstance = {}
 --- @return HitResult 
-function Damage:GetHitResult() end
+function DamageInstance:GetHitResult() end
 
 --- @param hitResult HitResult 
-function Damage:SetHitResult(hitResult) end
+function DamageInstance:SetHitResult(hitResult) end
 
 --- @param typeName string 
 --- @return boolean 
-function Damage:IsA(typeName) end
+function DamageInstance:IsA(typeName) end
+
+--- @class GlobalDamage 
+Damage = {}
+--- @overload fun(): Damage
+--- @param amount number 
+--- @return Damage 
+function Damage.New(amount) end
 
 
---- @class Decal 
+--- @class Decal : SmartObject 
 --- @field type string 
-local Decal = {}
+local DecalInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function Decal:IsA(typeName) end
+function DecalInstance:IsA(typeName) end
 
+--- @class GlobalDecal : SmartObject 
+Decal = {}
 
---- @class Equipment 
+--- @class Equipment : CoreObject 
+--- @field equippedEvent Event 
+--- @field unequippedEvent Event 
 --- @field owner Player 
 --- @field socket string 
 --- @field type string 
-local Equipment = {}
+local EquipmentInstance = {}
 --- @return table<number, Ability> 
-function Equipment:GetAbilities() end
+function EquipmentInstance:GetAbilities() end
 
 --- @param player Player 
-function Equipment:Equip(player) end
+function EquipmentInstance:Equip(player) end
 
-function Equipment:Unequip() end
+function EquipmentInstance:Unequip() end
 
 --- @param ability Ability 
-function Equipment:AddAbility(ability) end
+function EquipmentInstance:AddAbility(ability) end
 
 --- @param typeName string 
 --- @return boolean 
-function Equipment:IsA(typeName) end
+function EquipmentInstance:IsA(typeName) end
 
+--- @class GlobalEquipment : CoreObject 
+Equipment = {}
 
 --- @class Event 
 --- @field type string 
-local Event = {}
+local EventInstance = {}
 --- @overload fun(listener: function): EventListener
 --- @param listener function 
 --- @param additionalParameters any 
 --- @return EventListener 
-function Event:Connect(listener, additionalParameters) end
+function EventInstance:Connect(listener, additionalParameters) end
 
 --- @param typeName string 
 --- @return boolean 
-function Event:IsA(typeName) end
+function EventInstance:IsA(typeName) end
 
+--- @class GlobalEvent 
+Event = {}
 
 --- @class EventListener 
 --- @field isConnected boolean 
 --- @field type string 
-local EventListener = {}
-function EventListener:Disconnect() end
+local EventListenerInstance = {}
+function EventListenerInstance:Disconnect() end
 
 --- @param typeName string 
 --- @return boolean 
-function EventListener:IsA(typeName) end
+function EventListenerInstance:IsA(typeName) end
 
+--- @class GlobalEventListener 
+EventListener = {}
 
---- @class Folder 
+--- @class Folder : CoreObject 
 --- @field type string 
-local Folder = {}
+local FolderInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function Folder:IsA(typeName) end
+function FolderInstance:IsA(typeName) end
 
+--- @class GlobalFolder : CoreObject 
+Folder = {}
 
---- @class FourWheeledVehicle 
+--- @class FourWheeledVehicle : Vehicle 
 --- @field turnRadius number 
 --- @field type string 
-local FourWheeledVehicle = {}
+local FourWheeledVehicleInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function FourWheeledVehicle:IsA(typeName) end
+function FourWheeledVehicleInstance:IsA(typeName) end
 
+--- @class GlobalFourWheeledVehicle : Vehicle 
+FourWheeledVehicle = {}
 
 --- @class HitResult 
 --- @field other Object 
 --- @field socketName string 
 --- @field type string 
-local HitResult = {}
+local HitResultInstance = {}
 --- @return Vector3 
-function HitResult:GetImpactPosition() end
+function HitResultInstance:GetImpactPosition() end
 
 --- @return Vector3 
-function HitResult:GetImpactNormal() end
+function HitResultInstance:GetImpactNormal() end
 
 --- @return Transform 
-function HitResult:GetTransform() end
+function HitResultInstance:GetTransform() end
 
 --- @param typeName string 
 --- @return boolean 
-function HitResult:IsA(typeName) end
+function HitResultInstance:IsA(typeName) end
 
+--- @class GlobalHitResult 
+HitResult = {}
 
 --- @class Hook 
 --- @field type string 
-local Hook = {}
+local HookInstance = {}
 --- @overload fun(listener: function): HookListener
 --- @param listener function 
 --- @param additionalParameters any 
 --- @return HookListener 
-function Hook:Connect(listener, additionalParameters) end
+function HookInstance:Connect(listener, additionalParameters) end
 
 --- @param typeName string 
 --- @return boolean 
-function Hook:IsA(typeName) end
+function HookInstance:IsA(typeName) end
 
+--- @class GlobalHook 
+Hook = {}
 
 --- @class HookListener 
 --- @field isConnected boolean 
 --- @field priority number 
 --- @field type string 
-local HookListener = {}
-function HookListener:Disconnect() end
+local HookListenerInstance = {}
+function HookListenerInstance:Disconnect() end
 
 --- @param typeName string 
 --- @return boolean 
-function HookListener:IsA(typeName) end
+function HookListenerInstance:IsA(typeName) end
 
+--- @class GlobalHookListener 
+HookListener = {}
 
 --- @class ImpactData 
 --- @field targetObject Object 
@@ -782,17 +891,19 @@ function HookListener:IsA(typeName) end
 --- @field isHeadshot boolean 
 --- @field travelDistance number 
 --- @field type string 
-local ImpactData = {}
+local ImpactDataInstance = {}
 --- @return HitResult 
-function ImpactData:GetHitResult() end
+function ImpactDataInstance:GetHitResult() end
 
 --- @return table<number, HitResult> 
-function ImpactData:GetHitResults() end
+function ImpactDataInstance:GetHitResults() end
 
 --- @param typeName string 
 --- @return boolean 
-function ImpactData:IsA(typeName) end
+function ImpactDataInstance:IsA(typeName) end
 
+--- @class GlobalImpactData 
+ImpactData = {}
 
 --- @class LeaderboardEntry 
 --- @field id string 
@@ -800,13 +911,15 @@ function ImpactData:IsA(typeName) end
 --- @field score number 
 --- @field additionalData string 
 --- @field type string 
-local LeaderboardEntry = {}
+local LeaderboardEntryInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function LeaderboardEntry:IsA(typeName) end
+function LeaderboardEntryInstance:IsA(typeName) end
 
+--- @class GlobalLeaderboardEntry 
+LeaderboardEntry = {}
 
---- @class Light 
+--- @class Light : CoreObject 
 --- @field intensity number 
 --- @field attenuationRadius number 
 --- @field isShadowCaster boolean 
@@ -815,55 +928,80 @@ function LeaderboardEntry:IsA(typeName) end
 --- @field team number 
 --- @field isTeamColorUsed boolean 
 --- @field type string 
-local Light = {}
+local LightInstance = {}
 --- @return Color 
-function Light:GetColor() end
+function LightInstance:GetColor() end
 
 --- @param color Color 
-function Light:SetColor(color) end
+function LightInstance:SetColor(color) end
 
 --- @param typeName string 
 --- @return boolean 
-function Light:IsA(typeName) end
+function LightInstance:IsA(typeName) end
 
+--- @class GlobalLight : CoreObject 
+Light = {}
 
---- @class MergedModel 
+--- @class MergedModel : Folder 
 --- @field type string 
-local MergedModel = {}
+local MergedModelInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function MergedModel:IsA(typeName) end
+function MergedModelInstance:IsA(typeName) end
 
+--- @class GlobalMergedModel : Folder 
+MergedModel = {}
 
 --- @class NetReference 
 --- @field isAssigned boolean 
 --- @field referenceType NetReferenceType 
 --- @field type string 
-local NetReference = {}
+local NetReferenceInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function NetReference:IsA(typeName) end
+function NetReferenceInstance:IsA(typeName) end
 
+--- @class GlobalNetReference 
+NetReference = {}
 
---- @class NetworkContext 
+--- @class NetworkContext : CoreObject 
 --- @field type string 
-local NetworkContext = {}
+local NetworkContextInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function NetworkContext:IsA(typeName) end
+function NetworkContextInstance:IsA(typeName) end
 
+--- @class GlobalNetworkContext : CoreObject 
+NetworkContext = {}
 
 --- @class Object 
 --- @field serverUserData table 
 --- @field clientUserData table 
 --- @field type string 
-local Object = {}
+local ObjectInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function Object:IsA(typeName) end
+function ObjectInstance:IsA(typeName) end
+
+--- @class GlobalObject 
+Object = {}
+--- @param object any 
+--- @return boolean 
+function Object.IsValid(object) end
 
 
 --- @class Player 
+--- @field damagedEvent Event 
+--- @field diedEvent Event 
+--- @field respawnedEvent Event 
+--- @field bindingPressedEvent Event 
+--- @field bindingReleasedEvent Event 
+--- @field resourceChangedEvent Event 
+--- @field movementModeChangedEvent Event 
+--- @field animationEvent Event 
+--- @field emoteStartedEvent Event 
+--- @field emoteStoppedEvent Event 
+--- @field perkChangedEvent Event 
 --- @field id string 
 --- @field name string 
 --- @field team number 
@@ -919,230 +1057,243 @@ function Object:IsA(typeName) end
 --- @field currentRotationRate number 
 --- @field defaultRotationRate number 
 --- @field type string 
-local Player = {}
+local PlayerInstance = {}
 --- @return Transform 
-function Player:GetWorldTransform() end
+function PlayerInstance:GetWorldTransform() end
 
 --- @param worldTransform Transform 
-function Player:SetWorldTransform(worldTransform) end
+function PlayerInstance:SetWorldTransform(worldTransform) end
 
 --- @return Vector3 
-function Player:GetWorldPosition() end
+function PlayerInstance:GetWorldPosition() end
 
 --- @param worldPosition Vector3 
-function Player:SetWorldPosition(worldPosition) end
+function PlayerInstance:SetWorldPosition(worldPosition) end
 
 --- @return Rotation 
-function Player:GetWorldRotation() end
+function PlayerInstance:GetWorldRotation() end
 
 --- @param worldRotation Rotation 
-function Player:SetWorldRotation(worldRotation) end
+function PlayerInstance:SetWorldRotation(worldRotation) end
 
 --- @return Vector3 
-function Player:GetWorldScale() end
+function PlayerInstance:GetWorldScale() end
 
 --- @param worldScale Vector3 
-function Player:SetWorldScale(worldScale) end
+function PlayerInstance:SetWorldScale(worldScale) end
 
 --- @return Vector3 
-function Player:GetVelocity() end
+function PlayerInstance:GetVelocity() end
 
 --- @return table<number, Ability> 
-function Player:GetAbilities() end
+function PlayerInstance:GetAbilities() end
 
 --- @return table<number, Equipment> 
-function Player:GetEquipment() end
+function PlayerInstance:GetEquipment() end
 
 --- @return table<number, CoreObject> 
-function Player:GetAttachedObjects() end
+function PlayerInstance:GetAttachedObjects() end
 
 --- @param impulse Vector3 
-function Player:AddImpulse(impulse) end
+function PlayerInstance:AddImpulse(impulse) end
 
 --- @param velocity Vector3 
-function Player:SetVelocity(velocity) end
+function PlayerInstance:SetVelocity(velocity) end
 
-function Player:ResetVelocity() end
+function PlayerInstance:ResetVelocity() end
 
 --- @param damage Damage 
-function Player:ApplyDamage(damage) end
+function PlayerInstance:ApplyDamage(damage) end
 
 --- @overload fun(socketName: string)
 --- @overload fun()
 --- @param socketName string 
 --- @param weight number 
-function Player:EnableRagdoll(socketName, weight) end
+function PlayerInstance:EnableRagdoll(socketName, weight) end
 
-function Player:DisableRagdoll() end
+function PlayerInstance:DisableRagdoll() end
 
 --- @overload fun(isVisible: boolean)
 --- @param isVisible boolean 
 --- @param includeAttachments boolean 
-function Player:SetVisibility(isVisible, includeAttachments) end
+function PlayerInstance:SetVisibility(isVisible, includeAttachments) end
 
 --- @return boolean 
-function Player:GetVisibility() end
+function PlayerInstance:GetVisibility() end
 
 --- @return Vector3 
-function Player:GetViewWorldPosition() end
+function PlayerInstance:GetViewWorldPosition() end
 
 --- @return Rotation 
-function Player:GetViewWorldRotation() end
+function PlayerInstance:GetViewWorldRotation() end
 
 --- @overload fun()
 --- @param damage Damage 
-function Player:Die(damage) end
+function PlayerInstance:Die(damage) end
 
 --- @overload fun(optionalParameters: table)
 --- @overload fun()
 --- @param position Vector3 
 --- @param rotation Rotation 
-function Player:Respawn(position, rotation) end
+function PlayerInstance:Respawn(position, rotation) end
 
-function Player:ClearResources() end
+function PlayerInstance:ClearResources() end
 
 --- @return table 
-function Player:GetResources() end
+function PlayerInstance:GetResources() end
 
 --- @param resourceName string 
 --- @return number 
-function Player:GetResource(resourceName) end
-
---- @param resourceName string 
---- @param amount number 
---- @return number 
-function Player:SetResource(resourceName, amount) end
+function PlayerInstance:GetResource(resourceName) end
 
 --- @param resourceName string 
 --- @param amount number 
 --- @return number 
-function Player:AddResource(resourceName, amount) end
+function PlayerInstance:SetResource(resourceName, amount) end
 
 --- @param resourceName string 
 --- @param amount number 
 --- @return number 
-function Player:RemoveResource(resourceName, amount) end
+function PlayerInstance:AddResource(resourceName, amount) end
+
+--- @param resourceName string 
+--- @param amount number 
+--- @return number 
+function PlayerInstance:RemoveResource(resourceName, amount) end
 
 --- @return table<number, string> 
-function Player:GetResourceNames() end
+function PlayerInstance:GetResourceNames() end
 
 --- @param resourceNamePrefix string 
 --- @return table<number, string> 
-function Player:GetResourceNamesStartingWith(resourceNamePrefix) end
+function PlayerInstance:GetResourceNamesStartingWith(resourceNamePrefix) end
 
 --- @overload fun(gameInfo: CoreGameInfo)
 --- @overload fun(gameId: string)
 --- @param gameCollectionEntry CoreGameCollectionEntry 
-function Player:TransferToGame(gameCollectionEntry) end
+function PlayerInstance:TransferToGame(gameCollectionEntry) end
 
 --- @param perkReference NetReference 
 --- @return boolean 
-function Player:HasPerk(perkReference) end
+function PlayerInstance:HasPerk(perkReference) end
 
 --- @param perkReference NetReference 
 --- @return number 
-function Player:GetPerkCount(perkReference) end
+function PlayerInstance:GetPerkCount(perkReference) end
 
 --- @param perkReference NetReference 
 --- @return number 
-function Player:GetPerkTimeRemaining(perkReference) end
+function PlayerInstance:GetPerkTimeRemaining(perkReference) end
 
-function Player:ActivateFlying() end
+function PlayerInstance:ActivateFlying() end
 
-function Player:ActivateWalking() end
+function PlayerInstance:ActivateWalking() end
 
 --- @param isMounted boolean 
-function Player:SetMounted(isMounted) end
+function PlayerInstance:SetMounted(isMounted) end
 
 --- @return Camera 
-function Player:GetActiveCamera() end
+function PlayerInstance:GetActiveCamera() end
 
 --- @return Camera 
-function Player:GetDefaultCamera() end
+function PlayerInstance:GetDefaultCamera() end
 
 --- @overload fun(camera: Camera,lerpTime: number)
 --- @param camera Camera 
-function Player:SetDefaultCamera(camera) end
+function PlayerInstance:SetDefaultCamera(camera) end
 
 --- @return Camera 
-function Player:GetOverrideCamera() end
+function PlayerInstance:GetOverrideCamera() end
 
 --- @overload fun(camera: Camera,lerpTime: number)
 --- @param camera Camera 
-function Player:SetOverrideCamera(camera) end
+function PlayerInstance:SetOverrideCamera(camera) end
 
 --- @overload fun(lerpTime: number)
-function Player:ClearOverrideCamera() end
+function PlayerInstance:ClearOverrideCamera() end
 
 --- @return Rotation 
-function Player:GetLookWorldRotation() end
+function PlayerInstance:GetLookWorldRotation() end
 
 --- @param newLookRotation Rotation 
-function Player:SetLookWorldRotation(newLookRotation) end
+function PlayerInstance:SetLookWorldRotation(newLookRotation) end
 
 --- @param bindingName string 
 --- @return boolean 
-function Player:IsBindingPressed(bindingName) end
+function PlayerInstance:IsBindingPressed(bindingName) end
 
 --- @param object CoreObject 
-function Player:AttachToCoreObject(object) end
+function PlayerInstance:AttachToCoreObject(object) end
 
-function Player:Detach() end
-
---- @return PlayerTransferData 
-function Player:GetJoinTransferData() end
+function PlayerInstance:Detach() end
 
 --- @return PlayerTransferData 
-function Player:GetLeaveTransferData() end
+function PlayerInstance:GetJoinTransferData() end
+
+--- @return PlayerTransferData 
+function PlayerInstance:GetLeaveTransferData() end
 
 --- @param typeName string 
 --- @return boolean 
-function Player:IsA(typeName) end
+function PlayerInstance:IsA(typeName) end
 
+--- @class GlobalPlayer 
+Player = {}
 
---- @class PlayerSettings 
+--- @class PlayerSettings : CoreObject 
 --- @field type string 
-local PlayerSettings = {}
+local PlayerSettingsInstance = {}
 --- @param player Player 
-function PlayerSettings:ApplyToPlayer(player) end
+function PlayerSettingsInstance:ApplyToPlayer(player) end
 
 --- @param typeName string 
 --- @return boolean 
-function PlayerSettings:IsA(typeName) end
+function PlayerSettingsInstance:IsA(typeName) end
 
+--- @class GlobalPlayerSettings : CoreObject 
+PlayerSettings = {}
 
---- @class PlayerStart 
+--- @class PlayerStart : CoreObject 
 --- @field team number 
 --- @field type string 
-local PlayerStart = {}
+local PlayerStartInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function PlayerStart:IsA(typeName) end
+function PlayerStartInstance:IsA(typeName) end
 
+--- @class GlobalPlayerStart : CoreObject 
+PlayerStart = {}
 
 --- @class PlayerTransferData 
 --- @field reason PlayerTransferReason 
 --- @field gameId string 
 --- @field type string 
-local PlayerTransferData = {}
+local PlayerTransferDataInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function PlayerTransferData:IsA(typeName) end
+function PlayerTransferDataInstance:IsA(typeName) end
 
+--- @class GlobalPlayerTransferData 
+PlayerTransferData = {}
 
---- @class PointLight 
+--- @class PointLight : Light 
 --- @field hasNaturalFalloff boolean 
 --- @field falloffExponent number 
 --- @field sourceRadius number 
 --- @field sourceLength number 
 --- @field type string 
-local PointLight = {}
+local PointLightInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function PointLight:IsA(typeName) end
+function PointLightInstance:IsA(typeName) end
 
+--- @class GlobalPointLight : Light 
+PointLight = {}
 
 --- @class Projectile 
+--- @field impactEvent Event 
+--- @field lifeSpanEndedEvent Event 
+--- @field homingFailedEvent Event 
 --- @field sourceAbility Ability 
 --- @field shouldBounceOnPlayers boolean 
 --- @field shouldDieOnImpact boolean 
@@ -1160,27 +1311,35 @@ function PointLight:IsA(typeName) end
 --- @field homingTarget Object 
 --- @field homingAcceleration number 
 --- @field type string 
-local Projectile = {}
+local ProjectileInstance = {}
 --- @return Transform 
-function Projectile:GetWorldTransform() end
+function ProjectileInstance:GetWorldTransform() end
 
 --- @return Vector3 
-function Projectile:GetWorldPosition() end
+function ProjectileInstance:GetWorldPosition() end
 
 --- @param worldPosition Vector3 
-function Projectile:SetWorldPosition(worldPosition) end
+function ProjectileInstance:SetWorldPosition(worldPosition) end
 
 --- @return Vector3 
-function Projectile:GetVelocity() end
+function ProjectileInstance:GetVelocity() end
 
 --- @param velocity Vector3 
-function Projectile:SetVelocity(velocity) end
+function ProjectileInstance:SetVelocity(velocity) end
 
-function Projectile:Destroy() end
+function ProjectileInstance:Destroy() end
 
 --- @param typeName string 
 --- @return boolean 
-function Projectile:IsA(typeName) end
+function ProjectileInstance:IsA(typeName) end
+
+--- @class GlobalProjectile 
+Projectile = {}
+--- @param templateId string 
+--- @param startPosition Vector3 
+--- @param direction Vector3 
+--- @return Projectile 
+function Projectile.Spawn(templateId, startPosition, direction) end
 
 
 --- @class Quaternion 
@@ -1189,57 +1348,81 @@ function Projectile:IsA(typeName) end
 --- @field z number 
 --- @field w number 
 --- @field type string 
-local Quaternion = {}
+local QuaternionInstance = {}
 --- @return Rotation 
-function Quaternion:GetRotation() end
+function QuaternionInstance:GetRotation() end
 
 --- @return Vector3 
-function Quaternion:GetForwardVector() end
+function QuaternionInstance:GetForwardVector() end
 
 --- @return Vector3 
-function Quaternion:GetRightVector() end
+function QuaternionInstance:GetRightVector() end
 
 --- @return Vector3 
-function Quaternion:GetUpVector() end
+function QuaternionInstance:GetUpVector() end
 
 --- @param typeName string 
 --- @return boolean 
-function Quaternion:IsA(typeName) end
+function QuaternionInstance:IsA(typeName) end
+
+--- @class GlobalQuaternion 
+Quaternion = {}
+--- @param from Quaternion 
+--- @param to Quaternion 
+--- @param progress number 
+--- @return Quaternion 
+function Quaternion.Slerp(from, to, progress) end
+
+--- @overload fun(fromDirection: Vector3,toDirection: Vector3): Quaternion
+--- @overload fun(axis: Vector3,angle: number): Quaternion
+--- @overload fun(rotation: Rotation): Quaternion
+--- @overload fun(x: number,y: number,z: number,w: number): Quaternion
+--- @overload fun(): Quaternion
+--- @param quaternion Quaternion 
+--- @return Quaternion 
+function Quaternion.New(quaternion) end
 
 
 --- @class RandomStream 
 --- @field seed number 
 --- @field type string 
-local RandomStream = {}
+local RandomStreamInstance = {}
 --- @return number 
-function RandomStream:GetInitialSeed() end
+function RandomStreamInstance:GetInitialSeed() end
 
-function RandomStream:Reset() end
+function RandomStreamInstance:Reset() end
 
-function RandomStream:Mutate() end
+function RandomStreamInstance:Mutate() end
 
 --- @overload fun(min: number,max: number): number
 --- @return number 
-function RandomStream:GetNumber() end
+function RandomStreamInstance:GetNumber() end
 
 --- @param min number 
 --- @param max number 
 --- @return number 
-function RandomStream:GetInteger(min, max) end
+function RandomStreamInstance:GetInteger(min, max) end
 
 --- @return Vector3 
-function RandomStream:GetVector3() end
+function RandomStreamInstance:GetVector3() end
 
 --- @overload fun(direction: Vector3,coneHalfAngle: number): Vector3
 --- @param direction Vector3 
 --- @param horizontalHalfAngle number 
 --- @param verticalHalfAngle number 
 --- @return Vector3 
-function RandomStream:GetVector3FromCone(direction, horizontalHalfAngle, verticalHalfAngle) end
+function RandomStreamInstance:GetVector3FromCone(direction, horizontalHalfAngle, verticalHalfAngle) end
 
 --- @param typeName string 
 --- @return boolean 
-function RandomStream:IsA(typeName) end
+function RandomStreamInstance:IsA(typeName) end
+
+--- @class GlobalRandomStream 
+RandomStream = {}
+--- @overload fun(): RandomStream
+--- @param seed number 
+--- @return RandomStream 
+function RandomStream.New(seed) end
 
 
 --- @class Rotation 
@@ -1247,39 +1430,54 @@ function RandomStream:IsA(typeName) end
 --- @field y number 
 --- @field z number 
 --- @field type string 
-local Rotation = {}
+local RotationInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function Rotation:IsA(typeName) end
+function RotationInstance:IsA(typeName) end
+
+--- @class GlobalRotation 
+Rotation = {}
+--- @overload fun(rotation: Rotation): Rotation
+--- @overload fun(quaternion: Quaternion): Rotation
+--- @overload fun(x: number,y: number,z: number): Rotation
+--- @overload fun(): Rotation
+--- @param forwardVector Vector3 
+--- @param upVector Vector3 
+--- @return Rotation 
+function Rotation.New(forwardVector, upVector) end
 
 
---- @class Script 
+--- @class Script : CoreObject 
 --- @field context table 
 --- @field type string 
-local Script = {}
+local ScriptInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function Script:IsA(typeName) end
+function ScriptInstance:IsA(typeName) end
 
+--- @class GlobalScript : CoreObject 
+Script = {}
 
 --- @class ScriptAsset 
 --- @field name string 
 --- @field id string 
 --- @field type string 
-local ScriptAsset = {}
+local ScriptAssetInstance = {}
 --- @return table 
-function ScriptAsset:GetCustomProperties() end
+function ScriptAssetInstance:GetCustomProperties() end
 
 --- @param propertyName string 
 --- @return any|boolean 
-function ScriptAsset:GetCustomProperty(propertyName) end
+function ScriptAssetInstance:GetCustomProperty(propertyName) end
 
 --- @param typeName string 
 --- @return boolean 
-function ScriptAsset:IsA(typeName) end
+function ScriptAssetInstance:IsA(typeName) end
 
+--- @class GlobalScriptAsset 
+ScriptAsset = {}
 
---- @class SmartAudio 
+--- @class SmartAudio : SmartObject 
 --- @field isSpatializationEnabled boolean 
 --- @field isAttenuationEnabled boolean 
 --- @field isOcclusionEnabled boolean 
@@ -1296,45 +1494,49 @@ function ScriptAsset:IsA(typeName) end
 --- @field falloff number 
 --- @field isPlaying boolean 
 --- @field type string 
-local SmartAudio = {}
-function SmartAudio:Play() end
+local SmartAudioInstance = {}
+function SmartAudioInstance:Play() end
 
-function SmartAudio:Stop() end
-
---- @param time number 
-function SmartAudio:FadeIn(time) end
+function SmartAudioInstance:Stop() end
 
 --- @param time number 
-function SmartAudio:FadeOut(time) end
+function SmartAudioInstance:FadeIn(time) end
+
+--- @param time number 
+function SmartAudioInstance:FadeOut(time) end
 
 --- @param typeName string 
 --- @return boolean 
-function SmartAudio:IsA(typeName) end
+function SmartAudioInstance:IsA(typeName) end
 
+--- @class GlobalSmartAudio : SmartObject 
+SmartAudio = {}
 
---- @class SmartObject 
+--- @class SmartObject : CoreObject 
 --- @field team number 
 --- @field isTeamColorUsed boolean 
 --- @field type string 
-local SmartObject = {}
+local SmartObjectInstance = {}
 --- @return table 
-function SmartObject:GetSmartProperties() end
+function SmartObjectInstance:GetSmartProperties() end
 
 --- @param propertyName string 
 --- @return any|boolean 
-function SmartObject:GetSmartProperty(propertyName) end
+function SmartObjectInstance:GetSmartProperty(propertyName) end
 
 --- @param propertyName string 
 --- @param propertyValue any 
 --- @return boolean 
-function SmartObject:SetSmartProperty(propertyName, propertyValue) end
+function SmartObjectInstance:SetSmartProperty(propertyName, propertyValue) end
 
 --- @param typeName string 
 --- @return boolean 
-function SmartObject:IsA(typeName) end
+function SmartObjectInstance:IsA(typeName) end
 
+--- @class GlobalSmartObject : CoreObject 
+SmartObject = {}
 
---- @class SpotLight 
+--- @class SpotLight : Light 
 --- @field hasNaturalFalloff boolean 
 --- @field falloffExponent number 
 --- @field sourceRadius number 
@@ -1342,196 +1544,243 @@ function SmartObject:IsA(typeName) end
 --- @field innerConeAngle number 
 --- @field outerConeAngle number 
 --- @field type string 
-local SpotLight = {}
+local SpotLightInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function SpotLight:IsA(typeName) end
+function SpotLightInstance:IsA(typeName) end
 
+--- @class GlobalSpotLight : Light 
+SpotLight = {}
 
---- @class StaticMesh 
+--- @class StaticMesh : CoreMesh 
 --- @field isSimulatingDebrisPhysics boolean 
 --- @field type string 
-local StaticMesh = {}
+local StaticMeshInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function StaticMesh:IsA(typeName) end
+function StaticMeshInstance:IsA(typeName) end
 
+--- @class GlobalStaticMesh : CoreMesh 
+StaticMesh = {}
 
 --- @class Task 
 --- @field repeatInterval number 
 --- @field repeatCount number 
 --- @field id number 
 --- @field type string 
-local Task = {}
-function Task:Cancel() end
+local TaskInstance = {}
+function TaskInstance:Cancel() end
 
 --- @return TaskStatus 
-function Task:GetStatus() end
+function TaskInstance:GetStatus() end
 
 --- @param typeName string 
 --- @return boolean 
-function Task:IsA(typeName) end
+function TaskInstance:IsA(typeName) end
+
+--- @class GlobalTask 
+Task = {}
+--- @overload fun(func: function): Task
+--- @param func function 
+--- @param delay number 
+--- @return Task 
+function Task.Spawn(func, delay) end
+
+--- @return Task 
+function Task.GetCurrent() end
+
+--- @overload fun()
+--- @param delay number 
+function Task.Wait(delay) end
 
 
---- @class Terrain 
+--- @class Terrain : CoreObject 
 --- @field type string 
-local Terrain = {}
+local TerrainInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function Terrain:IsA(typeName) end
+function TerrainInstance:IsA(typeName) end
 
+--- @class GlobalTerrain : CoreObject 
+Terrain = {}
 
 --- @class Transform 
 --- @field type string 
-local Transform = {}
+local TransformInstance = {}
 --- @return Rotation 
-function Transform:GetRotation() end
+function TransformInstance:GetRotation() end
 
 --- @param rotation Rotation 
-function Transform:SetRotation(rotation) end
+function TransformInstance:SetRotation(rotation) end
 
 --- @return Vector3 
-function Transform:GetPosition() end
+function TransformInstance:GetPosition() end
 
 --- @param position Vector3 
-function Transform:SetPosition(position) end
+function TransformInstance:SetPosition(position) end
 
 --- @return Vector3 
-function Transform:GetScale() end
+function TransformInstance:GetScale() end
 
 --- @param scale Vector3 
-function Transform:SetScale(scale) end
+function TransformInstance:SetScale(scale) end
 
 --- @return Quaternion 
-function Transform:GetQuaternion() end
+function TransformInstance:GetQuaternion() end
 
 --- @param quaternion Quaternion 
-function Transform:SetQuaternion(quaternion) end
+function TransformInstance:SetQuaternion(quaternion) end
 
 --- @return Vector3 
-function Transform:GetForwardVector() end
+function TransformInstance:GetForwardVector() end
 
 --- @return Vector3 
-function Transform:GetRightVector() end
+function TransformInstance:GetRightVector() end
 
 --- @return Vector3 
-function Transform:GetUpVector() end
+function TransformInstance:GetUpVector() end
 
 --- @return Transform 
-function Transform:GetInverse() end
+function TransformInstance:GetInverse() end
 
 --- @param position Vector3 
 --- @return Vector3 
-function Transform:TransformPosition(position) end
+function TransformInstance:TransformPosition(position) end
 
 --- @param direction Vector3 
 --- @return Vector3 
-function Transform:TransformDirection(direction) end
+function TransformInstance:TransformDirection(direction) end
 
 --- @param typeName string 
 --- @return boolean 
-function Transform:IsA(typeName) end
+function TransformInstance:IsA(typeName) end
+
+--- @class GlobalTransform 
+Transform = {}
+--- @overload fun(xAxis: Vector3,yAxis: Vector3,zAxis: Vector3,position: Vector3): Transform
+--- @overload fun(rotation: Rotation,position: Vector3,scale: Vector3): Transform
+--- @overload fun(rotation: Quaternion,position: Vector3,scale: Vector3): Transform
+--- @overload fun(): Transform
+--- @param transform Transform 
+--- @return Transform 
+function Transform.New(transform) end
 
 
---- @class TreadedVehicle 
+--- @class TreadedVehicle : Vehicle 
 --- @field turnSpeed number 
 --- @field type string 
-local TreadedVehicle = {}
+local TreadedVehicleInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function TreadedVehicle:IsA(typeName) end
+function TreadedVehicleInstance:IsA(typeName) end
 
+--- @class GlobalTreadedVehicle : Vehicle 
+TreadedVehicle = {}
 
---- @class Trigger 
+--- @class Trigger : CoreObject 
+--- @field beginOverlapEvent Event 
+--- @field endOverlapEvent Event 
+--- @field interactedEvent Event 
 --- @field isInteractable boolean 
 --- @field interactionLabel string 
 --- @field team number 
 --- @field isTeamCollisionEnabled boolean 
 --- @field isEnemyCollisionEnabled boolean 
 --- @field type string 
-local Trigger = {}
+local TriggerInstance = {}
 --- @param OtherObject Object 
 --- @return boolean 
-function Trigger:IsOverlapping(OtherObject) end
+function TriggerInstance:IsOverlapping(OtherObject) end
 
 --- @return table<number, Object> 
-function Trigger:GetOverlappingObjects() end
+function TriggerInstance:GetOverlappingObjects() end
 
 --- @param typeName string 
 --- @return boolean 
-function Trigger:IsA(typeName) end
+function TriggerInstance:IsA(typeName) end
 
+--- @class GlobalTrigger : CoreObject 
+Trigger = {}
 
---- @class UIButton 
+--- @class UIButton : UIControl 
+--- @field clickedEvent Event 
+--- @field pressedEvent Event 
+--- @field releasedEvent Event 
+--- @field hoveredEvent Event 
+--- @field unhoveredEvent Event 
 --- @field text string 
 --- @field fontSize number 
 --- @field isInteractable boolean 
 --- @field shouldClipToSize boolean 
 --- @field type string 
-local UIButton = {}
+local UIButtonInstance = {}
 --- @param imageId string 
-function UIButton:SetImage(imageId) end
+function UIButtonInstance:SetImage(imageId) end
 
 --- @return Color 
-function UIButton:GetButtonColor() end
+function UIButtonInstance:GetButtonColor() end
 
 --- @param color Color 
-function UIButton:SetButtonColor(color) end
+function UIButtonInstance:SetButtonColor(color) end
 
 --- @return Color 
-function UIButton:GetHoveredColor() end
+function UIButtonInstance:GetHoveredColor() end
 
 --- @param color Color 
-function UIButton:SetHoveredColor(color) end
+function UIButtonInstance:SetHoveredColor(color) end
 
 --- @return Color 
-function UIButton:GetPressedColor() end
+function UIButtonInstance:GetPressedColor() end
 
 --- @param color Color 
-function UIButton:SetPressedColor(color) end
+function UIButtonInstance:SetPressedColor(color) end
 
 --- @return Color 
-function UIButton:GetDisabledColor() end
+function UIButtonInstance:GetDisabledColor() end
 
 --- @param color Color 
-function UIButton:SetDisabledColor(color) end
+function UIButtonInstance:SetDisabledColor(color) end
 
 --- @return Color 
-function UIButton:GetFontColor() end
+function UIButtonInstance:GetFontColor() end
 
 --- @param color Color 
-function UIButton:SetFontColor(color) end
+function UIButtonInstance:SetFontColor(color) end
 
 --- @param font string 
-function UIButton:SetFont(font) end
+function UIButtonInstance:SetFont(font) end
 
 --- @return Color 
-function UIButton:GetShadowColor() end
+function UIButtonInstance:GetShadowColor() end
 
 --- @param color Color 
-function UIButton:SetShadowColor(color) end
+function UIButtonInstance:SetShadowColor(color) end
 
 --- @return Vector2 
-function UIButton:GetShadowOffset() end
+function UIButtonInstance:GetShadowOffset() end
 
 --- @param vector2 Vector2 
-function UIButton:SetShadowOffset(vector2) end
+function UIButtonInstance:SetShadowOffset(vector2) end
 
 --- @param typeName string 
 --- @return boolean 
-function UIButton:IsA(typeName) end
+function UIButtonInstance:IsA(typeName) end
 
+--- @class GlobalUIButton : UIControl 
+UIButton = {}
 
---- @class UIContainer 
+--- @class UIContainer : UIControl 
 --- @field opacity number 
 --- @field type string 
-local UIContainer = {}
+local UIContainerInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function UIContainer:IsA(typeName) end
+function UIContainerInstance:IsA(typeName) end
 
+--- @class GlobalUIContainer : UIControl 
+UIContainer = {}
 
---- @class UIControl 
+--- @class UIControl : CoreObject 
 --- @field x number 
 --- @field y number 
 --- @field width number 
@@ -1540,147 +1789,166 @@ function UIContainer:IsA(typeName) end
 --- @field anchor UIPivot 
 --- @field dock UIPivot 
 --- @field type string 
-local UIControl = {}
+local UIControlInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function UIControl:IsA(typeName) end
+function UIControlInstance:IsA(typeName) end
 
+--- @class GlobalUIControl : CoreObject 
+UIControl = {}
 
---- @class UIImage 
+--- @class UIImage : UIControl 
 --- @field isTeamColorUsed boolean 
 --- @field team number 
 --- @field shouldClipToSize boolean 
 --- @field type string 
-local UIImage = {}
+local UIImageInstance = {}
 --- @return Color 
-function UIImage:GetColor() end
+function UIImageInstance:GetColor() end
 
 --- @param color Color 
-function UIImage:SetColor(color) end
+function UIImageInstance:SetColor(color) end
 
 --- @overload fun(imageId: string)
 --- @param player Player 
-function UIImage:SetImage(player) end
+function UIImageInstance:SetImage(player) end
 
 --- @overload fun(playerId: string)
 --- @overload fun(friend: CoreFriendCollectionEntry)
 --- @overload fun(playerProfile: CorePlayerProfile)
 --- @param player Player 
-function UIImage:SetPlayerProfile(player) end
+function UIImageInstance:SetPlayerProfile(player) end
 
 --- @return string 
-function UIImage:GetImage() end
+function UIImageInstance:GetImage() end
 
 --- @return Color 
-function UIImage:GetShadowColor() end
+function UIImageInstance:GetShadowColor() end
 
 --- @param color Color 
-function UIImage:SetShadowColor(color) end
+function UIImageInstance:SetShadowColor(color) end
 
 --- @return Vector2 
-function UIImage:GetShadowOffset() end
+function UIImageInstance:GetShadowOffset() end
 
 --- @param vector2 Vector2 
-function UIImage:SetShadowOffset(vector2) end
+function UIImageInstance:SetShadowOffset(vector2) end
 
 --- @param typeName string 
 --- @return boolean 
-function UIImage:IsA(typeName) end
+function UIImageInstance:IsA(typeName) end
 
+--- @class GlobalUIImage : UIControl 
+UIImage = {}
 
---- @class UIPanel 
+--- @class UIPanel : UIControl 
 --- @field shouldClipChildren number 
 --- @field opacity number 
 --- @field type string 
-local UIPanel = {}
+local UIPanelInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function UIPanel:IsA(typeName) end
+function UIPanelInstance:IsA(typeName) end
 
+--- @class GlobalUIPanel : UIControl 
+UIPanel = {}
 
---- @class UIPerkPurchaseButton 
+--- @class UIPerkPurchaseButton : UIControl 
+--- @field clickedEvent Event 
+--- @field pressedEvent Event 
+--- @field releasedEvent Event 
+--- @field hoveredEvent Event 
+--- @field unhoveredEvent Event 
 --- @field isInteractable boolean 
 --- @field type string 
-local UIPerkPurchaseButton = {}
+local UIPerkPurchaseButtonInstance = {}
 --- @param perkReference NetReference 
-function UIPerkPurchaseButton:SetPerkReference(perkReference) end
+function UIPerkPurchaseButtonInstance:SetPerkReference(perkReference) end
 
 --- @return NetReference 
-function UIPerkPurchaseButton:GetPerkReference() end
+function UIPerkPurchaseButtonInstance:GetPerkReference() end
 
 --- @param typeName string 
 --- @return boolean 
-function UIPerkPurchaseButton:IsA(typeName) end
+function UIPerkPurchaseButtonInstance:IsA(typeName) end
 
+--- @class GlobalUIPerkPurchaseButton : UIControl 
+UIPerkPurchaseButton = {}
 
---- @class UIProgressBar 
+--- @class UIProgressBar : UIControl 
 --- @field progress number 
 --- @field type string 
-local UIProgressBar = {}
+local UIProgressBarInstance = {}
 --- @return Color 
-function UIProgressBar:GetFillColor() end
+function UIProgressBarInstance:GetFillColor() end
 
 --- @param color Color 
-function UIProgressBar:SetFillColor(color) end
+function UIProgressBarInstance:SetFillColor(color) end
 
 --- @return Color 
-function UIProgressBar:GetBackgroundColor() end
+function UIProgressBarInstance:GetBackgroundColor() end
 
 --- @param color Color 
-function UIProgressBar:SetBackgroundColor(color) end
+function UIProgressBarInstance:SetBackgroundColor(color) end
 
 --- @param typeName string 
 --- @return boolean 
-function UIProgressBar:IsA(typeName) end
+function UIProgressBarInstance:IsA(typeName) end
 
+--- @class GlobalUIProgressBar : UIControl 
+UIProgressBar = {}
 
---- @class UIScrollPanel 
+--- @class UIScrollPanel : UIControl 
 --- @field orientation Orientation 
 --- @field scrollPosition number 
 --- @field contentLength number 
 --- @field type string 
-local UIScrollPanel = {}
+local UIScrollPanelInstance = {}
 --- @param typeName string 
 --- @return boolean 
-function UIScrollPanel:IsA(typeName) end
+function UIScrollPanelInstance:IsA(typeName) end
 
+--- @class GlobalUIScrollPanel : UIControl 
+UIScrollPanel = {}
 
---- @class UIText 
+--- @class UIText : UIControl 
 --- @field text string 
 --- @field fontSize number 
 --- @field justification TextJustify 
 --- @field shouldWrapText boolean 
 --- @field shouldClipText boolean 
 --- @field type string 
-local UIText = {}
+local UITextInstance = {}
 --- @return Color 
-function UIText:GetColor() end
+function UITextInstance:GetColor() end
 
 --- @param color Color 
-function UIText:SetColor(color) end
+function UITextInstance:SetColor(color) end
 
 --- @return Vector2 
-function UIText:ComputeApproximateSize() end
+function UITextInstance:ComputeApproximateSize() end
 
 --- @param font string 
-function UIText:SetFont(font) end
+function UITextInstance:SetFont(font) end
 
 --- @return Color 
-function UIText:GetShadowColor() end
+function UITextInstance:GetShadowColor() end
 
 --- @param color Color 
-function UIText:SetShadowColor(color) end
+function UITextInstance:SetShadowColor(color) end
 
 --- @return Vector2 
-function UIText:GetShadowOffset() end
+function UITextInstance:GetShadowOffset() end
 
 --- @param vector2 Vector2 
-function UIText:SetShadowOffset(vector2) end
+function UITextInstance:SetShadowOffset(vector2) end
 
 --- @param typeName string 
 --- @return boolean 
-function UIText:IsA(typeName) end
+function UITextInstance:IsA(typeName) end
 
+--- @class GlobalUIText : UIControl 
+UIText = {}
 
 --- @class Vector2 
 --- @field x number 
@@ -1688,13 +1956,29 @@ function UIText:IsA(typeName) end
 --- @field size number 
 --- @field sizeSquared number 
 --- @field type string 
-local Vector2 = {}
+local Vector2Instance = {}
 --- @return Vector2 
-function Vector2:GetNormalized() end
+function Vector2Instance:GetNormalized() end
 
 --- @param typeName string 
 --- @return boolean 
-function Vector2:IsA(typeName) end
+function Vector2Instance:IsA(typeName) end
+
+--- @class GlobalVector2 
+Vector2 = {}
+--- @param from Vector2 
+--- @param to Vector2 
+--- @param progress number 
+--- @return Vector2 
+function Vector2.Lerp(from, to, progress) end
+
+--- @overload fun(vector: Vector3): Vector2
+--- @overload fun(vector: Vector2): Vector2
+--- @overload fun(x: number,y: number): Vector2
+--- @overload fun(): Vector2
+--- @param xy number 
+--- @return Vector2 
+function Vector2.New(xy) end
 
 
 --- @class Vector3 
@@ -1704,13 +1988,30 @@ function Vector2:IsA(typeName) end
 --- @field size number 
 --- @field sizeSquared number 
 --- @field type string 
-local Vector3 = {}
+local Vector3Instance = {}
 --- @return Vector3 
-function Vector3:GetNormalized() end
+function Vector3Instance:GetNormalized() end
 
 --- @param typeName string 
 --- @return boolean 
-function Vector3:IsA(typeName) end
+function Vector3Instance:IsA(typeName) end
+
+--- @class GlobalVector3 
+Vector3 = {}
+--- @param from Vector3 
+--- @param to Vector3 
+--- @param progress number 
+--- @return Vector3 
+function Vector3.Lerp(from, to, progress) end
+
+--- @overload fun(vector: Vector4): Vector3
+--- @overload fun(vector: Vector3): Vector3
+--- @overload fun(xy: Vector2,z: number): Vector3
+--- @overload fun(x: number,y: number,z: number): Vector3
+--- @overload fun(): Vector3
+--- @param xyz number 
+--- @return Vector3 
+function Vector3.New(xyz) end
 
 
 --- @class Vector4 
@@ -1721,16 +2022,37 @@ function Vector3:IsA(typeName) end
 --- @field size number 
 --- @field sizeSquared number 
 --- @field type string 
-local Vector4 = {}
+local Vector4Instance = {}
 --- @return Vector4 
-function Vector4:GetNormalized() end
+function Vector4Instance:GetNormalized() end
 
 --- @param typeName string 
 --- @return boolean 
-function Vector4:IsA(typeName) end
+function Vector4Instance:IsA(typeName) end
+
+--- @class GlobalVector4 
+Vector4 = {}
+--- @param from Vector4 
+--- @param to Vector4 
+--- @param progress number 
+--- @return Vector4 
+function Vector4.Lerp(from, to, progress) end
+
+--- @overload fun(color: Color): Vector4
+--- @overload fun(xyzw: number): Vector4
+--- @overload fun(xyz: Vector3,w: number): Vector4
+--- @overload fun(vector: Vector4): Vector4
+--- @overload fun(x: number,y: number,z: number,w: number): Vector4
+--- @overload fun(): Vector4
+--- @param xy Vector2 
+--- @param zw Vector2 
+--- @return Vector4 
+function Vector4.New(xy, zw) end
 
 
---- @class Vehicle 
+--- @class Vehicle : CoreObject 
+--- @field driverEnteredEvent Event 
+--- @field driverExitedEvent Event 
 --- @field isAccelerating boolean 
 --- @field driver Player 
 --- @field mass number 
@@ -1747,47 +2069,56 @@ function Vector4:IsA(typeName) end
 --- @field enterTrigger Trigger 
 --- @field camera Camera 
 --- @field type string 
-local Vehicle = {}
+local VehicleInstance = {}
 --- @return Vector3 
-function Vehicle:GetPhysicsBodyOffset() end
+function VehicleInstance:GetPhysicsBodyOffset() end
 
 --- @return Vector3 
-function Vehicle:GetPhysicsBodyScale() end
+function VehicleInstance:GetPhysicsBodyScale() end
 
 --- @param driver Player 
-function Vehicle:SetDriver(driver) end
+function VehicleInstance:SetDriver(driver) end
 
-function Vehicle:RemoveDriver() end
+function VehicleInstance:RemoveDriver() end
 
 --- @param impulse Vector3 
-function Vehicle:AddImpulse(impulse) end
+function VehicleInstance:AddImpulse(impulse) end
 
 --- @return Vector3 
-function Vehicle:GetDriverPosition() end
+function VehicleInstance:GetDriverPosition() end
 
 --- @return Rotation 
-function Vehicle:GetDriverRotation() end
+function VehicleInstance:GetDriverRotation() end
 
 --- @param typeName string 
 --- @return boolean 
-function Vehicle:IsA(typeName) end
+function VehicleInstance:IsA(typeName) end
 
+--- @class GlobalVehicle : CoreObject 
+Vehicle = {}
 
---- @class Vfx 
+--- @class Vfx : SmartObject 
 --- @field type string 
-local Vfx = {}
+local VfxInstance = {}
+--- @overload fun()
 --- @param optionalParameters table 
-function Vfx:Play(optionalParameters) end
+function VfxInstance:Play(optionalParameters) end
 
+--- @overload fun()
 --- @param optionalParameters table 
-function Vfx:Stop(optionalParameters) end
+function VfxInstance:Stop(optionalParameters) end
 
 --- @param typeName string 
 --- @return boolean 
-function Vfx:IsA(typeName) end
+function VfxInstance:IsA(typeName) end
 
+--- @class GlobalVfx : SmartObject 
+Vfx = {}
 
---- @class Weapon 
+--- @class Weapon : Equipment 
+--- @field projectileSpawnedEvent Event 
+--- @field targetImpactedEvent Event 
+--- @field targetInteractionEvent Event 
 --- @field attackCooldownDuration number 
 --- @field animationStance string 
 --- @field multiShotCount number 
@@ -1826,38 +2157,42 @@ function Vfx:IsA(typeName) end
 --- @field spreadIncreasePerShot number 
 --- @field spreadPenaltyPerShot number 
 --- @field type string 
-local Weapon = {}
+local WeaponInstance = {}
 --- @return boolean 
-function Weapon:HasAmmo() end
+function WeaponInstance:HasAmmo() end
 
 --- @overload fun(targetObject: CoreObject)
 --- @overload fun(targetWorldPosition: Vector3)
 --- @overload fun()
 --- @param targetPlayer Player 
-function Weapon:Attack(targetPlayer) end
+function WeaponInstance:Attack(targetPlayer) end
 
 --- @param typeName string 
 --- @return boolean 
-function Weapon:IsA(typeName) end
+function WeaponInstance:IsA(typeName) end
 
+--- @class GlobalWeapon : Equipment 
+Weapon = {}
 
---- @class WorldText 
+--- @class WorldText : CoreObject 
 --- @field text string 
 --- @field type string 
-local WorldText = {}
+local WorldTextInstance = {}
 --- @return Color 
-function WorldText:GetColor() end
+function WorldTextInstance:GetColor() end
 
 --- @param color Color 
-function WorldText:SetColor(color) end
+function WorldTextInstance:SetColor(color) end
 
 --- @param font string 
-function WorldText:SetFont(font) end
+function WorldTextInstance:SetFont(font) end
 
 --- @param typeName string 
 --- @return boolean 
-function WorldText:IsA(typeName) end
+function WorldTextInstance:IsA(typeName) end
 
+--- @class GlobalWorldText : CoreObject 
+WorldText = {}
 
 
 
@@ -1865,18 +2200,24 @@ function WorldText:IsA(typeName) end
 
 
 --- @class Chat 
+local ChatInstance = {}
+--- @class GlobalChat 
 Chat = {}
+--- @overload fun(message: string): BroadcastMessageResultCode|string
 --- @param message string 
 --- @param optionalParams table 
 --- @return BroadcastMessageResultCode|string 
 function Chat.BroadcastMessage(message, optionalParams) end
 
+--- @overload fun(message: string)
 --- @param message string 
 --- @param optionalParams table 
 function Chat.LocalMessage(message, optionalParams) end
 
 
 --- @class CoreDebug 
+local CoreDebugInstance = {}
+--- @class GlobalCoreDebug 
 CoreDebug = {}
 --- @overload fun(startPosition: Vector3,endPosition: Vector3)
 --- @param startPosition Vector3 
@@ -1905,18 +2246,23 @@ function CoreDebug.GetTaskStackTrace() end
 
 
 --- @class CoreMath 
+local CoreMathInstance = {}
+--- @class GlobalCoreMath 
 CoreMath = {}
+--- @overload fun(x: number): number
 --- @param x number 
 --- @param decimals number 
 --- @return number 
 function CoreMath.Round(x, decimals) end
 
+--- @overload fun(from: number,to: number): number
 --- @param from number 
 --- @param to number 
 --- @param progress number 
 --- @return number 
 function CoreMath.Lerp(from, to, progress) end
 
+--- @overload fun(x: number): number
 --- @param x number 
 --- @param min number 
 --- @param max number 
@@ -1925,6 +2271,8 @@ function CoreMath.Clamp(x, min, max) end
 
 
 --- @class CorePlatform 
+local CorePlatformInstance = {}
+--- @class GlobalCorePlatform 
 CorePlatform = {}
 --- @param gameId string 
 --- @return CoreGameInfo 
@@ -1940,6 +2288,8 @@ function CorePlatform.GetPlayerProfile(playerId) end
 
 
 --- @class CoreSocial 
+local CoreSocialInstance = {}
+--- @class GlobalCoreSocial 
 CoreSocial = {}
 --- @overload fun(player: Player): boolean
 --- @param playerId string 
@@ -1952,8 +2302,10 @@ function CoreSocial.GetFriends(player) end
 
 
 --- @class CoreString 
+local CoreStringInstance = {}
+--- @class GlobalCoreString 
 CoreString = {}
---- @overload fun(string: string,delimiter: string,optionalParameters: table): any
+--- @overload fun(string: string): any
 --- @overload fun(string: string,optionalParameters: table): any
 --- @overload fun(string: string,delimiter: string): any
 --- @param string string 
@@ -1974,6 +2326,8 @@ function CoreString.Trim(string, trimmedStrings) end
 
 
 --- @class Environment 
+local EnvironmentInstance = {}
+--- @class GlobalEnvironment 
 Environment = {}
 --- @return boolean 
 function Environment.IsClient() end
@@ -1998,6 +2352,8 @@ function Environment.IsHostedGame() end
 
 
 --- @class Events 
+local EventsInstance = {}
+--- @class GlobalEvents 
 Events = {}
 --- @overload fun(eventName: string,listener: function): EventListener
 --- @param eventName string 
@@ -2039,6 +2395,8 @@ function Events.BroadcastToPlayer(player, eventName, argumentList) end
 
 
 --- @class Game 
+local GameInstance = {}
+--- @class GlobalGame 
 --- @field playerJoinedEvent Event 
 --- @field playerLeftEvent Event 
 --- @field abilitySpawnedEvent Event 
@@ -2053,22 +2411,26 @@ function Game.GetLocalPlayer() end
 --- @return Player 
 function Game.FindPlayer(playerId) end
 
+--- @overload fun(): table<number, Player>
 --- @param optionalParams table 
 --- @return table<number, Player> 
 function Game.GetPlayers(optionalParams) end
 
+--- @overload fun(worldPosition: Vector3,radius: number): table<number, Player>
 --- @param worldPosition Vector3 
 --- @param radius number 
 --- @param optionalParams table 
 --- @return table<number, Player> 
 function Game.FindPlayersInCylinder(worldPosition, radius, optionalParams) end
 
+--- @overload fun(worldPosition: Vector3,radius: number): table<number, Player>
 --- @param worldPosition Vector3 
 --- @param radius number 
 --- @param optionalParams table 
 --- @return table<number, Player> 
 function Game.FindPlayersInSphere(worldPosition, radius, optionalParams) end
 
+--- @overload fun(worldPosition: Vector3): Player
 --- @param worldPosition Vector3 
 --- @param optionalParameters table 
 --- @return Player 
@@ -2108,6 +2470,8 @@ function Game.TransferAllPlayersToGame(gameCollectionEntry) end
 
 
 --- @class Leaderboards 
+local LeaderboardsInstance = {}
+--- @class GlobalLeaderboards 
 Leaderboards = {}
 --- @param leaderboardReference NetReference 
 --- @param player Player 
@@ -2125,6 +2489,8 @@ function Leaderboards.HasLeaderboards() end
 
 
 --- @class Storage 
+local StorageInstance = {}
+--- @class GlobalStorage 
 Storage = {}
 --- @param data table 
 --- @return number 
@@ -2161,6 +2527,8 @@ function Storage.GetSharedOfflinePlayerData(sharedStorageKey, playerId) end
 
 
 --- @class Teams 
+local TeamsInstance = {}
+--- @class GlobalTeams 
 Teams = {}
 --- @param team1 number 
 --- @param team2 number 
@@ -2174,8 +2542,11 @@ function Teams.AreTeamsEnemies(team1, team2) end
 
 
 --- @class UI 
+local UIInstance = {}
+--- @class GlobalUI 
 --- @field coreModalChangedEvent Event 
 UI = {}
+--- @overload fun(text: string,worldPosition: Vector3)
 --- @param text string 
 --- @param worldPosition Vector3 
 --- @param optionalParameters table 
@@ -2193,6 +2564,7 @@ function UI.GetScreenPosition(worldPosition) end
 --- @return Vector2 
 function UI.GetScreenSize() end
 
+--- @overload fun(message: string)
 --- @param message string 
 --- @param color Color 
 function UI.PrintToScreen(message, color) end
@@ -2235,6 +2607,8 @@ function UI.SetReticleVisible(isVisible) end
 
 
 --- @class World 
+local WorldInstance = {}
+--- @class GlobalWorld 
 World = {}
 --- @return CoreObject 
 function World.GetRootObject() end
@@ -2255,11 +2629,13 @@ function World.FindObjectsByName(name) end
 --- @return table<number, CoreObject> 
 function World.FindObjectsByType(typeName) end
 
+--- @overload fun(assetId: string): CoreObject
 --- @param assetId string 
 --- @param optionalParameters table 
 --- @return CoreObject 
 function World.SpawnAsset(assetId, optionalParameters) end
 
+--- @overload fun(startPosition: Vector3,endPosition: Vector3): HitResult
 --- @param startPosition Vector3 
 --- @param endPosition Vector3 
 --- @param optionalParameters table 
@@ -2267,145 +2643,170 @@ function World.SpawnAsset(assetId, optionalParameters) end
 function World.Raycast(startPosition, endPosition, optionalParameters) end
 
 
---- @class AbilityFacingMode 
---- @field NONE 0 
---- @field MOVEMENT 1 
---- @field AIM 2 
-AbilityFacingMode = {}
---- @class AbilityPhase 
---- @field READY 0 
---- @field CAST 1 
---- @field EXECUTE 2 
---- @field RECOVERY 3 
---- @field COOLDOWN 4 
-AbilityPhase = {}
---- @class BroadcastEventResultCode 
---- @field SUCCESS 0 
---- @field FAILURE 1 
---- @field EXCEEDED_SIZE_LIMIT 2 
---- @field EXCEEDED_RATE_WARNING_LIMIT 3 
---- @field EXCEEDED_RATE_LIMIT 4 
-BroadcastEventResultCode = {}
---- @class BroadcastMessageResultCode 
---- @field SUCCESS 0 
---- @field FAILURE 1 
---- @field EXCEEDED_SIZE_LIMIT 2 
---- @field EXCEEDED_RATE_WARNING_LIMIT 3 
---- @field EXCEEDED_RATE_LIMIT 4 
-BroadcastMessageResultCode = {}
---- @class Collision 
---- @field INHERIT 0 
---- @field FORCE_ON 1 
---- @field FORCE_OFF 2 
-Collision = {}
---- @class CoreModalType 
---- @field PAUSE_MENU 1 
---- @field CHARACTER_PICKER 2 
---- @field MOUNT_PICKER 3 
---- @field EMOTE_PICKER 4 
-CoreModalType = {}
---- @class DamageReason 
---- @field UNKNOWN 0 
---- @field COMBAT 1 
---- @field FRIENDLY_FIRE 2 
---- @field MAP 3 
---- @field NPC 4 
-DamageReason = {}
---- @class FacingMode 
---- @field FACE_AIM_WHEN_ACTIVE 0 
---- @field FACE_AIM_ALWAYS 1 
---- @field FACE_MOVEMENT 2 
-FacingMode = {}
---- @class LeaderboardType 
---- @field GLOBAL 0 
---- @field DAILY 1 
---- @field WEEKLY 2 
---- @field MONTHLY 3 
-LeaderboardType = {}
---- @class LookControlMode 
---- @field NONE 0 
---- @field RELATIVE 1 
---- @field LOOK_AT_CURSOR 2 
-LookControlMode = {}
---- @class MovementControlMode 
---- @field NONE 0 
---- @field LOOK_RELATIVE 1 
---- @field VIEW_RELATIVE 2 
---- @field FACING_RELATIVE 3 
---- @field FIXED_AXES 4 
-MovementControlMode = {}
---- @class MovementMode 
---- @field NONE 0 
---- @field WALKING 1 
---- @field FALLING 3 
---- @field SWIMMING 4 
---- @field FLYING 5 
---- @field SLIDING 6 
-MovementMode = {}
---- @class NetReferenceType 
---- @field LEADERBOARD 1 
---- @field SHARED_STORAGE 2 
---- @field CREATOR_PERK 3 
---- @field UNKNOWN 0 
-NetReferenceType = {}
---- @class Orientation 
---- @field HORIZONTAL 0 
---- @field VERTICAL 1 
-Orientation = {}
---- @class PlayerTransferReason 
---- @field UNKNOWN 0 
---- @field CHARACTER 1 
---- @field CREATE 2 
---- @field SHOP 3 
---- @field BROWSE 4 
---- @field SOCIAL 5 
---- @field PORTAL 6 
---- @field AFK 7 
---- @field EXIT 8 
-PlayerTransferReason = {}
---- @class RotationMode 
---- @field CAMERA 0 
---- @field NONE 1 
---- @field LOOK_ANGLE 2 
-RotationMode = {}
---- @class StorageResultCode 
---- @field SUCCESS 0 
---- @field FAILURE 2 
---- @field STORAGE_DISABLED 1 
---- @field EXCEEDED_SIZE_LIMIT 3 
-StorageResultCode = {}
---- @class TaskStatus 
---- @field UNINITIALIZED 0 
---- @field SCHEDULED 1 
---- @field RUNNING 2 
---- @field COMPLETED 3 
---- @field YIELDED 4 
---- @field FAILED 5 
---- @field CANCELED 6 
---- @field BLOCKED 7 
-TaskStatus = {}
---- @class TextJustify 
---- @field LEFT 0 
---- @field CENTER 1 
---- @field RIGHT 2 
-TextJustify = {}
---- @class UIPivot 
---- @field TOP_LEFT 0 
---- @field TOP_CENTER 1 
---- @field TOP_RIGHT 2 
---- @field MIDDLE_LEFT 3 
---- @field MIDDLE_CENTER 4 
---- @field MIDDLE_RIGHT 5 
---- @field BOTTOM_LEFT 6 
---- @field BOTTOM_CENTER 7 
---- @field BOTTOM_RIGHT 8 
---- @field CUSTOM 9 
-UIPivot = {}
---- @class Visibility 
---- @field INHERIT 0 
---- @field FORCE_ON 1 
---- @field FORCE_OFF 2 
-Visibility = {}
 
+
+
+
+
+--- @alias AbilityFacingMode 0 | 1 | 2
+AbilityFacingMode = {
+    NONE = 0,
+    MOVEMENT = 1,
+    AIM = 2,
+}
+--- @alias AbilityPhase 0 | 1 | 2 | 3 | 4
+AbilityPhase = {
+    READY = 0,
+    CAST = 1,
+    EXECUTE = 2,
+    RECOVERY = 3,
+    COOLDOWN = 4,
+}
+--- @alias BroadcastEventResultCode 0 | 1 | 2 | 3 | 4
+BroadcastEventResultCode = {
+    SUCCESS = 0,
+    FAILURE = 1,
+    EXCEEDED_SIZE_LIMIT = 2,
+    EXCEEDED_RATE_WARNING_LIMIT = 3,
+    EXCEEDED_RATE_LIMIT = 4,
+}
+--- @alias BroadcastMessageResultCode 0 | 1 | 2 | 3 | 4
+BroadcastMessageResultCode = {
+    SUCCESS = 0,
+    FAILURE = 1,
+    EXCEEDED_SIZE_LIMIT = 2,
+    EXCEEDED_RATE_WARNING_LIMIT = 3,
+    EXCEEDED_RATE_LIMIT = 4,
+}
+--- @alias Collision 0 | 1 | 2
+Collision = {
+    INHERIT = 0,
+    FORCE_ON = 1,
+    FORCE_OFF = 2,
+}
+--- @alias CoreModalType 1 | 2 | 3 | 4
+CoreModalType = {
+    PAUSE_MENU = 1,
+    CHARACTER_PICKER = 2,
+    MOUNT_PICKER = 3,
+    EMOTE_PICKER = 4,
+}
+--- @alias DamageReason 0 | 1 | 2 | 3 | 4
+DamageReason = {
+    UNKNOWN = 0,
+    COMBAT = 1,
+    FRIENDLY_FIRE = 2,
+    MAP = 3,
+    NPC = 4,
+}
+--- @alias FacingMode 0 | 1 | 2
+FacingMode = {
+    FACE_AIM_WHEN_ACTIVE = 0,
+    FACE_AIM_ALWAYS = 1,
+    FACE_MOVEMENT = 2,
+}
+--- @alias LeaderboardType 0 | 1 | 2 | 3
+LeaderboardType = {
+    GLOBAL = 0,
+    DAILY = 1,
+    WEEKLY = 2,
+    MONTHLY = 3,
+}
+--- @alias LookControlMode 0 | 1 | 2
+LookControlMode = {
+    NONE = 0,
+    RELATIVE = 1,
+    LOOK_AT_CURSOR = 2,
+}
+--- @alias MovementControlMode 0 | 1 | 2 | 3 | 4
+MovementControlMode = {
+    NONE = 0,
+    LOOK_RELATIVE = 1,
+    VIEW_RELATIVE = 2,
+    FACING_RELATIVE = 3,
+    FIXED_AXES = 4,
+}
+--- @alias MovementMode 0 | 1 | 3 | 4 | 5 | 6
+MovementMode = {
+    NONE = 0,
+    WALKING = 1,
+    FALLING = 3,
+    SWIMMING = 4,
+    FLYING = 5,
+    SLIDING = 6,
+}
+--- @alias NetReferenceType 1 | 2 | 3 | 0
+NetReferenceType = {
+    LEADERBOARD = 1,
+    SHARED_STORAGE = 2,
+    CREATOR_PERK = 3,
+    UNKNOWN = 0,
+}
+--- @alias Orientation 0 | 1
+Orientation = {
+    HORIZONTAL = 0,
+    VERTICAL = 1,
+}
+--- @alias PlayerTransferReason 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+PlayerTransferReason = {
+    UNKNOWN = 0,
+    CHARACTER = 1,
+    CREATE = 2,
+    SHOP = 3,
+    BROWSE = 4,
+    SOCIAL = 5,
+    PORTAL = 6,
+    AFK = 7,
+    EXIT = 8,
+}
+--- @alias RotationMode 0 | 1 | 2
+RotationMode = {
+    CAMERA = 0,
+    NONE = 1,
+    LOOK_ANGLE = 2,
+}
+--- @alias StorageResultCode 0 | 2 | 1 | 3
+StorageResultCode = {
+    SUCCESS = 0,
+    FAILURE = 2,
+    STORAGE_DISABLED = 1,
+    EXCEEDED_SIZE_LIMIT = 3,
+}
+--- @alias TaskStatus 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+TaskStatus = {
+    UNINITIALIZED = 0,
+    SCHEDULED = 1,
+    RUNNING = 2,
+    COMPLETED = 3,
+    YIELDED = 4,
+    FAILED = 5,
+    CANCELED = 6,
+    BLOCKED = 7,
+}
+--- @alias TextJustify 0 | 1 | 2
+TextJustify = {
+    LEFT = 0,
+    CENTER = 1,
+    RIGHT = 2,
+}
+--- @alias UIPivot 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+UIPivot = {
+    TOP_LEFT = 0,
+    TOP_CENTER = 1,
+    TOP_RIGHT = 2,
+    MIDDLE_LEFT = 3,
+    MIDDLE_CENTER = 4,
+    MIDDLE_RIGHT = 5,
+    BOTTOM_LEFT = 6,
+    BOTTOM_CENTER = 7,
+    BOTTOM_RIGHT = 8,
+    CUSTOM = 9,
+}
+--- @alias Visibility 0 | 1 | 2
+Visibility = {
+    INHERIT = 0,
+    FORCE_ON = 1,
+    FORCE_OFF = 2,
+}
 --- @type CoreObject
-script = {}
+script = nil

@@ -11,6 +11,14 @@ export function getAnnotation(type: string, ...args: string[]): string {
   return getComment(`@${type} ${args.join(' ')}`);
 }
 
+export function reservedNamesMapping(name: string): string {
+  if (name === 'function') {
+    return 'func';
+  }
+
+  return name;
+}
+
 export function typeMapping(type: string): string {
   if (type === undefined) return 'any';
   if (type === 'integer') {

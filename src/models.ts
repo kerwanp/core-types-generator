@@ -15,6 +15,9 @@ export interface Class {
   BaseType: string;
   Properties: Property[];
   MemberFunctions: Func[];
+  StaticFunctions: Func[];
+  Events: Event[];
+  Constructors: Func[];
 }
 
 export interface Namespace {
@@ -59,6 +62,7 @@ export interface Parameter {
   Type: string;
   Name: string;
   IsVariadic: boolean;
+  IsOptional: boolean;
 }
 
 export interface Property {

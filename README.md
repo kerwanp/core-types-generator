@@ -4,11 +4,12 @@
 This project is still a work in progress and need some improvements :
 - [x] Use the [CoreGameAPI.json](https://docs.coregames.com/assets/api/CoreLuaAPI.json) file
 - [x] Change output file `core-games-api.def.lua` (currently using the one on Github)
-- [ ] Implements global `script` (not defined in CoreGameAPI)
+- [x] Implements global `script` (not defined in CoreGameAPI)
 - [x] Generate file structure with full implementation
     - [x] Namespaces
     - [x] Classes
     - [x] Enums
+    - [x] Inheritance
 - [ ] Better Event Type with use of Generics
 - [x] Optional function parameters
 - [ ] Create daily release system
