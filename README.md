@@ -44,7 +44,7 @@ Then install the [EmmyLua plugin for VSCode](https://marketplace.visualstudio.co
 #### 2. Install Java 8+
 EmmyLua need Java 8+ to work, you can download it here: [Java 8+]
 
-#### 3. Adding JAVA_HOME environment variable
+#### 3. Add JAVA_HOME environment variable
 Once Java is installed, you have to tell to EmmyLua where it is.
 
 - Windows
@@ -71,9 +71,24 @@ Done! You can now code and have full autocomplete for the CoreGamesAPI and also 
 > The plugin VSCode-EmmyLua does not support `@alias` tags, you will still have errors with Enums.
 
 ### IntelliJ IDEA (or PhpStorm, Webstorm, etc)
-Install the plugin [Luanalysis](https://plugins.jetbrains.com/plugin/14698-luanalysis) and open your Core Game Project with the IDE.
+#### 1. Install EmmyLua
+In order to enjoy the power of [LDoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) you must use a plugin that understand it.
 
-In your scripts folder, create a new file called `types.lua` and paste the content of the [following file](core-types.lua).
+For that, install the [Luanalysis plugin for Jetbrains](https://plugins.jetbrains.com/plugin/14698-luanalysis)
+
+#### 2. Open your project with Jetbrains
+
+First, you must retrieve the location of your project.
+For that Right Click on a script in the Core Editor Project Content, click on `Show in explorer` and copy the link of the directory.
+
+Then open Jetbrains and click on `File > Open...` and paste the path of your scripts folder.
+
+#### 3. Add the definition file to your project
+In Core Editor, create a new Script called `CoreGamesAPI` and delete it from the hierarchy.
+Open the Script in VSCode and paste the content of [core-games-api.def.lua](core-games-api.def.lua) in it.
+
+
+Done! You can now code and have full autocomplete for the CoreGamesAPI and also for your own Scripts!
 
 ## How
 Whenever you code, typing what you write is always a good thing. For you, and for the others.
