@@ -2406,3 +2406,6 @@ UIPivot = {}
 --- @field FORCE_ON 1 
 --- @field FORCE_OFF 2 
 Visibility = {}
+
+--- @type CoreObject
+script = {}
