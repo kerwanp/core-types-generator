@@ -31,12 +31,44 @@ As the types are just from a simple Lua file it can be understand in any IDE, VS
 I still encourage to use Intellij IDEA, it provides stronger understanding of types.
 
 ### VSCode
-In order for VSCode to understand the configuration, you must open the folder of your scripts (and not only file by file).
-For that, open VSCode on your project folder.
 
-In your scripts folder, create a new file called `types.lua` and paste the content of the [following file](core-types.lua).
+#### 1. Install EmmyLua
+In order to enjoy the power of [LDoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) you must use a plugin that understand it.
+The plugins advised by Core Games do not provide this feature, you should uninstall them before :
+- VSCode-Lua
+- Lua Coder Assist
+- VSCode-Core
 
-> Warning : You should install the [plugins advised by core games](https://docs.coregames.com/extensions/).
+Then install the [EmmyLua plugin for VSCode](https://marketplace.visualstudio.com/items?itemName=tangzx.emmylua)
+
+#### 2. Install Java 8+
+EmmyLua need Java 8+ to work, you can download it here: [Java 8+]
+
+#### 3. Adding JAVA_HOME environment variable
+Once Java is installed, you have to tell to EmmyLua where it is.
+
+- Windows
+  - In the searchbar, type : 'Environment Variables'
+  - Click on 'Environment Variables...'
+  - Click on 'New'
+  - In the name field type `JAVA_HOME`
+  - In the value field, local the folder of the Java Directory, it should look like this `C:\Program Files\Java\jre1.8.0_291`
+
+#### 4. Open your project with VSCode
+
+First, you must retrieve the location of your project.
+For that Right Click on a script in the Core Editor Project Content, click on `Show in explorer` and copy the link of the directory.
+
+Then open VSCode and click on `File > Open Folder...` and paste the path of your scripts folder.
+
+#### 5. Add the definition file to your project
+In Core Editor, create a new Script called `CoreGamesAPI` and delete it from the hierarchy.
+Open the Script in VSCode and paste the content of [core-games-api.def.lua](core-games-api.def.lua) in it.
+
+
+Done! You can now code and have full autocomplete for the CoreGamesAPI and also for your own Scripts!
+
+> The plugin VSCode-EmmyLua does not support `@alias` tags, you will still have errors with Enums.
 
 ### IntelliJ IDEA (or PhpStorm, Webstorm, etc)
 Install the plugin [Luanalysis](https://plugins.jetbrains.com/plugin/14698-luanalysis) and open your Core Game Project with the IDE.
