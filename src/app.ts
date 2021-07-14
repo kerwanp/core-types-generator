@@ -18,7 +18,7 @@ import { TypeEnum } from './TypeEnum';
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
   return new Promise((res) => {
     http.get(
-      'https://docs.coregames.com/assets/api/CoreLuaAPI.json',
+      'https://raw.githubusercontent.com/ManticoreGamesInc/platform-documentation/development/src/assets/api/CoreLuaAPI.json',
       (response) => {
         let body = '';
         response.on('data', (chunk) => {
