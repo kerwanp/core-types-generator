@@ -4,7 +4,7 @@ export function arrayToString(rows: string[]): string {
 }
 
 export function getComment(content: string): string {
-  return `--- ${content}`;
+  return `--- ${content.trim()}`;
 }
 
 export function getAnnotation(type: string, ...args: string[]): string {
