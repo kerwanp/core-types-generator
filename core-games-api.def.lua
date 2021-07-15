@@ -3063,3 +3063,9 @@ Visibility = {
 }
 --- @type CoreObject
 script = nil
+
+--- @return number
+function time() end
+
+--- @param deltaTime number
+function Tick(deltaTime) end
