@@ -165,12 +165,19 @@ async function run() {
   lines.push(getAnnotation('type', 'CoreObject'));
   lines.push('script = nil');
   lines.push('');
-  lines.push('--- @return number');
-  lines.push('function time() end');
-  lines.push('');
-  lines.push('--- @param deltaTime number');
-  lines.push('function Tick(deltaTime) end');
-  lines.push('');
+
+  const timeFunction = new TypeFunction('time', [
+    new TypeSignature([], [new TypeReturn(['number'])])
+  ]);
+  lines.push(...timeFunction.getLines());
+
+  const tickFunction = new TypeFunction('Tick', [
+    new TypeSignature(
+      [new TypeParameter('deltaTime', ['number'])],
+      [new TypeReturn(['number'])]
+    )
+  ]);
+  lines.push(...tickFunction.getLines());
 
   fs.writeFileSync('core-games-api.def.lua', arrayToString(lines));
 }
