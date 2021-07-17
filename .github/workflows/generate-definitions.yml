@@ -11,4 +11,12 @@ jobs:
       - run: npm ci
       - run: npm run build:prod
       - run: node ./dist/main.js
-      - run: cat core-games-api.def.lua
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        name: Publish
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: true
+          title: "Automatically generated"
+          files: |
+            core-games-api.def.lua
