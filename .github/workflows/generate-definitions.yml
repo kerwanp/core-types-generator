@@ -11,3 +11,4 @@ jobs:
       - run: npm ci
       - run: npm run build:prod
       - run: node ./dist/main.js
+      - run: cat core-games-api.def.lua
