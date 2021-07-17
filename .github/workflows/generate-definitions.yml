@@ -20,3 +20,6 @@ jobs:
           title: "Automatically generated"
           files: |
             core-games-api.def.lua
+      - name: Trigger VSCode extension CI
+        run: |
+          curl -XPOST -u "${{ secrets.CORE_PAT_USERNAME}}:${{secrets.CORE_PAT_TOKEN}}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/ManticoreGamesInc/vscode-core/actions/workflows/release.yml/dispatches --data '{"ref": "main"}'
