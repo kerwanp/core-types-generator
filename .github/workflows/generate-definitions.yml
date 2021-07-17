@@ -1,0 +1,13 @@
+name: Generate definitions file
+on: [push]
+jobs:
+  Generate-Definitions-File:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+      - run: npm ci
+      - run: npm run build:prod
+      - run: node ./dist/main.js
