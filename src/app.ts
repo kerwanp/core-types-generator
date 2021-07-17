@@ -67,6 +67,13 @@ function generateClassesLines(classes: Class[]): string[] {
     for (const memberFunction of obj.MemberFunctions) {
       typeClass.addFunction(generateFunction(obj.Name, memberFunction, true));
     }
+    if (obj.Constants) {
+      for (const constant of obj.Constants) {
+        typeClass.addField(
+          new TypeField(constant.Name, [typeMapping(constant.Type)])
+        );
+      }
+    }
 
     lines.push(...typeClass.getLines());
     lines.push('');
@@ -90,6 +97,14 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
         generateFunction(obj.Name, staticFunctions, false),
         true
       );
+    }
+
+    if (obj.Constants) {
+      for (const constant of obj.Constants) {
+        typeClass.addField(
+          new TypeField(constant.Name, [typeMapping(constant.Type)])
+        );
+      }
     }
 
     lines.push(...typeClass.getLines());
