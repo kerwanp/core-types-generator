@@ -11,6 +11,7 @@ export class TypeClass {
     private memberFunctions: TypeFunction[] = [],
     private memberFields: TypeField[] = [],
     private staticFields: TypeField[] = [],
+    private constants: TypeField[] = [],
     private description?: string
   ) {}
 
