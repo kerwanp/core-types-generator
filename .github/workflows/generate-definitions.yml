@@ -1,5 +1,8 @@
 name: Generate definitions file
-on: [push]
+on:
+  push:
+    tags:
+      - "v*"
 jobs:
   Generate-Definitions-File:
     runs-on: ubuntu-latest
@@ -15,9 +18,7 @@ jobs:
         name: Publish
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
           prerelease: true
-          title: "Automatically generated"
           files: |
             core-games-api.def.lua
       - name: Trigger VSCode extension CI
