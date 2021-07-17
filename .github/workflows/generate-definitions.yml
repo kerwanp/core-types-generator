@@ -1,0 +1,26 @@
+name: Generate definitions file
+on:
+  push:
+    tags:
+      - "v*"
+jobs:
+  Generate-Definitions-File:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Setup NodeJS
+        uses: actions/setup-node@v2
+      - run: npm ci
+      - run: npm run build:prod
+      - run: node ./dist/main.js
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        name: Publish
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          files: |
+            core-games-api.def.lua
+      - name: Trigger VSCode extension CI
+        run: |
+          curl -XPOST -u "${{ secrets.CORE_PAT_USERNAME}}:${{secrets.CORE_PAT_TOKEN}}" -H "Accept: application/vnd.github.everest-preview+json" -H "Content-Type: application/json" https://api.github.com/repos/ManticoreGamesInc/vscode-core/actions/workflows/release.yml/dispatches --data '{"ref": "main"}'
