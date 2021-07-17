@@ -3068,4 +3068,5 @@ script = nil
 function time() end
 
 --- @param deltaTime number
+--- @return number
 function Tick(deltaTime) end
