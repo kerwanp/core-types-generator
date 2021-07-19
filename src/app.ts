@@ -108,7 +108,6 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
     }
 
     lines.push(...typeClass.getLines());
-    lines.push('');
   }
 
   return lines;
@@ -121,8 +120,10 @@ function generateEnumsLines(enums: Enum[]) {
     for (const field of obj.Values) {
       typeEnum.addValue(field.Name, field.Value);
     }
+
     lines.push(...typeEnum.getLines());
   }
+
   return lines;
 }
 
@@ -138,6 +139,7 @@ function generateFunction(
   for (const signature of signatures) {
     typeFunction.addSignature(signature);
   }
+
   return typeFunction;
 }
 
@@ -165,6 +167,7 @@ function generateSignatures(signatures: Signature[]): TypeSignature[] {
 
     typeSignatures.push(typeSignature);
   }
+
   return typeSignatures;
 }
 
@@ -173,9 +176,7 @@ async function run() {
   const lines = [];
 
   lines.push(...generateClassesLines(coreLuaAPI.Classes));
-  lines.push(...['', '', '', '', '']);
   lines.push(...generateNamespacesLines(coreLuaAPI.Namespaces));
-  lines.push(...['', '', '', '', '']);
   lines.push(...generateEnumsLines(coreLuaAPI.Enums));
   lines.push(getAnnotation('type', 'CoreObject'));
   lines.push('script = nil');
