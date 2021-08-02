@@ -32,7 +32,9 @@ export class TypeSignature {
   public getAnnotations(): string[] {
     const lines = [];
     lines.push(
-      ...this.parameters.map((parameter) => parameter.getAnnotation())
+      ...this.parameters
+        .map((parameter) => parameter.getAnnotation())
+        .filter((annotation) => !!annotation)
     );
     lines.push(...this.returns.map((typeReturn) => typeReturn.getAnnotation()));
     return lines;
