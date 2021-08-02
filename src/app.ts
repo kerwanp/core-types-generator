@@ -150,7 +150,8 @@ function generateSignatures(signatures: Signature[]): TypeSignature[] {
         new TypeParameter(
           reservedNamesMapping(parameter.Name),
           [typeMapping(parameter.Type)],
-          (parameter.IsVariadic || parameter.IsOptional) ?? false
+          parameter.IsOptional,
+          parameter.IsVariadic
         )
       );
     }

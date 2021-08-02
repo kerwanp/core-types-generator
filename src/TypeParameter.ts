@@ -5,10 +5,14 @@ export class TypeParameter {
     public name: string,
     public types: string[],
     public optional = false,
+    public isVariadic = false,
     public description?: string
-  ) {}
+  ) {
+    if (this.isVariadic) this.name = '...';
+  }
 
   public getAnnotation(): string {
+    if (this.isVariadic) return;
     return getAnnotation(
       'param',
       this.name,
@@ -18,9 +22,6 @@ export class TypeParameter {
   }
 
   public getTypedArgument(): string {
-    if (this.name === 'additionalParameters') {
-      console.log(this.types);
-    }
     return `${this.name}${
       this.types.length > 0 ? ': ' + this.types.join('|') : ''
     }`;
