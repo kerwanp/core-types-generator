@@ -35,3 +35,11 @@ export function typeMapping(type: string): string {
 
   return type;
 }
+
+export function camelize(content: string) {
+  return content
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    })
+    .replace(/\s+/g, '');
+}

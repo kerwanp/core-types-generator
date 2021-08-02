@@ -1,4 +1,4 @@
-import { getAnnotation } from './utils';
+import { camelize, getAnnotation } from './utils';
 
 export class TypeParameter {
   public constructor(
@@ -9,6 +9,7 @@ export class TypeParameter {
     public description?: string
   ) {
     if (this.isVariadic) this.name = '...';
+    this.name = camelize(this.name);
   }
 
   public getAnnotation(): string {
