@@ -8,8 +8,8 @@ export class TypeParameter {
     public isVariadic = false,
     public description?: string
   ) {
-    if (this.isVariadic) this.name = '...';
     this.name = camelize(this.name);
+    if (this.isVariadic) this.name = '...';
   }
 
   public getAnnotation(): string {
