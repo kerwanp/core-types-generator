@@ -70,7 +70,8 @@ function generateClassesLines(classes: Class[]): string[] {
     if (obj.Constants) {
       for (const constant of obj.Constants) {
         typeClass.addField(
-          new TypeField(constant.Name, [typeMapping(constant.Type)])
+          new TypeField(constant.Name, [typeMapping(constant.Type)]),
+          true
         );
       }
     }
@@ -102,7 +103,8 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
     if (obj.Constants) {
       for (const constant of obj.Constants) {
         typeClass.addField(
-          new TypeField(constant.Name, [typeMapping(constant.Type)])
+          new TypeField(constant.Name, [typeMapping(constant.Type)]),
+          true
         );
       }
     }
