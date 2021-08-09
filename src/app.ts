@@ -93,11 +93,13 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
         typeClass.addField(new TypeField(event.Name, ['Event']), true);
       }
     }
-    for (const staticFunctions of obj.StaticFunctions) {
-      typeClass.addFunction(
-        generateFunction(obj.Name, staticFunctions, false),
-        true
-      );
+    if (obj.StaticFunctions) {
+      for (const staticFunctions of obj.StaticFunctions) {
+        typeClass.addFunction(
+          generateFunction(obj.Name, staticFunctions, false),
+          true
+        );
+      }
     }
 
     if (obj.Constants) {
