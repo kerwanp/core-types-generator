@@ -38,7 +38,3 @@ export class TypeFunction {
     return lines;
   }
 }
-
-interface Return {
-  types: string[];
-}
