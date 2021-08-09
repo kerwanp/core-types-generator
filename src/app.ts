@@ -1,5 +1,6 @@
 import http from 'https';
 import { Class, CoreLuaAPI, Enum, Func, Namespace, Signature } from './models';
+import fetch from 'node-fetch';
 import fs from 'fs';
 import {
   arrayToString,
@@ -15,18 +16,29 @@ import { TypeParameter } from './TypeParameter';
 import { TypeReturn } from './TypeReturn';
 import { TypeEnum } from './TypeEnum';
 
+const ENVIRONMENT = 'Prod';
+const BASE_URL = `https://manticore${ENVIRONMENT.toLowerCase()}.blob.core.windows.net`;
+const VERSION_ENDPOINT = `${BASE_URL}/builds/${ENVIRONMENT}-latest_client_build.txt`;
+
+async function getLatestVersion(): Promise<any> {
+  const versionResponse = await fetch(VERSION_ENDPOINT);
+  const latestVersion = await versionResponse.text();
+  return latestVersion;
+}
+
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
+  const latestVersion = await getLatestVersion();
+  console.log('Latest Version:', latestVersion);
+  const DUMP_ENDPOINT = `${BASE_URL}/builds/api_export/api-${latestVersion}.json`;
+
   return new Promise((res) => {
-    http.get(
-      'https://raw.githubusercontent.com/ManticoreGamesInc/platform-documentation/development/src/assets/api/CoreLuaAPI.json',
-      (response) => {
-        let body = '';
-        response.on('data', (chunk) => {
-          body += chunk;
-        });
-        response.on('end', () => res(JSON.parse(body)));
-      }
-    );
+    http.get(DUMP_ENDPOINT, (response) => {
+      let body = '';
+      response.on('data', (chunk) => {
+        body += chunk;
+      });
+      response.on('end', () => res(JSON.parse(body)));
+    });
   });
 }
 
