@@ -25,15 +25,15 @@
   "homepage": "https://github.com/KMP-Agency/boilerplate-node-typescript#readme",
   "devDependencies": {
     "@types/node-fetch": "^2.5.12",
-    "@typescript-eslint/eslint-plugin": "^4.29.1",
-    "@typescript-eslint/parser": "^4.29.1",
-    "esbuild": "^0.12.19",
+    "@typescript-eslint/eslint-plugin": "^4.29.3",
+    "@typescript-eslint/parser": "^4.29.3",
+    "esbuild": "^0.12.24",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-prettier": "^3.4.1",
     "node-fetch": "^2.6.1",
     "prettier": "^2.3.2",
     "ts-loader": "^9.2.5",
-    "typescript": "^4.3.5"
+    "typescript": "^4.4.2"
   }
 }
