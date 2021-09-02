@@ -55,6 +55,11 @@ function generateClassesLines(classes: Class[]): string[] {
         typeClass.addField(new TypeField(event.Name, ['Event']));
       }
     }
+    if (obj.Hooks) {
+      for (const hook of obj.Hooks) {
+        typeClass.addField(new TypeField(hook.Name, ['Hook']));
+      }
+    }
     if (obj.StaticFunctions) {
       for (const staticFunctions of obj.StaticFunctions) {
         typeClass.addFunction(
@@ -105,6 +110,13 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
         typeClass.addField(new TypeField(event.Name, ['Event']), true);
       }
     }
+
+    if (obj.StaticHooks) {
+      for (const hook of obj.StaticHooks) {
+        typeClass.addField(new TypeField(hook.Name, ['Hook']), true);
+      }
+    }
+
     if (obj.StaticFunctions) {
       for (const staticFunctions of obj.StaticFunctions) {
         typeClass.addFunction(

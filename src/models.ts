@@ -17,6 +17,7 @@ export interface Class {
   MemberFunctions: Func[];
   StaticFunctions: Func[];
   Events: Event[];
+  Hooks: Hook[];
   Constructors: Func[];
   Constants: Constant[];
 }
@@ -26,6 +27,7 @@ export interface Namespace {
   Description: string;
   StaticFunctions: Func[];
   StaticEvents: Event[];
+  StaticHooks: Hook[];
   Constants: Constant[];
 }
 
@@ -78,4 +80,13 @@ export interface Constant {
   Name: string;
   Description: string;
   Type: string;
+}
+
+export interface Hook {
+  Name: string;
+  Description: string;
+  Parameters: {
+    Type: string;
+    Name: string;
+  }[];
 }
