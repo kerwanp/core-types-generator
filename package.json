@@ -1,5 +1,5 @@
 {
-  "name": "boilerplate-node-typescript",
+  "name": "core-types-generator",
   "version": "1.0.0",
   "description": "",
   "main": "dist/main.js",
@@ -16,14 +16,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KMP-Agency/boilerplate-node-typescript.git"
+    "url": "git+https://github.com/kerwanp/core-types-generator.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KMP-Agency/boilerplate-node-typescript/issues"
+    "url": "https://github.com/kerwanp/core-types-generator/issues"
   },
-  "homepage": "https://github.com/KMP-Agency/boilerplate-node-typescript#readme",
+  "homepage": "https://github.com/kerwanp/core-types-generator#readme",
   "devDependencies": {
     "@types/node-fetch": "^2.5.12",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
