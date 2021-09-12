@@ -18,6 +18,7 @@ export interface Class {
   StaticFunctions: Func[];
   Events: Event[];
   Constructors: Func[];
+  Constants: Constant[];
 }
 
 export interface Namespace {
@@ -25,6 +26,7 @@ export interface Namespace {
   Description: string;
   StaticFunctions: Func[];
   StaticEvents: Event[];
+  Constants: Constant[];
 }
 
 export interface Enum {
@@ -71,4 +73,10 @@ export interface Property {
   Description: string;
   Type: string;
   Tags: string[];
+}
+
+export interface Constant {
+  Name: string;
+  Description: string;
+  Type: string;
 }

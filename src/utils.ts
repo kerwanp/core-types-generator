@@ -4,7 +4,7 @@ export function arrayToString(rows: string[]): string {
 }
 
 export function getComment(content: string): string {
-  return `--- ${content}`;
+  return `--- ${content.trim()}`;
 }
 
 export function getAnnotation(type: string, ...args: string[]): string {
@@ -34,6 +34,14 @@ export function typeMapping(type: string): string {
   }
 
   return type;
+}
+
+export function camelize(content: string) {
+  return content
+    .replace(/(?:^\w|[A-Z]|\b\w)/g, function (word, index) {
+      return index === 0 ? word.toLowerCase() : word.toUpperCase();
+    })
+    .replace(/\s+/g, '');
 }
 
 function splitDescription(description: string): string[] {

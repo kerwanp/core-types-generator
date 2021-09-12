@@ -18,7 +18,7 @@ import { TypeEnum } from './TypeEnum';
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
   return new Promise((res) => {
     http.get(
-      'https://docs.coregames.com/assets/api/CoreLuaAPI.json',
+      'https://raw.githubusercontent.com/ManticoreGamesInc/platform-documentation/development/src/assets/api/CoreLuaAPI.json',
       (response) => {
         let body = '';
         response.on('data', (chunk) => {
@@ -78,6 +78,14 @@ function generateClassesLines(classes: Class[]): string[] {
     for (const memberFunction of obj.MemberFunctions) {
       typeClass.addFunction(generateFunction(obj.Name, memberFunction, true));
     }
+    if (obj.Constants) {
+      for (const constant of obj.Constants) {
+        typeClass.addField(
+          new TypeField(constant.Name, [typeMapping(constant.Type)]),
+          true
+        );
+      }
+    }
 
     lines.push(...typeClass.getLines());
     lines.push('');
@@ -108,8 +116,16 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
       }
     }
 
+    if (obj.Constants) {
+      for (const constant of obj.Constants) {
+        typeClass.addField(
+          new TypeField(constant.Name, [typeMapping(constant.Type)]),
+          true
+        );
+      }
+    }
+
     lines.push(...typeClass.getLines());
-    lines.push('');
   }
 
   return lines;
@@ -122,8 +138,10 @@ function generateEnumsLines(enums: Enum[]) {
     for (const field of obj.Values) {
       typeEnum.addValue(field.Name, field.Value);
     }
+
     lines.push(...typeEnum.getLines());
   }
+
   return lines;
 }
 
@@ -140,6 +158,7 @@ function generateFunction(
   for (const signature of signatures) {
     typeFunction.addSignature(signature);
   }
+
   return typeFunction;
 }
 
@@ -152,7 +171,8 @@ function generateSignatures(signatures: Signature[]): TypeSignature[] {
         new TypeParameter(
           reservedNamesMapping(parameter.Name),
           [typeMapping(parameter.Type)],
-          (parameter.IsVariadic || parameter.IsOptional) ?? false
+          parameter.IsOptional,
+          parameter.IsVariadic
         )
       );
     }
@@ -167,6 +187,7 @@ function generateSignatures(signatures: Signature[]): TypeSignature[] {
 
     typeSignatures.push(typeSignature);
   }
+
   return typeSignatures;
 }
 
@@ -175,12 +196,24 @@ async function run() {
   const lines = [];
 
   lines.push(...generateClassesLines(coreLuaAPI.Classes));
-  lines.push(...['', '', '', '', '']);
   lines.push(...generateNamespacesLines(coreLuaAPI.Namespaces));
-  lines.push(...['', '', '', '', '']);
   lines.push(...generateEnumsLines(coreLuaAPI.Enums));
   lines.push(getAnnotation('type', 'CoreObject'));
   lines.push('script = nil');
+  lines.push('');
+
+  const timeFunction = new TypeFunction('time', [
+    new TypeSignature([], [new TypeReturn(['number'])])
+  ]);
+  lines.push(...timeFunction.getLines());
+
+  const tickFunction = new TypeFunction('Tick', [
+    new TypeSignature(
+      [new TypeParameter('deltaTime', ['number'])],
+      [new TypeReturn(['number'])]
+    )
+  ]);
+  lines.push(...tickFunction.getLines());
 
   fs.writeFileSync('core-games-api.def.lua', arrayToString(lines));
 }
