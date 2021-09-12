@@ -85,11 +85,13 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
         typeClass.addField(new TypeField(event.Name, ['Event']), true);
       }
     }
-    for (const staticFunctions of obj.StaticFunctions) {
-      typeClass.addFunction(
-        generateFunction(obj.Name, staticFunctions, false),
-        true
-      );
+    if (obj.StaticFunctions) {
+      for (const staticFunctions of obj.StaticFunctions) {
+        typeClass.addFunction(
+          generateFunction(obj.Name, staticFunctions, false),
+          true
+        );
+      }
     }
 
     lines.push(...typeClass.getLines());
@@ -117,7 +119,8 @@ function generateFunction(
   member: boolean
 ): TypeFunction {
   const typeFunction = new TypeFunction(
-    `${className}${member ? ':' : '.'}${func.Name}`
+    `${className}${member ? ':' : '.'}${func.Name}`,
+    func.Description
   );
   const signatures = generateSignatures(func.Signatures);
   for (const signature of signatures) {

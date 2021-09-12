@@ -48,6 +48,7 @@ export interface Event {
 
 export interface Func {
   Name: string;
+  Description: string;
   Signatures: Signature[];
 }
 
