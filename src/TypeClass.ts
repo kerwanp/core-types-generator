@@ -1,6 +1,6 @@
 import { TypeFunction } from './TypeFunction';
 import { TypeField } from './TypeField';
-import { getAnnotation, getDescription } from './utils';
+import { getAnnotation, getShortDescription } from './utils';
 
 export class TypeClass {
   public constructor(
@@ -58,7 +58,8 @@ export class TypeClass {
     const name = isStatic ? `Global${this.name}` : `${this.name}`;
     return getAnnotation(
       'class',
-      `${name}${this.baseClass ? ' : ' + this.baseClass : ''}`
+      `${name}${this.baseClass ? ' : ' + this.baseClass : ''}`,
+      getShortDescription(this.description)
     );
   }
 
@@ -72,7 +73,6 @@ export class TypeClass {
   public getLines() {
     const lines = [];
 
-    lines.push(...getDescription(this.description));
     lines.push(this.toAnnotation(false));
     lines.push(...this.getFieldsLines(false));
     lines.push(this.toDefinition(false));
