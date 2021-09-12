@@ -223,7 +223,7 @@ async function run() {
   ]);
   lines.push(...tickFunction.getLines());
 
-  fs.writeFileSync('core-games-api.def.lua', arrayToString(lines));
+  fs.writeFileSync('dist/core-games-api.def.lua', arrayToString(lines));
 }
 
 run();
