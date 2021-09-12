@@ -36,11 +36,18 @@ function generateClassesLines(classes: Class[]): string[] {
     const typeClass = new TypeClass(
       false,
       obj.Name,
-      obj.BaseType !== 'Object' ? obj.BaseType : undefined
+      obj.BaseType !== 'Object' ? obj.BaseType : undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      obj.Description
     );
     if (obj.Events) {
       for (const event of obj.Events) {
-        typeClass.addField(new TypeField(event.Name, ['Event']));
+        typeClass.addField(
+          new TypeField(event.Name, ['Event'], event.Description)
+        );
       }
     }
     if (obj.StaticFunctions) {
@@ -61,7 +68,11 @@ function generateClassesLines(classes: Class[]): string[] {
     }
     for (const property of obj.Properties) {
       typeClass.addField(
-        new TypeField(property.Name, [typeMapping(property.Type)])
+        new TypeField(
+          property.Name,
+          [typeMapping(property.Type)],
+          property.Description
+        )
       );
     }
     for (const memberFunction of obj.MemberFunctions) {
@@ -82,7 +93,10 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 
     if (obj.StaticEvents) {
       for (const event of obj.StaticEvents) {
-        typeClass.addField(new TypeField(event.Name, ['Event']), true);
+        typeClass.addField(
+          new TypeField(event.Name, ['Event'], event.Description),
+          true
+        );
       }
     }
     if (obj.StaticFunctions) {

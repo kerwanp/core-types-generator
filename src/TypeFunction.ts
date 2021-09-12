@@ -1,5 +1,5 @@
 import { TypeSignature } from './TypeSignature';
-import { getComment } from './utils';
+import { getDescription } from './utils';
 
 export class TypeFunction {
   public constructor(
@@ -10,20 +10,6 @@ export class TypeFunction {
 
   public addSignature(signature: TypeSignature) {
     this.signatures.push(signature);
-  }
-
-  public getDescription() {
-    if (!this.description) {
-      return null;
-    }
-
-    const lines = [];
-    for (const line of this.description.split('<br>')) {
-      lines.push(getComment(line));
-      // Push empty line to add line break
-      lines.push(getComment(''));
-    }
-    return lines;
   }
 
   private getSignatureAnnotations(): string[] {
@@ -47,7 +33,7 @@ export class TypeFunction {
 
   public getLines(): string[] {
     const lines = [];
-    lines.push(...this.getDescription());
+    lines.push(...getDescription(this.description));
     lines.push(...this.getOverloadAnnotations());
     lines.push(...this.getSignatureAnnotations());
     lines.push(this.getDefinition());

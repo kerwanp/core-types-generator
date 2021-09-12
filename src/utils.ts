@@ -35,3 +35,19 @@ export function typeMapping(type: string): string {
 
   return type;
 }
+
+export function getDescription(description: string): string[] {
+  const lines = [];
+
+  if (description) {
+    for (const line of description
+      .replace('\r\n', '<br>')
+      .replace('\n', '<br>')
+      .split('<br>')) {
+      lines.push(getComment(line));
+      // Push empty line to add line break
+      lines.push(getComment(''));
+    }
+  }
+  return lines;
+}
