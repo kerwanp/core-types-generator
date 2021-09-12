@@ -45,11 +45,7 @@ async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
 function generateClassesLines(classes: Class[]): string[] {
   const lines = [];
   for (const obj of classes) {
-    const typeClass = new TypeClass(
-      false,
-      obj.Name,
-      obj.BaseType !== 'Object' ? obj.BaseType : undefined
-    );
+    const typeClass = new TypeClass(false, obj.Name, obj.BaseType);
     if (obj.Events) {
       for (const event of obj.Events) {
         typeClass.addField(new TypeField(event.Name, ['Event']));

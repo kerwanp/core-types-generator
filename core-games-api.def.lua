@@ -1,4 +1,4 @@
---- @class AIActivity
+--- @class AIActivity : Object
 --- @field name string
 --- @field owner AIActivityHandler
 --- @field priority number
@@ -11,7 +11,7 @@ local AIActivityInstance = {}
 --- @return boolean
 function AIActivityInstance:IsA(typeName) end
 
---- @class GlobalAIActivity
+--- @class GlobalAIActivity : Object
 AIActivity = {}
 
 --- @class AIActivityHandler : CoreObject
@@ -88,7 +88,7 @@ function AbilityInstance:IsA(typeName) end
 --- @class GlobalAbility : CoreObject
 Ability = {}
 
---- @class AbilityPhaseSettings
+--- @class AbilityPhaseSettings : Object
 --- @field duration number
 --- @field canMove boolean
 --- @field canJump boolean
@@ -102,7 +102,7 @@ local AbilityPhaseSettingsInstance = {}
 --- @return boolean
 function AbilityPhaseSettingsInstance:IsA(typeName) end
 
---- @class GlobalAbilityPhaseSettings
+--- @class GlobalAbilityPhaseSettings : Object
 AbilityPhaseSettings = {}
 
 --- @class AbilityTarget
@@ -505,7 +505,7 @@ function CoreMeshInstance:IsA(typeName) end
 --- @class GlobalCoreMesh : CoreObject
 CoreMesh = {}
 
---- @class CoreObject
+--- @class CoreObject : Object
 --- @field childAddedEvent Event
 --- @field childRemovedEvent Event
 --- @field descendantAddedEvent Event
@@ -764,7 +764,7 @@ function CoreObjectInstance:SetNetworkedCustomProperty(propertyName, propertyVal
 --- @return boolean
 function CoreObjectInstance:IsA(typeName) end
 
---- @class GlobalCoreObject
+--- @class GlobalCoreObject : Object
 CoreObject = {}
 
 --- @class CoreObjectReference
@@ -1271,7 +1271,7 @@ function PhysicsObjectInstance:IsA(typeName) end
 --- @class GlobalPhysicsObject : CoreObject
 PhysicsObject = {}
 
---- @class Player
+--- @class Player : Object
 --- @field damagedEvent Event
 --- @field diedEvent Event
 --- @field spawnedEvent Event
@@ -1567,7 +1567,7 @@ function PlayerInstance:GetPrivateNetworkedDataKeys() end
 --- @return boolean
 function PlayerInstance:IsA(typeName) end
 
---- @class GlobalPlayer
+--- @class GlobalPlayer : Object
 Player = {}
 
 --- @class PlayerSettings : CoreObject
@@ -1625,7 +1625,7 @@ function PointLightInstance:IsA(typeName) end
 --- @class GlobalPointLight : Light
 PointLight = {}
 
---- @class Projectile
+--- @class Projectile : Object
 --- @field impactEvent Event
 --- @field lifeSpanEndedEvent Event
 --- @field homingFailedEvent Event
@@ -1668,7 +1668,7 @@ function ProjectileInstance:Destroy() end
 --- @return boolean
 function ProjectileInstance:IsA(typeName) end
 
---- @class GlobalProjectile
+--- @class GlobalProjectile : Object
 Projectile = {}
 --- @param templateId string
 --- @param startPosition Vector3
@@ -1795,7 +1795,7 @@ function ScriptInstance:IsA(typeName) end
 --- @class GlobalScript : CoreObject
 Script = {}
 
---- @class ScriptAsset
+--- @class ScriptAsset : Object
 --- @field name string
 --- @field id string
 --- @field type string
@@ -1811,7 +1811,7 @@ function ScriptAssetInstance:GetCustomProperty(propertyName) end
 --- @return boolean
 function ScriptAssetInstance:IsA(typeName) end
 
---- @class GlobalScriptAsset
+--- @class GlobalScriptAsset : Object
 ScriptAsset = {}
 
 --- @class SimpleCurve
