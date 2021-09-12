@@ -8,9 +8,9 @@
     "serve:dev": "NODE_ENV=development npm run serve",
     "serve:prod": "NODE_ENV=production npm run serve",
     "build": "esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node",
-    "dist": "npm run build && node dist/main.js",
     "build:dev": "NODE_ENV=development npm run build",
     "build:prod": "NODE_ENV=production npm run build",
+    "dist": "npm run build && node dist/main.js",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier 'src/**/*.ts' --write"
   },

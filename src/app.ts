@@ -77,6 +77,9 @@ function generateClassesLines(classes: Class[]): string[] {
       }
     }
     for (const property of obj.Properties) {
+      if (property.Type == 'Object') {
+        property.Type = 'CoreObject|Player';
+      }
       typeClass.addField(
         new TypeField(property.Name, [typeMapping(property.Type)])
       );
