@@ -1,7 +1,7 @@
 {
   "name": "core-types-generator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generates an EmmyLua definition file for the Core Games API.",
   "main": "dist/main.js",
   "scripts": {
     "serve": "NODEMON=true esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node --watch",
