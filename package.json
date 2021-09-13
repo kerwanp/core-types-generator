@@ -4,13 +4,13 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "serve": "NODEMON=true webpack --watch",
+    "serve": "NODEMON=true esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node --watch",
     "serve:dev": "NODE_ENV=development npm run serve",
     "serve:prod": "NODE_ENV=production npm run serve",
     "build": "esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node",
     "build:dev": "NODE_ENV=development npm run build",
-    "build:prod": "NODE_ENV=production npm run build",
-    "dist": "npm run build && node dist/main.js",
+    "build:prod": "NODE_ENV=production esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node --minify",
+    "dist": "npm run build:prod && node dist/main.js",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier 'src/**/*.ts' --write"
   },
