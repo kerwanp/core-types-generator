@@ -2,7 +2,7 @@
 
 ## WIP Disclaimer
 
-This project is still a work in progress and need some improvements :
+This project is still a work in progress and needs some improvements:
 
 - [x] Use the [CoreGameAPI.json](https://docs.coregames.com/assets/api/CoreLuaAPI.json) file
 - [x] Change output file `core-games-api.def.lua` (currently using the one on Github)
@@ -18,18 +18,17 @@ This project is still a work in progress and need some improvements :
 - [ ] Provide a better documentation
 - [x] Improve code structure
 
-## Why ?
+## Why?
 
-When working on Lua with Core Games, even with the referenced plugins for VSCode it does not provide a good type checking.
 Type checking provide a good flexible autocomplete system and give you errors when you are trying to access undefined properties.
 
 ### Without Types
 
-![](assets/gif1.gif)
+![withoutTypes](assets/gif1.gif)
 
 ### With Types
 
-![](assets/gif2.gif)
+![withTypes](assets/gif2.gif)
 
 ## Install
 
@@ -48,9 +47,9 @@ Get the official [vscode-core](https://marketplace.visualstudio.com/items?itemNa
 
 In order to enjoy the power of [LDoc](https://stevedonovan.github.io/ldoc/manual/doc.md.html) you must use a plugin that understand it.
 
-For that, install the [Luanalysis plugin for Jetbrains](https://plugins.jetbrains.com/plugin/14698-luanalysis)
+For that, install the [Luanalysis plugin for JetBrains](https://plugins.jetbrains.com/plugin/14698-luanalysis)
 
-#### 2. Open your project with Jetbrains
+#### 2. Open your project with JetBrains
 
 First, you must retrieve the location of your project.
 For that Right Click on a script in the Core Editor Project Content, click on `Show in explorer` and copy the link of the directory.
@@ -59,10 +58,10 @@ Then open Jetbrains and click on `File > Open...` and paste the path of your scr
 
 #### 3. Add the definition file to your project
 
-In Core Editor, create a new Script called `CoreGamesAPI` and delete it from the hierarchy.
-Open the Script in VSCode and paste the content of [core-games-api.def.lua](core-games-api.def.lua) in it.
+In the Core editor, create a new Script called `CoreGamesAPI` and delete it from the hierarchy.
+Open the script in your IDE and paste the content of [core-games-api.def.lua](dist/core-games-api.def.lua) in it.
 
-Done! You can now code and have full autocomplete for the CoreGamesAPI and also for your own Scripts!
+Done! You can now code and have full autocomplete for the Core Games API and also for your own scripts!
 
 ## How
 
