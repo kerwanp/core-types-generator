@@ -1,8 +1,10 @@
 import { TypeSignature } from './TypeSignature';
+import { getFullDescription } from './utils';
 
 export class TypeFunction {
   public constructor(
     public name: string,
+    public description: string,
     private signatures: TypeSignature[] = []
   ) {}
 
@@ -31,6 +33,7 @@ export class TypeFunction {
 
   public getLines(): string[] {
     const lines = [];
+    lines.push(...getFullDescription(this.description));
     lines.push(...this.getOverloadAnnotations());
     lines.push(...this.getSignatureAnnotations());
     lines.push(this.getDefinition());

@@ -1,6 +1,6 @@
 import { TypeFunction } from './TypeFunction';
 import { TypeField } from './TypeField';
-import { getAnnotation } from './utils';
+import { getAnnotation, getShortDescription } from './utils';
 
 export class TypeClass {
   public constructor(
@@ -60,7 +60,7 @@ export class TypeClass {
     return getAnnotation(
       'class',
       `${name}${this.baseClass ? ' : ' + this.baseClass : ''}`,
-      this.description
+      getShortDescription(this.description)
     );
   }
 

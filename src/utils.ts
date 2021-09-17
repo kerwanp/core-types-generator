@@ -43,3 +43,37 @@ export function camelize(content: string) {
     })
     .replace(/\s+/g, '');
 }
+
+function splitDescription(description: string): string[] {
+  if (description) {
+    return description
+      .replace(/\r\n/g, '<br>')
+      .replace(/\n/g, '<br>')
+      .replace(/<br \/>/g, '<br>')
+      .replace(/<br\/>/g, '<br>')
+      .split('<br>');
+  } else {
+    return [];
+  }
+}
+
+export function getFullDescription(description: string): string[] {
+  const lines = [];
+
+  for (const line of splitDescription(description)) {
+    lines.push(getComment(line));
+    // Push empty line to add line break
+    lines.push(getComment(''));
+  }
+
+  if (lines.length > 0) {
+    // Remove last new line
+    lines.pop();
+  }
+
+  return lines;
+}
+
+export function getShortDescription(description: string): string {
+  return splitDescription(description).join('. ');
+}

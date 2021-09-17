@@ -45,10 +45,21 @@ async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
 function generateClassesLines(classes: Class[]): string[] {
   const lines = [];
   for (const obj of classes) {
-    const typeClass = new TypeClass(false, obj.Name, obj.BaseType);
+    const typeClass = new TypeClass(
+      false,
+      obj.Name,
+      obj.BaseType !== 'Object' ? obj.BaseType : undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      obj.Description
+    );
     if (obj.Events) {
       for (const event of obj.Events) {
-        typeClass.addField(new TypeField(event.Name, ['Event']));
+        typeClass.addField(
+          new TypeField(event.Name, ['Event'], event.Description)
+        );
       }
     }
     if (obj.Hooks) {
@@ -77,7 +88,11 @@ function generateClassesLines(classes: Class[]): string[] {
         property.Type = 'CoreObject|Player';
       }
       typeClass.addField(
-        new TypeField(property.Name, [typeMapping(property.Type)])
+        new TypeField(
+          property.Name,
+          [typeMapping(property.Type)],
+          property.Description
+        )
       );
     }
     for (const memberFunction of obj.MemberFunctions) {
@@ -106,7 +121,10 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 
     if (obj.StaticEvents) {
       for (const event of obj.StaticEvents) {
-        typeClass.addField(new TypeField(event.Name, ['Event']), true);
+        typeClass.addField(
+          new TypeField(event.Name, ['Event'], event.Description),
+          true
+        );
       }
     }
 
@@ -160,7 +178,8 @@ function generateFunction(
   member: boolean
 ): TypeFunction {
   const typeFunction = new TypeFunction(
-    `${className}${member ? ':' : '.'}${func.Name}`
+    `${className}${member ? ':' : '.'}${func.Name}`,
+    func.Description
   );
   const signatures = generateSignatures(func.Signatures);
   for (const signature of signatures) {
