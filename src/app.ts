@@ -64,7 +64,9 @@ function generateClassesLines(classes: Class[]): string[] {
     }
     if (obj.Hooks) {
       for (const hook of obj.Hooks) {
-        typeClass.addField(new TypeField(hook.Name, ['Hook']));
+        typeClass.addField(
+          new TypeField(hook.Name, ['Hook'], hook.Description)
+        );
       }
     }
     if (obj.StaticFunctions) {
