@@ -6,13 +6,13 @@ export class TypeClass {
   public constructor(
     private isGlobal: boolean,
     private name: string,
+    private description?: string,
     private baseClass?: string,
     private staticFunctions: TypeFunction[] = [],
     private memberFunctions: TypeFunction[] = [],
     private memberFields: TypeField[] = [],
     private staticFields: TypeField[] = [],
-    private constants: TypeField[] = [],
-    private description?: string
+    private constants: TypeField[] = []
   ) {}
 
   public addFunction(typeFunction: TypeFunction, isStatic = false) {
