@@ -1,0 +1,25 @@
+{
+    "version": "0.2",
+    "language": "en-GB,en-US,fr",
+    "ignoreRegExpList": [
+        "\\((.+?)\\)"
+    ],
+    "words": [
+        "Desaturated",
+        "desaturation",
+        "equippable",
+        "Intelli",
+        "lerp",
+        "Luanalysis",
+        "RGBA",
+        "RRGGBB",
+        "RRGGBBAA",
+        "Slerp",
+        "Spatialization",
+        "spatialized",
+        "tonk",
+        "Unequip",
+        "unhovered",
+        "unsplit"
+    ]
+}
