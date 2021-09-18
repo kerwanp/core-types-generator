@@ -11,7 +11,7 @@ export class TypeField {
     return getAnnotation(
       'field',
       this.name,
-      this.types.join('|'),
+      this.types.join(' '),
       getShortDescription(this.description)
     );
   }

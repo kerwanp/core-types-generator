@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/explicit-member-accessibility */
-import { getAnnotation } from './utils';
+import { getAnnotation, getShortDescription } from './utils';
 
 export class TypeEnum {
   constructor(
     private name: string,
+    private description: string,
     private values: { [key: string]: string } = {}
   ) {}
 
@@ -13,9 +14,9 @@ export class TypeEnum {
 
   private getAnnotation(): string {
     return getAnnotation(
-      'alias',
+      'class',
       this.name,
-      Object.values(this.values).join(' | ')
+      `@${getShortDescription(this.description)}`
     );
   }
 
