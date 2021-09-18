@@ -58,14 +58,26 @@ function generateClassesLines(classes: Class[]): string[] {
     if (obj.Events) {
       for (const event of obj.Events) {
         typeClass.addField(
-          new TypeField(event.Name, ['Event'], event.Description)
+          new TypeField(
+            event.Name,
+            ['Event'],
+            event.IsDeprecated
+              ? `@${event.DeprecationMessage}`
+              : `@${event.Description}`
+          )
         );
       }
     }
     if (obj.Hooks) {
       for (const hook of obj.Hooks) {
         typeClass.addField(
-          new TypeField(hook.Name, ['Hook'], hook.Description)
+          new TypeField(
+            hook.Name,
+            ['Hook'],
+            hook.IsDeprecated
+              ? `@${hook.DeprecationMessage}`
+              : `@${hook.Description}`
+          )
         );
       }
     }
@@ -124,7 +136,13 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
     if (obj.StaticEvents) {
       for (const event of obj.StaticEvents) {
         typeClass.addField(
-          new TypeField(event.Name, ['Event'], event.Description),
+          new TypeField(
+            event.Name,
+            ['Event'],
+            event.IsDeprecated
+              ? `@${event.DeprecationMessage}`
+              : `@${event.Description}`
+          ),
           true
         );
       }
@@ -132,7 +150,16 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 
     if (obj.StaticHooks) {
       for (const hook of obj.StaticHooks) {
-        typeClass.addField(new TypeField(hook.Name, ['Hook']), true);
+        typeClass.addField(
+          new TypeField(
+            hook.Name,
+            ['Hook'],
+            hook.IsDeprecated
+              ? `@${hook.DeprecationMessage}`
+              : `@${hook.Description}`
+          ),
+          true
+        );
       }
     }
 
