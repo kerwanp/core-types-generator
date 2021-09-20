@@ -25,14 +25,14 @@
   },
   "homepage": "https://github.com/kerwanp/core-types-generator#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.31.0",
-    "@typescript-eslint/parser": "^4.31.0",
-    "esbuild": "^0.12.27",
+    "@typescript-eslint/eslint-plugin": "^4.31.1",
+    "@typescript-eslint/parser": "^4.31.1",
+    "esbuild": "^0.12.28",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "node-fetch": "^3.0.0",
-    "prettier": "^2.4.0",
+    "prettier": "^2.4.1",
     "ts-loader": "^9.2.5",
     "typescript": "^4.4.3"
   }
