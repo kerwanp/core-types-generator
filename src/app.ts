@@ -1,5 +1,6 @@
 import http from 'https';
 import { Class, CoreLuaAPI, Enum, Func, Namespace, Signature } from './models';
+import fetch from 'node-fetch';
 import fs from 'fs';
 import {
   arrayToString,
@@ -15,32 +16,44 @@ import { TypeParameter } from './TypeParameter';
 import { TypeReturn } from './TypeReturn';
 import { TypeEnum } from './TypeEnum';
 
+const ENVIRONMENT = 'Prod';
+const BASE_URL = `https://manticore${ENVIRONMENT.toLowerCase()}.blob.core.windows.net`;
+const VERSION_ENDPOINT = `${BASE_URL}/builds/${ENVIRONMENT}-latest_client_build.txt`;
+
+async function getLatestVersion(): Promise<any> {
+  const versionResponse = await fetch(VERSION_ENDPOINT);
+  const latestVersion = await versionResponse.text();
+  return latestVersion;
+}
+
 async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
+  const latestVersion = await getLatestVersion();
+  console.log('Latest Version:', latestVersion);
+  const DUMP_ENDPOINT = `${BASE_URL}/builds/api_export/api-${latestVersion}.json`;
+
   return new Promise((res) => {
-    http.get(
-      'https://raw.githubusercontent.com/ManticoreGamesInc/platform-documentation/development/src/assets/api/CoreLuaAPI.json',
-      (response) => {
-        let body = '';
-        response.on('data', (chunk) => {
-          body += chunk;
-        });
-        response.on('end', () => res(JSON.parse(body)));
-      }
-    );
+    http.get(DUMP_ENDPOINT, (response) => {
+      let body = '';
+      response.on('data', (chunk) => {
+        body += chunk;
+      });
+      response.on('end', () => res(JSON.parse(body)));
+    });
   });
 }
 
 function generateClassesLines(classes: Class[]): string[] {
   const lines = [];
   for (const obj of classes) {
-    const typeClass = new TypeClass(
-      false,
-      obj.Name,
-      obj.BaseType !== 'Object' ? obj.BaseType : undefined
-    );
+    const typeClass = new TypeClass(false, obj.Name, obj.BaseType);
     if (obj.Events) {
       for (const event of obj.Events) {
         typeClass.addField(new TypeField(event.Name, ['Event']));
+      }
+    }
+    if (obj.Hooks) {
+      for (const hook of obj.Hooks) {
+        typeClass.addField(new TypeField(hook.Name, ['Hook']));
       }
     }
     if (obj.StaticFunctions) {
@@ -60,6 +73,9 @@ function generateClassesLines(classes: Class[]): string[] {
       }
     }
     for (const property of obj.Properties) {
+      if (property.Type == 'Object') {
+        property.Type = 'CoreObject|Player';
+      }
       typeClass.addField(
         new TypeField(property.Name, [typeMapping(property.Type)])
       );
@@ -93,11 +109,20 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
         typeClass.addField(new TypeField(event.Name, ['Event']), true);
       }
     }
-    for (const staticFunctions of obj.StaticFunctions) {
-      typeClass.addFunction(
-        generateFunction(obj.Name, staticFunctions, false),
-        true
-      );
+
+    if (obj.StaticHooks) {
+      for (const hook of obj.StaticHooks) {
+        typeClass.addField(new TypeField(hook.Name, ['Hook']), true);
+      }
+    }
+
+    if (obj.StaticFunctions) {
+      for (const staticFunctions of obj.StaticFunctions) {
+        typeClass.addFunction(
+          generateFunction(obj.Name, staticFunctions, false),
+          true
+        );
+      }
     }
 
     if (obj.Constants) {
@@ -198,7 +223,7 @@ async function run() {
   ]);
   lines.push(...tickFunction.getLines());
 
-  fs.writeFileSync('core-games-api.def.lua', arrayToString(lines));
+  fs.writeFileSync('dist/core-games-api.def.lua', arrayToString(lines));
 }
 
 run();

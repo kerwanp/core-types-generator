@@ -1,6 +1,4 @@
 /.idea
-
 /node_modules
-/dist
-
-/core-games-api.def.lua
+/dist/*
+!/dist/core-games-api.def.lua

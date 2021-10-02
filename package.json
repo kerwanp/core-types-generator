@@ -1,40 +1,39 @@
 {
-  "name": "boilerplate-node-typescript",
+  "name": "core-types-generator",
   "version": "1.0.0",
-  "description": "",
+  "description": "Generates an EmmyLua definition file for the Core Games API.",
   "main": "dist/main.js",
   "scripts": {
-    "serve": "NODEMON=true webpack --watch",
+    "serve": "NODEMON=true esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node --watch",
     "serve:dev": "NODE_ENV=development npm run serve",
     "serve:prod": "NODE_ENV=production npm run serve",
-    "build": "webpack",
+    "build": "esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node",
     "build:dev": "NODE_ENV=development npm run build",
-    "build:prod": "NODE_ENV=production npm run build",
+    "build:prod": "NODE_ENV=production esbuild src/app.ts --bundle --outfile=dist/main.js --platform=node --minify",
+    "dist": "npm run build:prod && node dist/main.js",
     "lint": "eslint . --ext .ts",
     "prettier": "prettier 'src/**/*.ts' --write"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/KMP-Agency/boilerplate-node-typescript.git"
+    "url": "git+https://github.com/kerwanp/core-types-generator.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/KMP-Agency/boilerplate-node-typescript/issues"
+    "url": "https://github.com/kerwanp/core-types-generator/issues"
   },
-  "homepage": "https://github.com/KMP-Agency/boilerplate-node-typescript#readme",
+  "homepage": "https://github.com/kerwanp/core-types-generator#readme",
   "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.28.2",
-    "@typescript-eslint/parser": "^4.28.2",
-    "eslint": "^7.30.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.0",
+    "@typescript-eslint/parser": "^4.31.0",
+    "esbuild": "^0.12.27",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-prettier": "^3.4.0",
-    "eslint-webpack-plugin": "^2.5.4",
-    "nodemon-webpack-plugin": "^4.5.2",
-    "prettier": "^2.3.2",
-    "ts-loader": "^9.2.3",
-    "typescript": "^4.3.5",
-    "webpack": "^5.44.0",
-    "webpack-cli": "^4.7.2"
+    "eslint-plugin-prettier": "^4.0.0",
+    "node-fetch": "^3.0.0",
+    "prettier": "^2.4.0",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.4.3"
   }
 }
