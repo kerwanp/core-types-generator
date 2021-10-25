@@ -539,6 +539,54 @@ function CoreGameCollectionEntryInstance:IsA(typeName) end
 --- @class GlobalCoreGameCollectionEntry @Metadata about a published game in a collection on the Core platform. Additional metadata is available via [CorePlatform.GetGameInfo()](coreplatform.md).
 CoreGameCollectionEntry = {}
 
+--- @class CoreGameEvent @Metadata about a creator-defined event for a game on the Core platform.
+--- @field id string @The ID of the event.
+--- @field gameId string @The ID of the game this event belongs to.
+--- @field name string @The display name of the event.
+--- @field referenceName string @The reference name of the event.
+--- @field description string @The description of the event.
+--- @field state CoreGameEventState @The current state of the event (active, scheduled, etc).
+--- @field registeredPlayerCount number @The number of players currently registered for this event.
+--- @field type string
+local CoreGameEventInstance = {}
+--- Returns a list of the tags selected when this event was published.
+--- @return table<number, string>
+function CoreGameEventInstance:GetTags() end
+
+--- Returns the start date and time of the event.
+--- @return DateTime
+function CoreGameEventInstance:GetStartDateTime() end
+
+--- Returns the end date and time of the event.
+--- @return DateTime
+function CoreGameEventInstance:GetEndDateTime() end
+
+--- @param typeName string
+--- @return boolean
+function CoreGameEventInstance:IsA(typeName) end
+
+--- @class GlobalCoreGameEvent @Metadata about a creator-defined event for a game on the Core platform.
+CoreGameEvent = {}
+
+--- @class CoreGameEventCollection @Contains a set of results from [CorePlatform.GetGameEventCollection()](coreplatform.md) and related functions. Depending on how many events are available, results may be separated into multiple pages. The `.hasMoreResults` property may be checked to determine whether more events are available. Those results may be retrieved using the `:GetMoreResults()` function.
+--- @field hasMoreResults boolean @Returns `true` if there are more events available to be requested.
+--- @field type string
+local CoreGameEventCollectionInstance = {}
+--- Returns the list of events contained in this set of results. This may return an empty table.
+--- @return table<number, CoreGameEvent>
+function CoreGameEventCollectionInstance:GetResults() end
+
+--- Requests the next set of results for this list of events and returns a new collection containing those results. Returns `nil` if the `hasMoreResults` property is `false`. This function may yield until a result is available, and may raise an error if an error occurs retrieving the information.
+--- @return CoreGameEventCollection
+function CoreGameEventCollectionInstance:GetMoreResults() end
+
+--- @param typeName string
+--- @return boolean
+function CoreGameEventCollectionInstance:IsA(typeName) end
+
+--- @class GlobalCoreGameEventCollection @Contains a set of results from [CorePlatform.GetGameEventCollection()](coreplatform.md) and related functions. Depending on how many events are available, results may be separated into multiple pages. The `.hasMoreResults` property may be checked to determine whether more events are available. Those results may be retrieved using the `:GetMoreResults()` function.
+CoreGameEventCollection = {}
+
 --- @class CoreGameInfo @Metadata about a published game on the Core platform.
 --- @field id string @The ID of the game.
 --- @field parentGameId string @The ID of this game's parent game if there is one, or else `nil`.
@@ -596,7 +644,8 @@ CoreMesh = {}
 --- @field descendantAddedEvent Event @Fired when a child is added to this object or any of its descendants.
 --- @field descendantRemovedEvent Event @Fired when a child is removed from this object or any of its descendants.
 --- @field destroyEvent Event @Fired when this object is about to be destroyed.
---- @field networkedPropertyChangedEvent Event @Fired whenever any of the networked custom properties on this object receive an update. The event is fired on the server and the client. Event payload is the owning object and the name of the property that just changed.
+--- @field customPropertyChangedEvent Event @Fired whenever any of the dynamic custom properties on this object receive an update. The event is fired on the server and the client. Event payload is the owning object and the name of the property that just changed.
+--- @field networkedPropertyChangedEvent Event @CoreObject.networkedPropertyChangedEvent is deprecated.  Please use CoreObject.customPropertyChangedEvent instead.
 --- @field name string @The object's name as seen in the Hierarchy.
 --- @field id string @The object's MUID.
 --- @field isVisible boolean
@@ -901,7 +950,13 @@ function CoreObjectInstance:GetCustomProperties() end
 --- @return any|boolean
 function CoreObjectInstance:GetCustomProperty(propertyName) end
 
---- Sets the named custom property if it is marked as replicated and the object it belongs to is server-side networked or in a client/server context. The value must match the existing type of the property, with the exception of CoreObjectReference properties (which accept a CoreObjectReference or a CoreObject) and Asset Reference properties (which accept a string MUID). AssetReferences, CoreObjectReferences, and NetReferences also accept `nil` to clear their value, although `GetCustomProperty()` will still return an unassigned CoreObjectReference or NetReference rather than `nil`. (See the `.isAssigned` property on those types.)
+--- Sets the named custom property if it is marked as dynamic and the object it belongs to is server-side networked or in a client/server context. The value must match the existing type of the property, with the exception of CoreObjectReference properties (which accept a CoreObjectReference or a CoreObject) and Asset Reference properties (which accept a string MUID). AssetReferences, CoreObjectReferences, and NetReferences also accept `nil` to clear their value, although `GetCustomProperty()` will still return an unassigned CoreObjectReference or NetReference rather than `nil`. (See the `.isAssigned` property on those types.)
+--- @param propertyName string
+--- @param propertyValue any
+--- @return boolean
+function CoreObjectInstance:SetCustomProperty(propertyName, propertyValue) end
+
+--- *This function is deprecated. Please use `CoreObject:SetCustomProperty()` instead.* Sets the named custom property if it is marked as replicated and the object it belongs to is server-side networked. The value must match the existing type of the property, with the exception of CoreObjectReference properties (which accept a CoreObjectReference or a CoreObject) and Asset Reference properties (which accept a string MUID). AssetReferences, CoreObjectReferences, and NetReferences also accept `nil` to clear their value, although `GetCustomProperty()` will still return an unassigned CoreObjectReference or NetReference rather than `nil`. (See the `.isAssigned` property on those types.)
 --- @param propertyName string
 --- @param propertyValue any
 --- @return boolean
@@ -1956,6 +2011,7 @@ PlayerStart = {}
 --- @field reason PlayerTransferReason @Indicates how the player joined or left a game.
 --- @field gameId string @The ID of the game the player joined from or left to join. Returns `nil` if the player joined while not already connected to a game or left for a reason other than joining another game. Also returns `nil` if the player has opted out of sharing this information.
 --- @field sceneId string @The scene ID that the player joined from or left to join. May return `nil`.
+--- @field sceneName string @The scene name that the player joined from or left to join. May return `nil`.
 --- @field type string
 local PlayerTransferDataInstance = {}
 --- @param typeName string
@@ -2507,7 +2563,7 @@ function TriggerInstance:IsA(typeName) end
 --- @class GlobalTrigger : CoreObject @A trigger is an invisible and non-colliding CoreObject which fires events when it interacts with another object (e.g. A Player walks into it):
 Trigger = {}
 
---- @class UIButton : UIControl @A UIControl for a button, should be inside client context.
+--- @class UIButton : UIControl @A UIControl for a button, should be inside client context. Inherits from [UIControl](uicontrol.md).
 --- @field clickedEvent Event @Fired when button is clicked. This triggers on mouse-button up, if both button-down and button-up events happen inside the button hitbox.
 --- @field pressedEvent Event @Fired when button is pressed. (mouse button down)
 --- @field releasedEvent Event @Fired when button is released. (mouse button up)
@@ -2588,10 +2644,10 @@ function UIButtonInstance:SetShadowOffset(vector2) end
 --- @return boolean
 function UIButtonInstance:IsA(typeName) end
 
---- @class GlobalUIButton : UIControl @A UIControl for a button, should be inside client context.
+--- @class GlobalUIButton : UIControl @A UIControl for a button, should be inside client context. Inherits from [UIControl](uicontrol.md).
 UIButton = {}
 
---- @class UIContainer : UIControl @A UIContainer is a type of UIControl. All other UI elements must be a descendant of a UIContainer to be visible. It does not have a position or size. It is always the size of the entire screen. It has no properties or functions of its own, but inherits everything from CoreObject.
+--- @class UIContainer : UIControl @A UIContainer is a type of UIControl. All other UI elements must be a descendant of a UIContainer to be visible. It does not have a position or size. It is always the size of the entire screen. It has no properties or functions of its own, but inherits everything from CoreObject. Inherits from [UIControl](uicontrol.md).
 --- @field opacity number @Controls the opacity of the container's contents by multiplying the alpha component of descendants' colors. Note that other UIPanels and UIContainers in the hierarchy may also contribute their own opacity values. A resulting alpha value of 1 or greater is fully opaque, 0 is fully transparent.
 --- @field cylinderArcAngle number @When the container is rendered in 3D space, this adjusts the curvature of the canvas in degrees. Changing this value will force a redraw.
 --- @field type string
@@ -2608,7 +2664,7 @@ function UIContainerInstance:SetCanvasSize(size) end
 --- @return boolean
 function UIContainerInstance:IsA(typeName) end
 
---- @class GlobalUIContainer : UIControl @A UIContainer is a type of UIControl. All other UI elements must be a descendant of a UIContainer to be visible. It does not have a position or size. It is always the size of the entire screen. It has no properties or functions of its own, but inherits everything from CoreObject.
+--- @class GlobalUIContainer : UIControl @A UIContainer is a type of UIControl. All other UI elements must be a descendant of a UIContainer to be visible. It does not have a position or size. It is always the size of the entire screen. It has no properties or functions of its own, but inherits everything from CoreObject. Inherits from [UIControl](uicontrol.md).
 UIContainer = {}
 
 --- @class UIControl : CoreObject @UIControl is a CoreObject which serves as a base class for other UI controls.
@@ -2628,7 +2684,24 @@ function UIControlInstance:IsA(typeName) end
 --- @class GlobalUIControl : CoreObject @UIControl is a CoreObject which serves as a base class for other UI controls.
 UIControl = {}
 
---- @class UIImage : UIControl @A UIControl for displaying an image.
+--- @class UIEventRSVPButton : UIControl @A UIControl for a button which allows players to register for an event within a game. Similar to `UIButton`, but designed to present a consistent experience for players across all games. Inherits from [UIControl](uicontrol.md).
+--- @field clickedEvent Event @Fired when button is clicked. This triggers on mouse-button up, if both button-down and button-up events happen inside the button hitbox.
+--- @field pressedEvent Event @Fired when button is pressed. (mouse button down)
+--- @field releasedEvent Event @Fired when button is released. (mouse button up)
+--- @field hoveredEvent Event @Fired when button is hovered.
+--- @field unhoveredEvent Event @Fired when button is unhovered.
+--- @field isInteractable boolean @Returns whether the button can interact with the cursor (click, hover, etc).
+--- @field eventId string @Returns the ID of the event for which this button is currently configured. This ID can be found in the creator dashboard or using the `CoreGameEvent.id` property of an event returned from various `CorePlatform` functions.
+--- @field type string
+local UIEventRSVPButtonInstance = {}
+--- @param typeName string
+--- @return boolean
+function UIEventRSVPButtonInstance:IsA(typeName) end
+
+--- @class GlobalUIEventRSVPButton : UIControl @A UIControl for a button which allows players to register for an event within a game. Similar to `UIButton`, but designed to present a consistent experience for players across all games. Inherits from [UIControl](uicontrol.md).
+UIEventRSVPButton = {}
+
+--- @class UIImage : UIControl @A UIControl for displaying an image. Inherits from [UIControl](uicontrol.md).
 --- @field isTeamColorUsed boolean @If `true`, the image will be tinted blue if its team matches the Player, or red if not.
 --- @field team number @the team of the image, used for `isTeamColorUsed`.
 --- @field shouldClipToSize boolean @Whether or not the image and its shadow should be clipped when exceeding the bounds of this control.
@@ -2662,6 +2735,10 @@ function UIImageInstance:SetPlayerProfile(player) end
 --- @param screenshotIndex number
 function UIImageInstance:SetGameScreenshot(gameId, screenshotIndex) end
 
+--- Downloads and sets a game event image as the texture for this UIImage control.
+--- @param gameEvent CoreGameEvent
+function UIImageInstance:SetGameEvent(gameEvent) end
+
 --- Returns the `imageId` assigned to this UIImage control. **Note:** As of 1.0.211, this function returns `nil` instead of `"0BADBADBADBADBAD"` when no image asset has been set.
 --- @return string
 function UIImageInstance:GetImage() end
@@ -2690,10 +2767,10 @@ function UIImageInstance:SetCameraCapture(cameraCapture) end
 --- @return boolean
 function UIImageInstance:IsA(typeName) end
 
---- @class GlobalUIImage : UIControl @A UIControl for displaying an image.
+--- @class GlobalUIImage : UIControl @A UIControl for displaying an image. Inherits from [UIControl](uicontrol.md).
 UIImage = {}
 
---- @class UIPanel : UIControl @A UIControl which can be used for containing and laying out other UI controls.
+--- @class UIPanel : UIControl @A UIControl which can be used for containing and laying out other UI controls. Inherits from [UIControl](uicontrol.md).
 --- @field shouldClipChildren number @If `true`, children of this UIPanel will not draw outside of its bounds.
 --- @field opacity number @Controls the opacity of the panel's contents by multiplying the alpha component of descendants' colors. Note that other UIPanels and UIContainers in the hierarchy may also contribute their own opacity values. A resulting alpha value of 1 or greater is fully opaque, 0 is fully transparent.
 --- @field type string
@@ -2702,10 +2779,10 @@ local UIPanelInstance = {}
 --- @return boolean
 function UIPanelInstance:IsA(typeName) end
 
---- @class GlobalUIPanel : UIControl @A UIControl which can be used for containing and laying out other UI controls.
+--- @class GlobalUIPanel : UIControl @A UIControl which can be used for containing and laying out other UI controls. Inherits from [UIControl](uicontrol.md).
 UIPanel = {}
 
---- @class UIPerkPurchaseButton : UIControl @A UIControl for a button which allows players to purchase perks within a game. Similar to `UIButton`, but designed to present a consistent purchasing experience for players across all games.
+--- @class UIPerkPurchaseButton : UIControl @A UIControl for a button which allows players to purchase perks within a game. Similar to `UIButton`, but designed to present a consistent purchasing experience for players across all games. Inherits from [UIControl](uicontrol.md).
 --- @field clickedEvent Event @Fired when button is clicked. This triggers on mouse-button up, if both button-down and button-up events happen inside the button hitbox.
 --- @field pressedEvent Event @Fired when button is pressed. (mouse button down)
 --- @field releasedEvent Event @Fired when button is released. (mouse button up)
@@ -2726,10 +2803,10 @@ function UIPerkPurchaseButtonInstance:GetPerkReference() end
 --- @return boolean
 function UIPerkPurchaseButtonInstance:IsA(typeName) end
 
---- @class GlobalUIPerkPurchaseButton : UIControl @A UIControl for a button which allows players to purchase perks within a game. Similar to `UIButton`, but designed to present a consistent purchasing experience for players across all games.
+--- @class GlobalUIPerkPurchaseButton : UIControl @A UIControl for a button which allows players to purchase perks within a game. Similar to `UIButton`, but designed to present a consistent purchasing experience for players across all games. Inherits from [UIControl](uicontrol.md).
 UIPerkPurchaseButton = {}
 
---- @class UIProgressBar : UIControl @A UIControl that displays a filled rectangle which can be used for things such as a health indicator.
+--- @class UIProgressBar : UIControl @A UIControl that displays a filled rectangle which can be used for things such as a health indicator. Inherits from [UIControl](uicontrol.md).
 --- @field progress number @From 0 to 1, how full the bar should be.
 --- @field fillType ProgressBarFillType @Controls the direction in which the progress bar fills.
 --- @field fillTileType ImageTileType @How the fill texture is tiled.
@@ -2772,20 +2849,20 @@ function UIProgressBarInstance:SetBackgroundColor(color) end
 --- @return boolean
 function UIProgressBarInstance:IsA(typeName) end
 
---- @class GlobalUIProgressBar : UIControl @A UIControl that displays a filled rectangle which can be used for things such as a health indicator.
+--- @class GlobalUIProgressBar : UIControl @A UIControl that displays a filled rectangle which can be used for things such as a health indicator. Inherits from [UIControl](uicontrol.md).
 UIProgressBar = {}
 
---- @class UIRewardPointsMeter : UIControl @A UIControl that displays the a players progress towards the daily Reward Points cap.
+--- @class UIRewardPointsMeter : UIControl @A UIControl that displays the a players progress towards the daily Reward Points cap. Inherits from [UIControl](uicontrol.md).
 --- @field type string
 local UIRewardPointsMeterInstance = {}
 --- @param typeName string
 --- @return boolean
 function UIRewardPointsMeterInstance:IsA(typeName) end
 
---- @class GlobalUIRewardPointsMeter : UIControl @A UIControl that displays the a players progress towards the daily Reward Points cap.
+--- @class GlobalUIRewardPointsMeter : UIControl @A UIControl that displays the a players progress towards the daily Reward Points cap. Inherits from [UIControl](uicontrol.md).
 UIRewardPointsMeter = {}
 
---- @class UIScrollPanel : UIControl @A UIControl that supports scrolling a child UIControl that is larger than itself.
+--- @class UIScrollPanel : UIControl @A UIControl that supports scrolling a child UIControl that is larger than itself. Inherits from [UIControl](uicontrol.md).
 --- @field orientation Orientation @Determines whether the panel scrolls horizontally or vertically. Default is `Orientation.VERTICAL`.
 --- @field scrollPosition number @The position in UI space of the scroll panel content. Defaults to 0, which is scrolled to the top or left, depending on orientation. Set to the value of `contentLength` to scroll to the end.
 --- @field contentLength number @Returns the height or width of the scroll panel content, depending on orientation. This is the maximum value of `scrollPosition`.
@@ -2795,10 +2872,10 @@ local UIScrollPanelInstance = {}
 --- @return boolean
 function UIScrollPanelInstance:IsA(typeName) end
 
---- @class GlobalUIScrollPanel : UIControl @A UIControl that supports scrolling a child UIControl that is larger than itself.
+--- @class GlobalUIScrollPanel : UIControl @A UIControl that supports scrolling a child UIControl that is larger than itself. Inherits from [UIControl](uicontrol.md).
 UIScrollPanel = {}
 
---- @class UIText : UIControl @A UIControl which displays a basic text label.
+--- @class UIText : UIControl @A UIControl which displays a basic text label. Inherits from [UIControl](uicontrol.md).
 --- @field text string @The actual text string to show.
 --- @field fontSize number @The font size of the UIText control.
 --- @field outlineSize number @The thickness of the outline around text in this control. A value of 0 means no outline.
@@ -2852,7 +2929,7 @@ function UITextInstance:SetOutlineColor(color) end
 --- @return boolean
 function UITextInstance:IsA(typeName) end
 
---- @class GlobalUIText : UIControl @A UIControl which displays a basic text label.
+--- @class GlobalUIText : UIControl @A UIControl which displays a basic text label. Inherits from [UIControl](uicontrol.md).
 UIText = {}
 
 --- @class Vector2 @A two-component vector that can represent a position or direction.
@@ -3301,6 +3378,52 @@ function CorePlatform.GetGameCollection(collectionId) end
 --- @return CorePlayerProfile
 function CorePlatform.GetPlayerProfile(playerId) end
 
+--- Requests metadata for a creator event with the given event ID. Event IDs for specific events may be found in the Creator Events Dashboard. This function may yield until a result is available, and may raise an error if the event ID is invalid or if an error occurs retrieving the information. Results may be cached for later calls.
+--- @param eventId string
+--- @return CoreGameEvent
+function CorePlatform.GetGameEvent(eventId) end
+
+--- Requests a list of creator events belonging to a given collection. This function may yield until a result is available, and may raise an error if the collection ID is invalid or if an error occurs retrieving the information. Results may be cached for later calls. Supported event collection IDs include: "active", "upcoming", "popular", and "suggested".
+--- 
+--- The following optional parameters are supported:
+--- 
+--- `state (CoreGameEventState)`: Filters the returned collection to include only events with the specified state. By default, active and upcoming events are returned.
+--- @overload fun(collectionId: string): CoreGameEventCollection
+--- @param collectionId string
+--- @param optionalParameters table
+--- @return CoreGameEventCollection
+function CorePlatform.GetGameEventCollection(collectionId, optionalParameters) end
+
+--- Requests a list of creator events for the specified game. This function may yield until a result is available, and may raise an error if the game ID is invalid or if an error occurs retrieving the information. Results may be cached for later calls.
+--- 
+--- The following optional parameters are supported:
+--- 
+--- `state (CoreGameEventState)`: Filters the returned events to include only events with the specified state. By default, active and upcoming events are returned.
+--- 
+--- `tag (string)`: Filters the returned events to include only events with the given tag.
+--- @overload fun(gameId: string): CoreGameEventCollection
+--- @param gameId string
+--- @param optionalParameters table
+--- @return CoreGameEventCollection
+function CorePlatform.GetGameEventsForGame(gameId, optionalParameters) end
+
+--- Returns `true` if the given player is registered for the given event, or `false` if they are not. This function may yield until a result is available, and may raise an error if an error occurs retrieving the information. Results may be cached for later calls, and so may also not be immediately up to date. This function will raise an error if called from a client script with a player other than the local player.
+--- @param player Player
+--- @param gameEvent CoreGameEvent
+--- @return boolean
+function CorePlatform.IsPlayerRegisteredForGameEvent(player, gameEvent) end
+
+--- Requests a list of creator events for which the given player is registered. This function may yield until a result is available, and may raise an error if an error occurs retrieving the information. This function will raise an error if called from a client script with a player other than the local player. Results may be cached for later calls.
+--- 
+--- The following optional parameters are supported:
+--- 
+--- `state (CoreGameEventState)`: Filters the returned events to include only events with the specified state. By default, active and upcoming events are returned.
+--- @overload fun(player: Player): CoreGameEventCollection
+--- @param player Player
+--- @param optionalParameters table
+--- @return CoreGameEventCollection
+function CorePlatform.GetRegisteredGameEvents(player, optionalParameters) end
+
 --- @class CoreSocial
 local CoreSocialInstance = {}
 --- @class GlobalCoreSocial
@@ -3506,6 +3629,13 @@ function Game.IsAcceptingPlayers() end
 --- @param gameCollectionEntry CoreGameCollectionEntry
 function Game.TransferAllPlayersToGame(gameCollectionEntry) end
 
+--- Similar to `Player:TransferToGame()`, transfers the specified list of players to the game specified by the passed in game ID. Note that if a party leader is included in the list of players to transfer, the "Play as Party" party setting is ignored, and other party members will only be transfered if also included in the list of players. Does not work in preview mode or in games played locally.
+--- @overload fun(gameInfo: CoreGameInfo,players: table<number, Player>)
+--- @overload fun(gameId: string,players: table<number, Player>)
+--- @param gameCollectionEntry CoreGameCollectionEntry
+--- @param players table<number, Player>
+function Game.TransferPlayersToGame(gameCollectionEntry, players) end
+
 --- Similar to `Player:TransferToScene()`, transfers all players to the scene specified by the passed in scene name. Does not work in preview mode or in games played locally.
 --- 
 --- The following optional parameters are supported:
@@ -3515,6 +3645,17 @@ function Game.TransferAllPlayersToGame(gameCollectionEntry) end
 --- @param sceneName string
 --- @param optionalParams table
 function Game.TransferAllPlayersToScene(sceneName, optionalParams) end
+
+--- Similar to `Player:TransferToScene()`, transfers the specified list of players to the scene specified by the passed in scene name. Note that if a party leader is included in the list of players to transfer, the "Play as Party" party setting is ignored, and other party members will only be transfered if also included in the list of players. Does not work in preview mode or in games played locally.
+--- 
+--- The following optional parameters are supported:
+--- 
+--- `spawnKey (string)`: Spawns the players at a spawn point with a matching key. If an invalid key is provided, the players will spawn at the origin, (0, 0, 0).
+--- @overload fun(sceneName: string,players: table<number, Player>)
+--- @param sceneName string
+--- @param players table<number, Player>
+--- @param optionalParams table
+function Game.TransferPlayersToScene(sceneName, players, optionalParams) end
 
 --- Returns the name of the current scene.
 --- @return string
@@ -3831,9 +3972,35 @@ function World.FindObjectsByName(name) end
 --- @return table<number, CoreObject>
 function World.FindObjectsByType(typeName) end
 
---- Spawns an instance of an asset into the world. Optional parameters can specify a parent for the spawned object. Supported parameters include: parent (CoreObject)
+--- Spawns an instance of an asset into the world. Optional parameters can specify a parent, transform, or other properties of the spawned object. Note that when spawning a template, most optional parameters apply only to the root object of the spawned template.
 --- 
---- If provided, the spawned asset will be a child of this parent, and any Transform parameters are relative to the parent's Transform; `position (Vector3)`: Position of the spawned object; `rotation (Rotation or Quaternion)`: Rotation of the spawned object; `scale (Vector3)`: Scale of the spawned object.
+--- Supported parameters include:
+--- 
+--- `parent (CoreObject)`: If provided, the spawned asset will be a child of this parent, and any Transform parameters are relative to the parent's Transform.
+--- 
+--- `position (Vector3)`: Position of the spawned object.
+--- 
+--- `rotation (Rotation or Quaternion)`: Rotation of the spawned object.
+--- 
+--- `scale (Vector3)`: Scale of the spawned object.
+--- 
+--- `transform (Transform)`: The full transform of the spawned object. If `transform` is specified, it is an error to also specify `position`, `rotation`, or `scale`.
+--- 
+--- `networkContext (NetworkContext)`: Overrides the network context of the spawned object. This may be used, for example, to spawn networked or static objects from a server only context, or client-only objects from a client script running in a static context, but it cannot spawn client only objects from a server script or networked objects from a client script. If an invalid context is specified, an error will be raised.
+--- 
+--- `name (string)`: Set the name of the spawned object.
+--- 
+--- `team (integer)`: Set the team on the spawned object.
+--- 
+--- `lifeSpan (number)`: Set the life span of the spawned object.
+--- 
+--- `collision (Collision)`: Set the collision of the spawned object.
+--- 
+--- `visibility (Visibility)`: Set the visibility of the spawned object.
+--- 
+--- `cameraCollision (Collision)`: Set the camera collision of the spawned object.
+--- 
+--- `color (Color)`: Set the color of the spawned object.
 --- @overload fun(assetId: string): CoreObject
 --- @param assetId string
 --- @param optionalParameters table
@@ -3984,6 +4151,12 @@ Collision = {
     FORCE_ON = 1,
     FORCE_OFF = 2,
 }
+--- @class CoreGameEventState @Indicates the status of a CoreGameEvent.
+CoreGameEventState = {
+    ACTIVE = 1,
+    SCHEDULED = 0,
+    CANCELED = 2,
+}
 --- @class CoreModalType @Identifies the type of a Core built-in modal dialog.
 CoreModalType = {
     PAUSE_MENU = 1,
@@ -4076,6 +4249,13 @@ NetReferenceType = {
     SHARED_STORAGE = 2,
     CREATOR_PERK = 3,
     UNKNOWN = 0,
+}
+--- @class NetworkContextType @Indicates the network context to use when spawning an object.
+NetworkContextType = {
+    NETWORKED = 2,
+    CLIENT_CONTEXT = 3,
+    SERVER_CONTEXT = 4,
+    STATIC_CONTEXT = 5,
 }
 --- @class Orientation @Determines the orientation of a `UIScrollPanel`.
 Orientation = {
