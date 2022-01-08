@@ -45,15 +45,41 @@ async function getCoreLuaAPI(): Promise<CoreLuaAPI> {
 function generateClassesLines(classes: Class[]): string[] {
   const lines = [];
   for (const obj of classes) {
-    const typeClass = new TypeClass(false, obj.Name, obj.BaseType);
+    const typeClass = new TypeClass(
+      false,
+      obj.Name,
+      `@${obj.Description}`,
+      obj.BaseType,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined
+    );
     if (obj.Events) {
       for (const event of obj.Events) {
-        typeClass.addField(new TypeField(event.Name, ['Event']));
+        typeClass.addField(
+          new TypeField(
+            event.Name,
+            ['Event'],
+            event.IsDeprecated
+              ? `@${event.DeprecationMessage}`
+              : `@${event.Description}`
+          )
+        );
       }
     }
     if (obj.Hooks) {
       for (const hook of obj.Hooks) {
-        typeClass.addField(new TypeField(hook.Name, ['Hook']));
+        typeClass.addField(
+          new TypeField(
+            hook.Name,
+            ['Hook'],
+            hook.IsDeprecated
+              ? `@${hook.DeprecationMessage}`
+              : `@${hook.Description}`
+          )
+        );
       }
     }
     if (obj.StaticFunctions) {
@@ -77,7 +103,11 @@ function generateClassesLines(classes: Class[]): string[] {
         property.Type = 'CoreObject|Player';
       }
       typeClass.addField(
-        new TypeField(property.Name, [typeMapping(property.Type)])
+        new TypeField(
+          property.Name,
+          [typeMapping(property.Type)],
+          property.Description ? `@${property.Description}` : ''
+        )
       );
     }
     for (const memberFunction of obj.MemberFunctions) {
@@ -86,7 +116,10 @@ function generateClassesLines(classes: Class[]): string[] {
     if (obj.Constants) {
       for (const constant of obj.Constants) {
         typeClass.addField(
-          new TypeField(constant.Name, [typeMapping(constant.Type)]),
+          new TypeField(constant.Name, [
+            typeMapping(constant.Type),
+            `@${constant.Description}`
+          ]),
           true
         );
       }
@@ -106,13 +139,31 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 
     if (obj.StaticEvents) {
       for (const event of obj.StaticEvents) {
-        typeClass.addField(new TypeField(event.Name, ['Event']), true);
+        typeClass.addField(
+          new TypeField(
+            event.Name,
+            ['Event'],
+            event.IsDeprecated
+              ? `@${event.DeprecationMessage}`
+              : `@${event.Description}`
+          ),
+          true
+        );
       }
     }
 
     if (obj.StaticHooks) {
       for (const hook of obj.StaticHooks) {
-        typeClass.addField(new TypeField(hook.Name, ['Hook']), true);
+        typeClass.addField(
+          new TypeField(
+            hook.Name,
+            ['Hook'],
+            hook.IsDeprecated
+              ? `@${hook.DeprecationMessage}`
+              : `@${hook.Description}`
+          ),
+          true
+        );
       }
     }
 
@@ -128,7 +179,10 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
     if (obj.Constants) {
       for (const constant of obj.Constants) {
         typeClass.addField(
-          new TypeField(constant.Name, [typeMapping(constant.Type)]),
+          new TypeField(constant.Name, [
+            typeMapping(constant.Type),
+            `@${constant.Description}`
+          ]),
           true
         );
       }
@@ -143,7 +197,7 @@ function generateNamespacesLines(namespaces: Namespace[]): string[] {
 function generateEnumsLines(enums: Enum[]) {
   const lines = [];
   for (const obj of enums) {
-    const typeEnum = new TypeEnum(obj.Name);
+    const typeEnum = new TypeEnum(obj.Name, obj.Description);
     for (const field of obj.Values) {
       typeEnum.addValue(field.Name, field.Value);
     }
@@ -160,7 +214,8 @@ function generateFunction(
   member: boolean
 ): TypeFunction {
   const typeFunction = new TypeFunction(
-    `${className}${member ? ':' : '.'}${func.Name}`
+    `${className}${member ? ':' : '.'}${func.Name}`,
+    func.Description
   );
   const signatures = generateSignatures(func.Signatures);
   for (const signature of signatures) {
@@ -210,17 +265,23 @@ async function run() {
   lines.push('script = nil');
   lines.push('');
 
-  const timeFunction = new TypeFunction('time', [
-    new TypeSignature([], [new TypeReturn(['number'])])
-  ]);
+  const timeFunction = new TypeFunction(
+    'time',
+    'Returns the time in seconds (floating point) since the game started on the server.',
+    [new TypeSignature([], [new TypeReturn(['number'])])]
+  );
   lines.push(...timeFunction.getLines());
 
-  const tickFunction = new TypeFunction('Tick', [
-    new TypeSignature(
-      [new TypeParameter('deltaTime', ['number'])],
-      [new TypeReturn(['number'])]
-    )
-  ]);
+  const tickFunction = new TypeFunction(
+    'Tick',
+    'The Tick event is used for things you need to check continuously (e.g. main game loop), but be careful of putting too much logic here or you will cause performance issues. DeltaTime is the time difference (in seconds) between this and the last tick.',
+    [
+      new TypeSignature(
+        [new TypeParameter('deltaTime', ['number'])],
+        [new TypeReturn(['number'])]
+      )
+    ]
+  );
   lines.push(...tickFunction.getLines());
 
   fs.writeFileSync('dist/core-games-api.def.lua', arrayToString(lines));

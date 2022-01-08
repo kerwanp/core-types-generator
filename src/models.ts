@@ -34,6 +34,8 @@ export interface Namespace {
 export interface Enum {
   Name: string;
   Description: string;
+  IsDeprecated: boolean;
+  DeprecationMessage: string;
   Values: {
     Name: string;
     Description: string;
@@ -44,6 +46,8 @@ export interface Enum {
 export interface Event {
   Name: string;
   Description: string;
+  IsDeprecated: boolean;
+  DeprecationMessage: string;
   Parameters: {
     Type: string;
     Name: string;
@@ -52,6 +56,7 @@ export interface Event {
 
 export interface Func {
   Name: string;
+  Description: string;
   Signatures: Signature[];
 }
 
@@ -85,6 +90,8 @@ export interface Constant {
 export interface Hook {
   Name: string;
   Description: string;
+  IsDeprecated: boolean;
+  DeprecationMessage: string;
   Parameters: {
     Type: string;
     Name: string;

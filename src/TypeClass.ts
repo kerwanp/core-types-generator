@@ -1,18 +1,18 @@
 import { TypeFunction } from './TypeFunction';
 import { TypeField } from './TypeField';
-import { getAnnotation } from './utils';
+import { getAnnotation, getShortDescription } from './utils';
 
 export class TypeClass {
   public constructor(
     private isGlobal: boolean,
     private name: string,
+    private description?: string,
     private baseClass?: string,
     private staticFunctions: TypeFunction[] = [],
     private memberFunctions: TypeFunction[] = [],
     private memberFields: TypeField[] = [],
     private staticFields: TypeField[] = [],
-    private constants: TypeField[] = [],
-    private description?: string
+    private constants: TypeField[] = []
   ) {}
 
   public addFunction(typeFunction: TypeFunction, isStatic = false) {
@@ -60,7 +60,7 @@ export class TypeClass {
     return getAnnotation(
       'class',
       `${name}${this.baseClass ? ' : ' + this.baseClass : ''}`,
-      this.description
+      getShortDescription(this.description)
     );
   }
 

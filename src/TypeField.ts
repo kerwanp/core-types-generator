@@ -1,4 +1,4 @@
-import { getAnnotation } from './utils';
+import { getAnnotation, getShortDescription } from './utils';
 
 export class TypeField {
   public constructor(
@@ -11,8 +11,8 @@ export class TypeField {
     return getAnnotation(
       'field',
       this.name,
-      this.types.join('|'),
-      this.description
+      this.types.join(' '),
+      getShortDescription(this.description)
     );
   }
 }
