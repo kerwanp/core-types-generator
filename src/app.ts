@@ -217,7 +217,7 @@ function generateFunction(
     `${className}${member ? ':' : '.'}${func.Name}`,
     func.Description
   );
-  const signatures = generateSignatures(func.Signatures);
+  const signatures = generateSignatures(func.Signatures, member ? className : undefined);
   for (const signature of signatures) {
     typeFunction.addSignature(signature);
   }
@@ -225,10 +225,22 @@ function generateFunction(
   return typeFunction;
 }
 
-function generateSignatures(signatures: Signature[]): TypeSignature[] {
+function generateSignatures(signatures: Signature[], memberOfClass?: string): TypeSignature[] {
   const typeSignatures = [];
   for (const signature of signatures) {
     const typeSignature = new TypeSignature();
+
+    if (memberOfClass && typeSignatures.length > 0) {
+      typeSignature.addParameter(
+        new TypeParameter(
+          reservedNamesMapping('self'),
+          [typeMapping(memberOfClass)],
+          false,
+          false
+        )
+      );
+    }
+
     for (const parameter of signature.Parameters) {
       typeSignature.addParameter(
         new TypeParameter(
