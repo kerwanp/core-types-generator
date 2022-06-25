@@ -56,7 +56,7 @@ function AIActivityHandlerInstance:IsA(typeName) end
 --- @class GlobalAIActivityHandler : CoreObject @AIActivityHandle is a CoreObject which can manage one or more `AIActivity`. Each tick, the handler calls a function on each of its registered activities to give them a chance to reevaluate their priorities. It then ticks the highest priority activity again, allowing it to perform additional work.
 AIActivityHandler = {}
 
---- @class Ability : CoreObject @Abilities are CoreObjects that can be added to Players and guide the Player's animation in sync with the Ability's state machine. Spawn an Ability with `World.SpawnAsset()` or add an Ability as a child of an Equipment/Weapon to have it be assigned to the Player automatically when that item is equipped.. . Abilities can be activated by association with an Action Binding. Their internal state machine flows through the phases: Ready, Cast, Execute, Recovery and Cooldown. An Ability begins in the Ready state and transitions to Cast when its Binding (e.g. Left mouse click) is activated by the owning player. It then automatically flows from Cast to Execute, then Recovery and finally Cooldown. At each of these state transitions it fires a corresponding event.. . Only one ability can be active at a time. By default, activating an ability will interrupt the currently active ability. The `canBePrevented` and `preventsOtherAbilities` properties can be used to customize interruption rules for competing abilities.. . If an ability is interrupted during the Cast phase, it will immediately reset to the Ready state. If an ability is interrupted during the Execute or Recovery phase, the ability will immediately transition to the Cooldown phase.
+--- @class Ability : CoreObject @Abilities are CoreObjects that can be added to Players and guide the Player's animation in sync with the Ability's state machine. Spawn an Ability with `World.SpawnAsset()` or add an Ability as a child of an Equipment/Weapon to have it be assigned to the Player automatically when that item is equipped.. . Abilities can be activated by association with an Action Binding. Their internal state machine flows through the phases: Ready, Cast, Execute, Recovery, and Cooldown. An Ability begins in the Ready state and transitions to Cast when its Binding (for example Left mouse click) is activated by the owning player. It then automatically flows from Cast to Execute, then Recovery and finally Cooldown. At each of these state transitions it fires a corresponding event.. . Only one ability can be active at a time. By default, activating an ability will interrupt the currently active ability. The `canBePrevented` and `preventsOtherAbilities` properties can be used to customize interruption rules for competing abilities.. . If an ability is interrupted during the Cast phase, it will immediately reset to the Ready state. If an ability is interrupted during the Execute or Recovery phase, the ability will immediately transition to the Cooldown phase.
 --- @field readyEvent Event @Fired when the Ability becomes ready. In this phase it is possible to activate it again.
 --- @field castEvent Event @Fired when the Ability enters the Cast phase.
 --- @field executeEvent Event @Fired when the Ability enters Execute phase.
@@ -64,7 +64,8 @@ AIActivityHandler = {}
 --- @field cooldownEvent Event @Fired when the Ability enters Cooldown.
 --- @field interruptedEvent Event @Fired when the Ability is interrupted.
 --- @field tickEvent Event @Fired every tick while the Ability is active (isEnabled = true and phase is not ready).
---- @field actionBinding string @Which action binding will cause the Ability to activate. Possible values of the bindings are listed on the [Ability binding](../api/key_bindings.md) page.
+--- @field actionBinding string @*This property is deprecated. Please use `actionName` instead, but note that `actionBinding` and `actionName` use different values.*  Which action binding will cause the Ability to activate. Possible values of the bindings are listed on the [Ability binding](../api/key_bindings.md) page.
+--- @field actionName string @Which binding set action name will cause the Ability to activate. See [Binding Sets](../references/binding_sets.md) reference.
 --- @field canActivateWhileDead boolean @Indicates if the Ability can be used while the owning Player is dead. False by default.
 --- @field animation string @Name of the animation the Player will play when the Ability is activated. Possible values: See [Ability Animation](../api/animations.md) for strings and other info.
 --- @field canBePrevented boolean @Used in conjunction with the phase property `preventsOtherAbilities` so multiple abilities on the same Player can block each other during specific phases. True by default.
@@ -88,6 +89,10 @@ function AbilityInstance:SetTargetData(target) end
 --- @return AbilityPhase
 function AbilityInstance:GetCurrentPhase() end
 
+--- Returns the settings for the current phase of this Ability. Returns `nil` if the current phase is `AbilityPhase.READY`.
+--- @return AbilityPhaseSettings
+function AbilityInstance:GetCurrentPhaseSettings() end
+
 --- Seconds left in the current phase.
 --- @return number
 function AbilityInstance:GetPhaseTimeRemaining() end
@@ -105,7 +110,7 @@ function AbilityInstance:AdvancePhase() end
 --- @return boolean
 function AbilityInstance:IsA(typeName) end
 
---- @class GlobalAbility : CoreObject @Abilities are CoreObjects that can be added to Players and guide the Player's animation in sync with the Ability's state machine. Spawn an Ability with `World.SpawnAsset()` or add an Ability as a child of an Equipment/Weapon to have it be assigned to the Player automatically when that item is equipped.. . Abilities can be activated by association with an Action Binding. Their internal state machine flows through the phases: Ready, Cast, Execute, Recovery and Cooldown. An Ability begins in the Ready state and transitions to Cast when its Binding (e.g. Left mouse click) is activated by the owning player. It then automatically flows from Cast to Execute, then Recovery and finally Cooldown. At each of these state transitions it fires a corresponding event.. . Only one ability can be active at a time. By default, activating an ability will interrupt the currently active ability. The `canBePrevented` and `preventsOtherAbilities` properties can be used to customize interruption rules for competing abilities.. . If an ability is interrupted during the Cast phase, it will immediately reset to the Ready state. If an ability is interrupted during the Execute or Recovery phase, the ability will immediately transition to the Cooldown phase.
+--- @class GlobalAbility : CoreObject @Abilities are CoreObjects that can be added to Players and guide the Player's animation in sync with the Ability's state machine. Spawn an Ability with `World.SpawnAsset()` or add an Ability as a child of an Equipment/Weapon to have it be assigned to the Player automatically when that item is equipped.. . Abilities can be activated by association with an Action Binding. Their internal state machine flows through the phases: Ready, Cast, Execute, Recovery, and Cooldown. An Ability begins in the Ready state and transitions to Cast when its Binding (for example Left mouse click) is activated by the owning player. It then automatically flows from Cast to Execute, then Recovery and finally Cooldown. At each of these state transitions it fires a corresponding event.. . Only one ability can be active at a time. By default, activating an ability will interrupt the currently active ability. The `canBePrevented` and `preventsOtherAbilities` properties can be used to customize interruption rules for competing abilities.. . If an ability is interrupted during the Cast phase, it will immediately reset to the Ready state. If an ability is interrupted during the Execute or Recovery phase, the ability will immediately transition to the Cooldown phase.
 Ability = {}
 
 --- @class AbilityPhaseSettings : Object @Each phase of an Ability can be configured differently, allowing complex and different Abilities. AbilityPhaseSettings is an Object.
@@ -184,7 +189,7 @@ function AbilityTarget.New() end
 
 
 --- @class AnimatedMesh : CoreMesh @AnimatedMesh objects are skeletal CoreMeshes with parameterized animations baked into them. They also have sockets exposed to which any CoreObject can be attached.
---- @field animationEvent Event @Some animations have events specified at important points of the animation (e.g. the impact point in a punch animation). This event is fired with the animated mesh that triggered it, the name of the event at those points, and the name of the animation itself.
+--- @field animationEvent Event @Some animations have events specified at important points of the animation (for example the impact point in a punch animation). This event is fired with the animated mesh that triggered it, the name of the event at those points, and the name of the animation itself.
 --- @field animationStance string @The stance the animated mesh plays.
 --- @field animationStancePlaybackRate number @The playback rate for the animation stance being played.
 --- @field animationStanceShouldLoop boolean @If `true`, the animation stance will keep playing in a loop. If `false` the animation will stop playing once completed.
@@ -329,6 +334,107 @@ function BindingSetInstance:IsA(typeName) end
 --- @class GlobalBindingSet : CoreObject @BindingSet is a CoreObject which contains a set of actions a creator has defined for a game and the default key bindings to trigger those actions.
 BindingSet = {}
 
+--- @class BlockchainContract @Metadata about a smart contract on the blockchain.
+--- @field address string @The address of the contract.
+--- @field name string @The name of the contract, if it has one.
+--- @field description string @The description of the contract, if it has one.
+--- @field symbol string @An abbreviated name for the contract.
+--- @field count number @The number of tokens contained in the contract, if available.
+--- @field type string
+local BlockchainContractInstance = {}
+--- @param typeName string
+--- @return boolean
+function BlockchainContractInstance:IsA(typeName) end
+
+--- @class GlobalBlockchainContract @Metadata about a smart contract on the blockchain.
+BlockchainContract = {}
+
+--- @class BlockchainToken @Metadata about a token stored on the blockchain.
+--- @field contractAddress string @The address of the contract this token belongs to.
+--- @field tokenId string @The ID of this token within its contract.
+--- @field name string @The name of the token, if it has one.
+--- @field description string @The description of the token, if it has one.
+--- @field rawMetadata string @The raw, unprocessed metadata value from the token. This could be anything, including a URL, JSON string, etc.
+--- @field ownerAddress string @The wallet address of the token's owner.
+--- @field creatorAddress string @The address of the token's creator.
+--- @field type string
+local BlockchainTokenInstance = {}
+--- Returns the contract this token belongs to.
+--- @return BlockchainContract
+function BlockchainTokenInstance:GetContract() end
+
+--- Returns an array of this token's attributes.
+--- @return table<number, BlockchainTokenAttribute>
+function BlockchainTokenInstance:GetAttributes() end
+
+--- Returns the attribute with the specified name. Returns nil if this token does not contain the desired attribute.
+--- @param name string
+--- @return BlockchainTokenAttribute
+function BlockchainTokenInstance:GetAttribute(name) end
+
+--- @param typeName string
+--- @return boolean
+function BlockchainTokenInstance:IsA(typeName) end
+
+--- @class GlobalBlockchainToken @Metadata about a token stored on the blockchain.
+BlockchainToken = {}
+
+--- @class BlockchainTokenAttribute @A single attribute on a BlockchainToken.
+--- @field name string @The name of the attribute.
+--- @field type string
+local BlockchainTokenAttributeInstance = {}
+--- Returns the attribute's value as a string.
+--- @return string
+function BlockchainTokenAttributeInstance:GetValue() end
+
+--- @param typeName string
+--- @return boolean
+function BlockchainTokenAttributeInstance:IsA(typeName) end
+
+--- @class GlobalBlockchainTokenAttribute @A single attribute on a BlockchainToken.
+BlockchainTokenAttribute = {}
+
+--- @class BlockchainTokenCollection @Contains a set of results from [Blockchain.GetTokens()](blockchain.md) and related functions. Depending on how many tokens are available, results may be separated into multiple pages. The `.hasMoreResults` property may be checked to determine whether more tokens are available. Those results may be retrieved using the `:GetMoreResults()` function.
+--- @field hasMoreResults boolean @Returns `true` if there are more tokens available to be requested.
+--- @field type string
+local BlockchainTokenCollectionInstance = {}
+--- Returns the list of tokens contained in this set of results. This may return an empty table.
+--- @return table<number, BlockchainToken>
+function BlockchainTokenCollectionInstance:GetResults() end
+
+--- Requests the next set of results for this list of tokens and returns a new collection containing those results. This function may yield until a result is available. Returns `nil` if the `hasMoreResults` property is `false`, or if an error occurs while fetching data. The status code in the second return value indicates whether the request succeeded or failed, with an optional error message in the third return value.
+--- @return BlockchainTokenCollection|BlockchainTokenResultCode|string
+function BlockchainTokenCollectionInstance:GetMoreResults() end
+
+--- @param typeName string
+--- @return boolean
+function BlockchainTokenCollectionInstance:IsA(typeName) end
+
+--- @class GlobalBlockchainTokenCollection @Contains a set of results from [Blockchain.GetTokens()](blockchain.md) and related functions. Depending on how many tokens are available, results may be separated into multiple pages. The `.hasMoreResults` property may be checked to determine whether more tokens are available. Those results may be retrieved using the `:GetMoreResults()` function.
+BlockchainTokenCollection = {}
+
+--- @class Box @A 3D box aligned to some coordinate system.
+--- @field type string
+local BoxInstance = {}
+--- Returns the coordinates of the center of the box.
+--- @return Vector3
+function BoxInstance:GetCenter() end
+
+--- Returns a Vector3 representing half the size of the box along its local axes.
+--- @return Vector3
+function BoxInstance:GetExtent() end
+
+--- Returns a Transform which, when applied to a unit cube, produces a result matching the position, size, and rotation of this box.
+--- @return Transform
+function BoxInstance:GetTransform() end
+
+--- @param typeName string
+--- @return boolean
+function BoxInstance:IsA(typeName) end
+
+--- @class GlobalBox @A 3D box aligned to some coordinate system.
+Box = {}
+
 --- @class Camera : CoreObject @Camera is a CoreObject which is used both to configure Player Camera settings as well as to represent the position and rotation of the Camera in the world. Cameras can be configured in various ways, usually following a specific Player's view, but can also have a fixed orientation and/or position.. . Each Player (on their client) can have a default Camera and an override Camera. If they have neither, camera behavior falls back to a basic third-person behavior. Default Cameras should be used for main gameplay while override Cameras are generally employed as a temporary view, such as a when the Player is sitting in a mounted turret.
 --- @field followPlayer Player @Which Player's view the camera should follow. Set to the local Player for a first or third person camera. Set to nil to detach.
 --- @field isOrthographic boolean @Whether the camera uses an isometric (orthographic) view or perspective.
@@ -352,6 +458,7 @@ BindingSet = {}
 --- @field audioListenerOffset Vector3 @This property is deprecated. Please use the GetAudioListenerOffset() and SetAudioListenerOffset() functions instead.
 --- @field lerpTime number
 --- @field isUsingCameraRotation boolean
+--- @field isCameraCollisionEnabled boolean @When true, this camera will collide with objects that have camera collision enabled. When set to false, the camera will not collide with any objects. Defaults to true.
 --- @field type string
 local CameraInstance = {}
 --- An offset added to the camera or follow target's eye position to the Player's view.
@@ -392,7 +499,7 @@ function CameraInstance:IsA(typeName) end
 --- @class GlobalCamera : CoreObject @Camera is a CoreObject which is used both to configure Player Camera settings as well as to represent the position and rotation of the Camera in the world. Cameras can be configured in various ways, usually following a specific Player's view, but can also have a fixed orientation and/or position.. . Each Player (on their client) can have a default Camera and an override Camera. If they have neither, camera behavior falls back to a basic third-person behavior. Default Cameras should be used for main gameplay while override Cameras are generally employed as a temporary view, such as a when the Player is sitting in a mounted turret.
 Camera = {}
 
---- @class CameraCapture @CameraCapture represents an image rendered by a `Camera` to be used elsewhere in the game, for example in UI. Captures can be created using a fixed set of resolutions, and a finite number of captures are allowed at a time for each resolution. Creators may wish to explicitly release existing capture instances when they are no longer needed, so that they can create more elsewhere. A released capture is no longer valid, and should not be used thereafter.. . Currently, creators are limited to the following:. . * Up to 256 `VERY_SMALL` captures.. * In addition to Up to 64 `SMALL` capture.. * In addition to Up to 16 `MEDIUM` captures.. * In addition to Up to 4 `LARGE` captures.. * In addition to Up to 1 `VERY_LARGE` capture.
+--- @class CameraCapture @CameraCapture represents an image rendered by a `Camera` to be used elsewhere in the game, for example in UI. Each camera capture instance uses a certain amount of the memory based on the resolution size. Creators are free to create whatever combination (mixed resolutions) of camera captures needed up until the budget is fully consumed. Creators may wish to explicitly release existing capture instances when they are no longer needed, so that they can create more elsewhere. A released capture is no longer valid, and should not be used thereafter.. . The total budget is 8 megapixels (8,388,608 pixels).. . Below lists the total number of captures that can be done per resolution. Creators can mix the resolution size as long as the total budget is not above the limit of 8 megapixels.. . - 2048 maximum captures at `VERY_SMALL` resolution size.. - 512 maximum captures at `SMALL` resolution size.. - 128 maximum captures at `MEDIUM` resolution size.. - 32 maximum captures at `LARGE` resolution size.. - 8 maximum captures at `VERY_LARGE` resolution size.
 --- @field resolution CameraCaptureResolution @The resolution of this capture.
 --- @field camera Camera @The Camera to capture from.
 --- @field type string
@@ -411,7 +518,7 @@ function CameraCaptureInstance:Release() end
 --- @return boolean
 function CameraCaptureInstance:IsA(typeName) end
 
---- @class GlobalCameraCapture @CameraCapture represents an image rendered by a `Camera` to be used elsewhere in the game, for example in UI. Captures can be created using a fixed set of resolutions, and a finite number of captures are allowed at a time for each resolution. Creators may wish to explicitly release existing capture instances when they are no longer needed, so that they can create more elsewhere. A released capture is no longer valid, and should not be used thereafter.. . Currently, creators are limited to the following:. . * Up to 256 `VERY_SMALL` captures.. * In addition to Up to 64 `SMALL` capture.. * In addition to Up to 16 `MEDIUM` captures.. * In addition to Up to 4 `LARGE` captures.. * In addition to Up to 1 `VERY_LARGE` capture.
+--- @class GlobalCameraCapture @CameraCapture represents an image rendered by a `Camera` to be used elsewhere in the game, for example in UI. Each camera capture instance uses a certain amount of the memory based on the resolution size. Creators are free to create whatever combination (mixed resolutions) of camera captures needed up until the budget is fully consumed. Creators may wish to explicitly release existing capture instances when they are no longer needed, so that they can create more elsewhere. A released capture is no longer valid, and should not be used thereafter.. . The total budget is 8 megapixels (8,388,608 pixels).. . Below lists the total number of captures that can be done per resolution. Creators can mix the resolution size as long as the total budget is not above the limit of 8 megapixels.. . - 2048 maximum captures at `VERY_SMALL` resolution size.. - 512 maximum captures at `SMALL` resolution size.. - 128 maximum captures at `MEDIUM` resolution size.. - 32 maximum captures at `LARGE` resolution size.. - 8 maximum captures at `VERY_LARGE` resolution size.
 CameraCapture = {}
 
 --- @class Color @An RGBA representation of a color. Color components have an effective range of `[0.0, 1.0]`, but values greater than 1 may be used.
@@ -836,24 +943,24 @@ function CoreObjectInstance:FindTemplateRoot() end
 function CoreObjectInstance:IsAncestorOf(coreObject) end
 
 --- Smoothly moves the object to the target location over a given amount of time (seconds). Third parameter specifies if the given destination is in local space (true) or world space (false).
---- @overload fun(worldPosition: Vector3,duration: number)
+--- @overload fun(self: CoreObject,worldPosition: Vector3,duration: number)
 --- @param position Vector3
 --- @param duration number
 --- @param isLocalPosition boolean
 function CoreObjectInstance:MoveTo(position, duration, isLocalPosition) end
 
 --- Smoothly moves the object over time by the given velocity vector. Second parameter specifies if the given velocity is in local space (true) or world space (false). The velocity vector indicates the direction, with its magnitude expressed in centimeters per second.
---- @overload fun(worldVelocity: Vector3)
+--- @overload fun(self: CoreObject,worldVelocity: Vector3)
 --- @param worldVelocity Vector3
 --- @param isLocalVelocity boolean
 function CoreObjectInstance:MoveContinuous(worldVelocity, isLocalVelocity) end
 
 --- Follows a CoreObject or Player at a certain speed. If the speed is not supplied it will follow as fast as possible. The third parameter specifies a distance to keep away from the target.
---- @overload fun(target: Player,speed: number)
---- @overload fun(target: Player)
---- @overload fun(target: CoreObject,speed: number,minimumDistance: number)
---- @overload fun(target: CoreObject,speed: number)
---- @overload fun(target: CoreObject)
+--- @overload fun(self: CoreObject,target: Player,speed: number)
+--- @overload fun(self: CoreObject,target: Player)
+--- @overload fun(self: CoreObject,target: CoreObject,speed: number,minimumDistance: number)
+--- @overload fun(self: CoreObject,target: CoreObject,speed: number)
+--- @overload fun(self: CoreObject,target: CoreObject)
 --- @param target Player
 --- @param speed number
 --- @param minimumDistance number
@@ -863,22 +970,22 @@ function CoreObjectInstance:Follow(target, speed, minimumDistance) end
 function CoreObjectInstance:StopMove() end
 
 --- Smoothly rotates the object to the target orientation over a given amount of time. Third parameter specifies if given rotation is in local space (true) or world space (false).
---- @overload fun(worldRotation: Quaternion,duration: number)
---- @overload fun(rotation: Rotation,duration: number,isLocalRotation: boolean)
---- @overload fun(worldRotation: Rotation,duration: number)
+--- @overload fun(self: CoreObject,worldRotation: Quaternion,duration: number)
+--- @overload fun(self: CoreObject,rotation: Rotation,duration: number,isLocalRotation: boolean)
+--- @overload fun(self: CoreObject,worldRotation: Rotation,duration: number)
 --- @param rotation Quaternion
 --- @param duration number
 --- @param isLocalRotation boolean
 function CoreObjectInstance:RotateTo(rotation, duration, isLocalRotation) end
 
 --- Smoothly rotates the object over time by the given rotation (per second). The second parameter is an optional multiplier, for very fast rotations. Third parameter specifies if the given rotation or quaternion is in local space (true) or world space (false (default)). Angular velocity is expressed in degrees per second.
---- @overload fun(angularVelocity: Vector3)
---- @overload fun(quaternionSpeed: Quaternion,multiplier: number,isLocalQuaternionSpeed: boolean)
---- @overload fun(quaternionSpeed: Quaternion,multiplier: number)
---- @overload fun(quaternionSpeed: Quaternion)
---- @overload fun(rotationSpeed: Rotation,multiplier: number,isLocalRotationSpeed: boolean)
---- @overload fun(rotationSpeed: Rotation,multiplier: number)
---- @overload fun(rotationSpeed: Rotation)
+--- @overload fun(self: CoreObject,angularVelocity: Vector3)
+--- @overload fun(self: CoreObject,quaternionSpeed: Quaternion,multiplier: number,isLocalQuaternionSpeed: boolean)
+--- @overload fun(self: CoreObject,quaternionSpeed: Quaternion,multiplier: number)
+--- @overload fun(self: CoreObject,quaternionSpeed: Quaternion)
+--- @overload fun(self: CoreObject,rotationSpeed: Rotation,multiplier: number,isLocalRotationSpeed: boolean)
+--- @overload fun(self: CoreObject,rotationSpeed: Rotation,multiplier: number)
+--- @overload fun(self: CoreObject,rotationSpeed: Rotation)
 --- @param angularVelocity Vector3
 --- @param isLocalAngularVelocity boolean
 function CoreObjectInstance:RotateContinuous(angularVelocity, isLocalAngularVelocity) end
@@ -888,20 +995,20 @@ function CoreObjectInstance:RotateContinuous(angularVelocity, isLocalAngularVelo
 function CoreObjectInstance:LookAt(worldPosition) end
 
 --- Smoothly rotates a CoreObject to look at another given CoreObject or Player. Second parameter is optional and locks the pitch, default is unlocked. Third parameter is optional and sets how fast it tracks the target (in radians/second). If speed is not supplied it tracks as fast as possible.
---- @overload fun(target: Player,speed: number)
---- @overload fun(target: Player,isPitchLocked: boolean)
---- @overload fun(target: Player)
---- @overload fun(target: CoreObject,isPitchLocked: boolean,speed: number)
---- @overload fun(target: CoreObject,speed: number)
---- @overload fun(target: CoreObject,isPitchLocked: boolean)
---- @overload fun(target: CoreObject)
+--- @overload fun(self: CoreObject,target: Player,speed: number)
+--- @overload fun(self: CoreObject,target: Player,isPitchLocked: boolean)
+--- @overload fun(self: CoreObject,target: Player)
+--- @overload fun(self: CoreObject,target: CoreObject,isPitchLocked: boolean,speed: number)
+--- @overload fun(self: CoreObject,target: CoreObject,speed: number)
+--- @overload fun(self: CoreObject,target: CoreObject,isPitchLocked: boolean)
+--- @overload fun(self: CoreObject,target: CoreObject)
 --- @param target Player
 --- @param isPitchLocked boolean
 --- @param speed number
 function CoreObjectInstance:LookAtContinuous(target, isPitchLocked, speed) end
 
 --- Continuously looks at the local camera. The boolean parameter is optional and locks the pitch.
---- @overload fun()
+--- @overload fun(self: CoreObject)
 --- @param isPitchLocked boolean
 function CoreObjectInstance:LookAtLocalView(isPitchLocked) end
 
@@ -909,14 +1016,14 @@ function CoreObjectInstance:LookAtLocalView(isPitchLocked) end
 function CoreObjectInstance:StopRotate() end
 
 --- Smoothly scales the object to the target scale over a given amount of time. Third parameter specifies if the given scale is in local space (true) or world space (false).
---- @overload fun(worldScale: Vector3,duration: number)
+--- @overload fun(self: CoreObject,worldScale: Vector3,duration: number)
 --- @param scale Vector3
 --- @param duration number
 --- @param isScaleLocal boolean
 function CoreObjectInstance:ScaleTo(scale, duration, isScaleLocal) end
 
 --- Smoothly scales the object over time by the given scale vector per second. Second parameter specifies if the given scale rate is in local space (true) or world space (false).
---- @overload fun(scaleRate: Vector3)
+--- @overload fun(self: CoreObject,scaleRate: Vector3)
 --- @param scaleRate Vector3
 --- @param isLocalScaleRate boolean
 function CoreObjectInstance:ScaleContinuous(scaleRate, isLocalScaleRate) end
@@ -961,6 +1068,11 @@ function CoreObjectInstance:SetCustomProperty(propertyName, propertyValue) end
 --- @param propertyValue any
 --- @return boolean
 function CoreObjectInstance:SetNetworkedCustomProperty(propertyName, propertyValue) end
+
+--- Returns `true` if the named custom property exists and is marked as dynamic. Otherwise, returns `false`.
+--- @param propertyName string
+--- @return boolean
+function CoreObjectInstance:IsCustomPropertyDynamic(propertyName) end
 
 --- @param typeName string
 --- @return boolean
@@ -1031,10 +1143,10 @@ function CurveKey.New(other) end
 --- @field type string
 local CustomMaterialInstance = {}
 --- Sets the given property of the material.
---- @overload fun(propertyName: string,value: boolean)
---- @overload fun(propertyName: string,value: Vector3)
---- @overload fun(propertyName: string,value: Color)
---- @overload fun(propertyName: string,value: number)
+--- @overload fun(self: CustomMaterial,propertyName: string,value: boolean)
+--- @overload fun(self: CustomMaterial,propertyName: string,value: Vector3)
+--- @overload fun(self: CustomMaterial,propertyName: string,value: Color)
+--- @overload fun(self: CustomMaterial,propertyName: string,value: number)
 --- @param propertyName string
 --- @param value Vector2
 function CustomMaterialInstance:SetProperty(propertyName, value) end
@@ -1064,11 +1176,11 @@ CustomMaterial = {}
 function CustomMaterial.Find(assetId) end
 
 
---- @class Damage @To damage a Player, you can simply write e.g.: `whichPlayer:ApplyDamage(Damage.New(10))`. Alternatively, create a Damage object and populate it with all the following properties to get full use out of the system:
+--- @class Damage @To damage a Player, you can simply write for example: `whichPlayer:ApplyDamage(Damage.New(10))`. Alternatively, create a Damage object and populate it with all the following properties to get full use out of the system:
 --- @field amount number @The numeric amount of damage to inflict.
 --- @field reason DamageReason @What is the context for this Damage? DamageReason.UNKNOWN (default value), DamageReason.COMBAT, DamageReason.FRIENDLY_FIRE, DamageReason.MAP, DamageReason.NPC.
---- @field sourceAbility Ability @Reference to the Ability which caused the Damage. Setting this allows other systems to react to the damage event, e.g. a kill feed can show what killed a Player.
---- @field sourcePlayer Player @Reference to the Player who caused the Damage. Setting this allows other systems to react to the damage event, e.g. a kill feed can show who killed a Player.
+--- @field sourceAbility Ability @Reference to the Ability which caused the Damage. Setting this allows other systems to react to the damage event, for example a kill feed can show what killed a Player.
+--- @field sourcePlayer Player @Reference to the Player who caused the Damage. Setting this allows other systems to react to the damage event, for example a kill feed can show who killed a Player.
 --- @field type string
 local DamageInstance = {}
 --- Get the HitResult information if this damage was caused by a Projectile impact.
@@ -1083,7 +1195,7 @@ function DamageInstance:SetHitResult(hitResult) end
 --- @return boolean
 function DamageInstance:IsA(typeName) end
 
---- @class GlobalDamage @To damage a Player, you can simply write e.g.: `whichPlayer:ApplyDamage(Damage.New(10))`. Alternatively, create a Damage object and populate it with all the following properties to get full use out of the system:
+--- @class GlobalDamage @To damage a Player, you can simply write for example: `whichPlayer:ApplyDamage(Damage.New(10))`. Alternatively, create a Damage object and populate it with all the following properties to get full use out of the system:
 Damage = {}
 --- Constructs a damage object with the given number, defaults to 0.
 --- @overload fun(): Damage
@@ -1095,6 +1207,7 @@ function Damage.New(amount) end
 --- @class DamageableObject : CoreObject @DamageableObject is a CoreObject which implements the [Damageable](damageable.md) interface.
 --- @field damagedEvent Event @Fired when the object takes damage.
 --- @field diedEvent Event @Fired when the object dies.
+--- @field damageHook Hook @Hook called when applying damage from a call to `ApplyDamage()`. The incoming damage may be modified or prevented by modifying properties on the `damage` parameter.
 --- @field hitPoints number @Current amount of hit points.
 --- @field maxHitPoints number @Maximum amount of hit points.
 --- @field isDead boolean @True if the object is dead, otherwise false. Death occurs when damage is applied which reduces hit points to 0, or when the `Die()` function is called.
@@ -1111,7 +1224,7 @@ local DamageableObjectInstance = {}
 function DamageableObjectInstance:ApplyDamage(damage) end
 
 --- Kills the object, unless it is immortal. The optional Damage parameter is a way to communicate cause of death.
---- @overload fun()
+--- @overload fun(self: DamageableObject)
 --- @param damage Damage
 function DamageableObjectInstance:Die(damage) end
 
@@ -1240,7 +1353,7 @@ function EquipmentInstance:IsA(typeName) end
 --- @class GlobalEquipment : CoreObject @Equipment is a CoreObject representing an equippable item for players. They generally have a visual component that attaches to the Player, but a visual component is not a requirement. Any Ability objects added as children of the Equipment are added/removed from the Player automatically as it becomes equipped/unequipped.
 Equipment = {}
 
---- @class Event @Events appear as properties on several objects. The goal is to register a function that will be fired whenever that event happens. E.g. `playerA.damagedEvent:Connect(OnPlayerDamaged)` chooses the function `OnPlayerDamaged` to be fired whenever `playerA` takes damage.
+--- @class Event @Events appear as properties on several objects. The goal is to register a function that will be fired whenever that event happens. For example `playerA.damagedEvent:Connect(OnPlayerDamaged)` chooses the function `OnPlayerDamaged` to be fired whenever `playerA` takes damage.
 --- @field type string
 local EventInstance = {}
 --- Registers the given function which will be called every time the event is fired. Returns an EventListener which can be used to disconnect from the event or check if the event is still connected. Accepts any number of additional arguments after the listener function, those arguments will be provided after the event's own parameters.
@@ -1252,7 +1365,7 @@ function EventInstance:Connect(listener, ...) end
 --- @return boolean
 function EventInstance:IsA(typeName) end
 
---- @class GlobalEvent @Events appear as properties on several objects. The goal is to register a function that will be fired whenever that event happens. E.g. `playerA.damagedEvent:Connect(OnPlayerDamaged)` chooses the function `OnPlayerDamaged` to be fired whenever `playerA` takes damage.
+--- @class GlobalEvent @Events appear as properties on several objects. The goal is to register a function that will be fired whenever that event happens. For example `playerA.damagedEvent:Connect(OnPlayerDamaged)` chooses the function `OnPlayerDamaged` to be fired whenever `playerA` takes damage.
 Event = {}
 
 --- @class EventListener @EventListeners are returned by Events when you connect a listener function to them.
@@ -1303,13 +1416,17 @@ function HitResultInstance:GetImpactPosition() end
 --- @return Vector3
 function HitResultInstance:GetImpactNormal() end
 
---- For HitResults returned by box casts and sphere casts, returns the world position of the center of the cast shape when the collision occurred. Otherwise returns the world position where the impact occurred.
+--- For HitResults returned by box casts and sphere casts, returns the world position of the center of the cast shape when the collision occurred. In the case of HitResults not related to a box cast or sphere cast, returns the world position where the impact occurred.
 --- @return Vector3
 function HitResultInstance:GetShapePosition() end
 
 --- Returns a Transform composed of the position of the impact in world space, the rotation of the normal, and a uniform scale of 1.
 --- @return Transform
 function HitResultInstance:GetTransform() end
+
+--- For HitResults involving a `CoreMesh`, returns a MaterialSlot instance indicating which material on the mesh was impacted. For certain types of collisions, including when the impacted object is not a `CoreMesh`, a `MaterialSlot` is not available, and `nil` is returned.
+--- @return MaterialSlot
+function HitResultInstance:GetMaterialSlot() end
 
 --- @param typeName string
 --- @return boolean
@@ -1318,7 +1435,7 @@ function HitResultInstance:IsA(typeName) end
 --- @class GlobalHitResult @Contains data pertaining to an impact or raycast.
 HitResult = {}
 
---- @class Hook @Hooks appear as properties on several objects. Similar to Events, functions may be registered that will be called whenever that hook is fired, but Hooks allow those functions to modify the parameters given to them. E.g. `player.movementHook:Connect(OnPlayerMovement)` calls the function `OnPlayerMovement` each tick, which may modify the direction in which a player will move.
+--- @class Hook @Hooks appear as properties on several objects. Similar to Events, functions may be registered that will be called whenever that hook is fired, but Hooks allow those functions to modify the parameters given to them. For example `player.movementHook:Connect(OnPlayerMovement)` calls the function `OnPlayerMovement` each tick, which may modify the direction in which a player will move.
 --- @field type string
 local HookInstance = {}
 --- Registers the given function which will be called every time the hook is fired. Returns a HookListener which can be used to disconnect from the hook or change the listener's priority. Accepts any number of additional arguments after the listener function, those arguments will be provided after the hook's own parameters.
@@ -1330,7 +1447,7 @@ function HookInstance:Connect(listener, ...) end
 --- @return boolean
 function HookInstance:IsA(typeName) end
 
---- @class GlobalHook @Hooks appear as properties on several objects. Similar to Events, functions may be registered that will be called whenever that hook is fired, but Hooks allow those functions to modify the parameters given to them. E.g. `player.movementHook:Connect(OnPlayerMovement)` calls the function `OnPlayerMovement` each tick, which may modify the direction in which a player will move.
+--- @class GlobalHook @Hooks appear as properties on several objects. Similar to Events, functions may be registered that will be called whenever that hook is fired, but Hooks allow those functions to modify the parameters given to them. For example `player.movementHook:Connect(OnPlayerMovement)` calls the function `OnPlayerMovement` each tick, which may modify the direction in which a player will move.
 Hook = {}
 
 --- @class HookListener @HookListeners are returned by Hooks when you connect a listener function to them.
@@ -1351,7 +1468,7 @@ HookListener = {}
 --- @class IKAnchor : CoreObject @IKAnchors are objects that can be used to control player animations. They can be used to specify the position of a specific hand, foot, or the hips of a player, and can be controlled from script to create complex animations.
 --- @field activatedEvent Event @Fired when this IKAnchor is activated on a player.
 --- @field deactivatedEvent Event @Fired when this IKAnchor is deactivated from a player.
---- @field target string @Which Player the IKAnchor is activated on.
+--- @field target Player @Which Player the IKAnchor is activated on.
 --- @field anchorType IKAnchorType @Which socket this IKAnchor applies to.
 --- @field blendInTime number @The duration over which this IKAnchor is blended when it is activated.
 --- @field blendOutTime number @The duration over which this IKAnchor is blended when it is deactivated.
@@ -1394,7 +1511,7 @@ local ImpactDataInstance = {}
 --- @return HitResult
 function ImpactDataInstance:GetHitResult() end
 
---- Table with multiple HitResults that hit the same object, in the case of Weapons with multi-shot (e.g. Shotguns). If a single attack hits multiple targets you receive a separate interaction event for each object hit.
+--- Table with multiple HitResults that hit the same object, in the case of Weapons with multi-shot (for example Shotguns). If a single attack hits multiple targets you receive a separate interaction event for each object hit.
 --- @return table<number, HitResult>
 function ImpactDataInstance:GetHitResults() end
 
@@ -1404,6 +1521,325 @@ function ImpactDataInstance:IsA(typeName) end
 
 --- @class GlobalImpactData @A data structure containing all information about a specific Weapon interaction, such as collision with a character.
 ImpactData = {}
+
+--- @class Inventory : CoreObject @Inventory is a CoreObject that represents a container of InventoryItems. Items can be added directly to an inventory, picked up from an ItemObject in the world, or transferred between inventories. An Inventory may be assigned to a Player, and Players may have any number of Inventories.
+--- @field ownerChangedEvent Event @Fired when the inventory's owner has changed.
+--- @field resizedEvent Event @Fired when the inventory's size has changed.
+--- @field changedEvent Event @Fired when the contents of an inventory slot have changed. This includes when the item in that slot is added, given, received, dropped, moved, resized, or removed.
+--- @field itemPropertyChangedEvent Event @Fired when an inventory item's dynamic custom property value has changed.
+--- @field owner Player @The Player who currently owns the inventory. May be `nil`. Change owners with `Assign()` or `Unassign()`.
+--- @field slotCount number @The number of unique inventory item stacks this inventory can hold. Zero or negative numbers indicate no limit.
+--- @field emptySlotCount number @The number of slots in the inventory that do not contain an inventory item stack.
+--- @field occupiedSlotCount number @The number of slots in the inventory that contain an inventory item stack.
+--- @field type string
+local InventoryInstance = {}
+--- Sets the owner property of the inventory to the specified player. When a networked inventory is assigned to a player, only that player's client will be able to access the inventory contents.
+--- @param player Player
+function InventoryInstance:Assign(player) end
+
+--- Clears the owner property of the inventory. The given inventory will now be accessible to all clients.
+function InventoryInstance:Unassign() end
+
+--- Returns the contents of the specified slot. Returns `nil` if the slot is empty.
+--- @param slot number
+--- @return InventoryItem
+function InventoryInstance:GetItem(slot) end
+
+--- Returns a table mapping integer slot number to the inventory item in that slot. Note that this may leave gaps in the table if the inventory contains empty slots, so use with `ipairs()` is not recommended. Returns an empty table if the inventory is empty.
+--- 
+--- Supported parameters include:
+--- 
+--- `itemAssetId (string)`: If specified, filters the results by the specified item asset reference. Useful for getting all inventory items of a specific type.
+--- @overload fun(): table
+--- @param optionalParameters table
+--- @return table
+function InventoryInstance:GetItems(optionalParameters) end
+
+--- Removes all items from the inventory.
+function InventoryInstance:ClearItems() end
+
+--- Reorganizes inventory items into sequential slots starting with slot 1. Does not perform any consolidation of item stacks of the same type. Use `ConsolidateItems()` first if this behavior is desired.
+function InventoryInstance:SortItems() end
+
+--- Combines stacks of inventory items into as few slots as possible based on the `maximumStackCount` of each item. Slots may be emptied by this operation, but are otherwise not sorted or reorganized.
+function InventoryInstance:ConsolidateItems() end
+
+--- Checks if there are enough slots for all current contents of the inventory if the inventory were to be resized. Returns `true` if the inventory can be resized to the new size or `false` if it cannot.
+--- @param newSize number
+--- @return boolean
+function InventoryInstance:CanResize(newSize) end
+
+--- Changes the number of slots of the inventory. There must be enough slots to contain all of the items currently in the inventory or the operation will fail. This operation will move items into empty slots if necessary, but it will not consolidate item stacks, even if doing so would create sufficient space for the operation to succeed. Use `ConsolidateItems()` first if this behavior is desired. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- @param newSize number
+--- @return boolean
+function InventoryInstance:Resize(newSize) end
+
+--- Checks for room to add the specified item to this inventory. If the item can be added to the inventory, returns `true`. If the inventory is full or the item otherwise cannot be added, returns `false`. Supports the same parameters as `AddItem()`.
+--- @overload fun(itemAssetId: string): boolean
+--- @param itemAssetId string
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanAddItem(itemAssetId, optionalParameters) end
+
+--- Attempts to add the specified item to this inventory. If the item was successfully added to the inventory, returns `true`. If the inventory was full or the item otherwise wasn't added, returns `false`.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of items to create and add to the inventory. Defaults to 1.
+--- 
+--- `slot (integer)`: Attempts to create the item directly into the specified slot. If unspecified, the inventory will either look to stack this item with other items of the same `itemAssetId`, or will look to find the first empty slot.
+--- 
+--- `customProperties (table)`: Applies initial property values to any dynamic properties on the item. Attempting to specify a property that does not exist will yield a warning. Attempting to specify a property that does exist and is not dynamic will raise an error. Providing a property value of the incorrect type will raise an error.
+--- @overload fun(itemAssetId: string): boolean
+--- @param itemAssetId string
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:AddItem(itemAssetId, optionalParameters) end
+
+--- Checks for room in an existing stack or free inventory slots to add the given item to the inventory. If the item can be added to the inventory, returns `true`. If the inventory is full or the item otherwise cannot be added, returns `false`. Supports the same parameters as `PickUpItem()`.
+--- @overload fun(itemObject: ItemObject): boolean
+--- @param itemObject ItemObject
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanPickUpItem(itemObject, optionalParameters) end
+
+--- Creates an inventory item from an ItemObject that exists in the world, taking 1 count from the ItemObject. Destroys the ItemObject if the inventory item is successfully created and the ItemObject count has been reduced to zero. Returns `true` if the item was picked up. Returns `false` and logs a warning if the item could not be picked up.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Determines the number of items taken from the specified ItemObject. If the ItemObject still has a count greater than zero after this operation, it is not destroyed. Defaults to 1.
+--- 
+--- `all (boolean)`: If `true`, picks up all of the given item's count instead of just 1. Overrides `count` if both are specified.
+--- @overload fun(itemObject: ItemObject): boolean
+--- @param itemObject ItemObject
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:PickUpItem(itemObject, optionalParameters) end
+
+--- Checks if an item can be moved from one slot to another. If the item can be moved, returns `true`. Returns `false` if it cannot be moved. Supports the same parameters as `MoveFromSlot()`.
+--- @overload fun(fromSlot: number,toSlot: number): boolean
+--- @param fromSlot number
+--- @param toSlot number
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanMoveFromSlot(fromSlot, toSlot, optionalParameters) end
+
+--- Moves an inventory item and its entire count from one slot to another. If the target slot is empty, the stack is moved. If the target slot is occupied by a matching item, the stack will merge as much as it can up to its `maximumStackCount`. If the target slot is occupied by a non-matching item, the stacks will swap. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of items to move. When swapping with another stack containing a non-matching item, this operation will fail unless `count` is the entire stack.
+--- @overload fun(fromSlot: number,toSlot: number): boolean
+--- @param fromSlot number
+--- @param toSlot number
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:MoveFromSlot(fromSlot, toSlot, optionalParameters) end
+
+--- Checks if an item can be removed from the inventory. If the item can be removed, returns `true`. Returns `false` if it cannot be removed. Supports the same parameters as `RemoveItem()`.
+--- @overload fun(itemAssetId: string): boolean
+--- @param itemAssetId string
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanRemoveItem(itemAssetId, optionalParameters) end
+
+--- Deletes 1 item of the specified asset from the inventory. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of the item to be removed. Defaults to 1.
+--- 
+--- `all (boolean)`: If `true`, removes all of the specified items instead of just 1. Overrides `count` if both are specified.
+--- @overload fun(itemAssetId: string): boolean
+--- @param itemAssetId string
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:RemoveItem(itemAssetId, optionalParameters) end
+
+--- Checks if an item can be removed from an inventory slot. If the item can be removed, returns `true`. Returns `false` if it cannot be removed. Supports the same parameters as `RemoveFromSlot()`.
+--- @overload fun(slot: number): boolean
+--- @param slot number
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanRemoveFromSlot(slot, optionalParameters) end
+
+--- Deletes the inventory item and its entire count from the specified inventory slot. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of the item to be removed. Defaults to the total count in the specified slot.
+--- @overload fun(slot: number): boolean
+--- @param slot number
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:RemoveFromSlot(slot, optionalParameters) end
+
+--- Checks if an item can be dropped from the inventory. If the item can be dropped, returns `true`. Returns `false` if it cannot be dropped. Supports the same parameters as `DropItem()`.
+--- @overload fun(itemAssetId: string): boolean
+--- @param itemAssetId string
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanDropItem(itemAssetId, optionalParameters) end
+
+--- Removes 1 item of the specified asset from the inventory and creates an ItemObject with the item's properties. Spawns the ItemObject at the position of the inventory in the world, or at the position of the owner player's feet if the inventory has been assigned to a player. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of the item to be dropped. Defaults to 1.
+--- 
+--- `all (boolean)`: If `true`, drops all of the specified items instead of just 1. Overrides `count` if both are specified.
+--- 
+--- `dropTo (ItemObject)`: Specifies a pre-existing ItemObject to drop the items onto. Doing this will add to that ItemObject's count. If the ItemObject's maximum stack count would be exceeded by this operation, it will fail, and this function will return false.
+--- 
+--- `parent (CoreObject)`: Creates the new ItemObject as a child of the specified CoreObject. Can only be used if `dropTo` is not specified.
+--- 
+--- `position (Vector3)`: Specifies the world position at which the ItemObject is spawned, or the relative position if a parent is specified. Can only be used if `dropTo` is not specified.
+--- 
+--- `rotation (Rotation or Quaternion)`: Specifies the world rotation at which the ItemObject is spawned, or the relative rotation if a parent is specified. Can only be used if `dropTo` is not specified.
+--- 
+--- `scale (Vector3)`: Specifies the world scale with which the ItemObject is spawned, or the relative scale if a parent is specified. Can only be used if `dropTo` is not specified.
+--- 
+--- `transform (Transform)`: Specifies the world transform at which the ItemObject is spawned, or the relative transform if a parent is specified. Can only be used if `dropTo` is not specified, and is mutually exclusive with `position`, `rotation`, and `scale`.
+--- 
+--- Additional parameters supported by `World.SpawnAsset()` may also be supported here.
+--- @overload fun(itemAssetId: string): boolean
+--- @param itemAssetId string
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:DropItem(itemAssetId, optionalParameters) end
+
+--- Checks if an item can be dropped from an inventory slot. If the item can be dropped, returns `true`. Returns `false` if it cannot be dropped. Supports the same parameters as `DropFromSlot()`.
+--- @overload fun(slot: number): boolean
+--- @param slot number
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanDropFromSlot(slot, optionalParameters) end
+
+--- Drops the entire contents of a specified slot, creating an ItemObject with the item's properties. Spawns the ItemObject at the position of the inventory in the world, or at the position of the owner player's feet if the inventory has been assigned to a player. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed. If the full item count is successfully dropped, the slot will be left empty.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of the item to be dropped. If not specified, the total number of items in this slot will be dropped.
+--- 
+--- `dropTo (ItemObject)`: Specifies a pre-existing ItemObject to drop the items onto. Doing this will add to that ItemObject's count. If the ItemObject's max stack count would be exceeded by this operation, it will fail, and this function will return false.
+--- 
+--- `parent (CoreObject)`: Creates the new ItemObject as a child of the specified CoreObject. Can only be used if `dropTo` is not specified.
+--- 
+--- `position (Vector3)`: Specifies the world position at which the ItemObject is spawned, or the relative position if a parent is specified. Can only be used if `dropTo` is not specified.
+--- 
+--- `rotation (Rotation or Quaternion)`: Specifies the world rotation at which the ItemObject is spawned, or the relative rotation if a parent is specified. Can only be used if `dropTo` is not specified.
+--- 
+--- `scale (Vector3)`: Specifies the world scale with which the ItemObject is spawned, or the relative scale if a parent is specified. Can only be used if `dropTo` is not specified.
+--- 
+--- `transform (Transform)`: Specifies the world transform at which the ItemObject is spawned, or the relative transform if a parent is specified. Can only be used if `dropTo` is not specified, and is mutually exclusive with `position`, `rotation`, and `scale`.
+--- 
+--- Additional parameters supported by `World.SpawnAsset()` may also be supported here.
+--- @overload fun(slot: number): boolean
+--- @param slot number
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:DropFromSlot(slot, optionalParameters) end
+
+--- Checks if an item can be transferred to the specified recipient inventory. If the item can be transferred, returns `true`. Returns `false` if it cannot be transferred. Supports the same parameters as `GiveItem()`.
+--- @overload fun(itemAssetId: string,recipient: Inventory): boolean
+--- @param itemAssetId string
+--- @param recipient Inventory
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanGiveItem(itemAssetId, recipient, optionalParameters) end
+
+--- Transfers an item, specified by item asset ID, from this inventory to the given recipient inventory. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of the item to be transferred. Defaults to 1.
+--- 
+--- `all (boolean)`: If `true`, transfers all of the specified items instead of just 1. Overrides `count` if both are specified.
+--- @overload fun(itemAssetId: string,recipient: Inventory): boolean
+--- @param itemAssetId string
+--- @param recipient Inventory
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:GiveItem(itemAssetId, recipient, optionalParameters) end
+
+--- Checks if a slot can be transferred to the specified recipient inventory. If the item can be transferred, returns `true`. Returns `false` if it cannot be transferred. Supports the same parameters as `GiveFromSlot()`.
+--- @overload fun(slot: number,recipient: Inventory): boolean
+--- @param slot number
+--- @param recipient Inventory
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:CanGiveFromSlot(slot, recipient, optionalParameters) end
+
+--- Transfers the entire stack of a given slot to the given recipient inventory. Returns `true` if the operation succeeded. Returns `false` and logs a warning if the operation failed.
+--- 
+--- Supported parameters include:
+--- 
+--- `count (integer)`: Specifies the number of the item to be transferred. If not specified, the total number of items in this slot will be transferred.
+--- @overload fun(slot: number,recipient: Inventory): boolean
+--- @param slot number
+--- @param recipient Inventory
+--- @param optionalParameters table
+--- @return boolean
+function InventoryInstance:GiveFromSlot(slot, recipient, optionalParameters) end
+
+--- @param typeName string
+--- @return boolean
+function InventoryInstance:IsA(typeName) end
+
+--- @class GlobalInventory : CoreObject @Inventory is a CoreObject that represents a container of InventoryItems. Items can be added directly to an inventory, picked up from an ItemObject in the world, or transferred between inventories. An Inventory may be assigned to a Player, and Players may have any number of Inventories.
+Inventory = {}
+
+--- @class InventoryItem : Object @InventoryItem is an Object which implements the [Item](item.md) interface. It represents an Item stored in an Inventory and has no 3D representation in the world.
+--- @field name string @The name of this item, inherited from the Item asset.
+--- @field itemAssetId string @Asset ID defining this Item's properties.
+--- @field itemTemplateId string @Asset reference that is spawned as a child of an ItemObject when spawned in the world. May be `nil`.
+--- @field maximumStackCount number @The maximum number of items in one stack of this item. Zero or negative numbers indicate no limit.
+--- @field inventory Inventory @The Inventory which owns this item.
+--- @field slot number @The slot number to which this item has been assigned within its owning Inventory.
+--- @field count number @The number of items this object represents.
+--- @field type string
+local InventoryItemInstance = {}
+--- Sets the value of a custom property. The value must match the existing type of the property. Returns `true` if the property was successfully set. If the property could not be set, returns `false` or raises an error depending on the cause of the failure.
+--- @param propertyName string
+--- @param propertyValue any
+--- @return boolean
+function InventoryItemInstance:SetCustomProperty(propertyName, propertyValue) end
+
+--- Returns the value of a specific custom property or `nil` if the Item does not possess the custom property. The second return value is `true` if the property is found or `false` if it is not. Initial values are inherited from the Item asset defining this item.
+--- @param propertyName string
+--- @return any|boolean
+function InventoryItemInstance:GetCustomProperty(propertyName) end
+
+--- Returns a table containing the names and values of all custom properties on this item. Initial values are inherited from the Item asset defining this item.
+--- @return table
+function InventoryItemInstance:GetCustomProperties() end
+
+--- Returns `true` if the named custom property exists and is marked as dynamic. Otherwise, returns `false`.
+--- @param propertyName string
+--- @return boolean
+function InventoryItemInstance:IsCustomPropertyDynamic(propertyName) end
+
+--- @param typeName string
+--- @return boolean
+function InventoryItemInstance:IsA(typeName) end
+
+--- @class GlobalInventoryItem : Object @InventoryItem is an Object which implements the [Item](item.md) interface. It represents an Item stored in an Inventory and has no 3D representation in the world.
+InventoryItem = {}
+
+--- @class ItemObject : CoreObject @ItemObject is a CoreObject which implements the [Item](item.md) interface. It represents an Item that has been spawned in the world.
+--- @field changedEvent Event @Fired when the count or a custom property value of an ItemObject has changed.
+--- @field itemAssetId string @Asset ID defining this ItemObject's properties.
+--- @field itemTemplateId string @Asset reference that is spawned as a child of the ItemObject when spawned in the world. This is inherited from the item asset's Item Template property. May be `nil`.
+--- @field maximumStackCount number @The maximum number of items in one stack of this item. This is inherited from the item asset's Maximum Stack Count property. Zero or negative numbers indicate no limit.
+--- @field count number @The number of items this object represents.
+--- @field type string
+local ItemObjectInstance = {}
+--- @param typeName string
+--- @return boolean
+function ItemObjectInstance:IsA(typeName) end
+
+--- @class GlobalItemObject : CoreObject @ItemObject is a CoreObject which implements the [Item](item.md) interface. It represents an Item that has been spawned in the world.
+ItemObject = {}
 
 --- @class LeaderboardEntry @A data structure containing a player's entry on a leaderboard. See the `Leaderboards` API for information on how to retrieve or update a `LeaderboardEntry`.
 --- @field id string @The ID of the `Player` whose entry this is.
@@ -1453,7 +1889,7 @@ Light = {}
 --- @field type string
 local MaterialSlotInstance = {}
 --- Set the U and V tiling values.
---- @overload fun(u: number,v: number)
+--- @overload fun(self: MaterialSlot,u: number,v: number)
 --- @param uv Vector2
 function MaterialSlotInstance:SetUVTiling(uv) end
 
@@ -1504,7 +1940,7 @@ MergedModel = {}
 
 --- @class NetReference @A reference to a network resource, such as a player leaderboard. NetReferences are not created directly, but may be returned by `CoreObject:GetCustomProperty()`.
 --- @field isAssigned boolean @Returns true if this reference has been assigned a value. This does not necessarily mean the reference is valid, but does mean it is at least not empty.
---- @field referenceType NetReferenceType @Returns one of `NetReferenceType.LEADERBOARD`, `NetReferenceType.SHARED_STORAGE`, or `NetReferenceType.UNKNOWN` to indicate which type of NetReference this is.
+--- @field referenceType NetReferenceType @Returns one of the following to indicate the type of NetReference: `NetReferenceType.LEADERBOARD`, `NetReferenceType.SHARED_STORAGE`, `NetReferenceType.SHARED_PLAYER_STORAGE`, `NetReferenceType.CONCURRENT_SHARED_PLAYER_STORAGE`, `NetReferenceType.CONCURRENT_CREATOR_STORAGE`, `NetReferenceType.CREATOR_PERK` or `NetReferenceType.UNKNOWN`.
 --- @field type string
 local NetReferenceInstance = {}
 --- @param typeName string
@@ -1545,7 +1981,7 @@ function NetworkContextInstance:IsA(typeName) end
 --- @class GlobalNetworkContext : CoreObject @NetworkContext is a CoreObject representing a special folder containing client-only, server-only, or static objects.. . They have no properties or functions of their own, but inherit everything from CoreObject.
 NetworkContext = {}
 
---- @class Object @At a high level, Core Lua types can be divided into two groups: data structures and Objects. Data structures are owned by Lua, while Objects are owned by the engine and could be destroyed while still referenced by Lua. Any such object will inherit from this type. These include CoreObject, Player and Projectile.
+--- @class Object @At a high level, Core Lua types can be divided into two groups: data structures and Objects. Data structures are owned by Lua, while Objects are owned by the engine and could be destroyed while still referenced by Lua. Any such object will inherit from this type. These include CoreObject, Player, and Projectile.
 --- @field serverUserData table @Table in which users can store any data they want on the server.
 --- @field clientUserData table @Table in which users can store any data they want on the client.
 --- @field type string
@@ -1554,7 +1990,7 @@ local ObjectInstance = {}
 --- @return boolean
 function ObjectInstance:IsA(typeName) end
 
---- @class GlobalObject @At a high level, Core Lua types can be divided into two groups: data structures and Objects. Data structures are owned by Lua, while Objects are owned by the engine and could be destroyed while still referenced by Lua. Any such object will inherit from this type. These include CoreObject, Player and Projectile.
+--- @class GlobalObject @At a high level, Core Lua types can be divided into two groups: data structures and Objects. Data structures are owned by Lua, while Objects are owned by the engine and could be destroyed while still referenced by Lua. Any such object will inherit from this type. These include CoreObject, Player, and Projectile.
 Object = {}
 --- Returns true if object is still a valid Object, or false if it has been destroyed. Also returns false if passed a nil value or something that's not an Object, such as a Vector3 or a string.
 --- @param object any
@@ -1595,6 +2031,7 @@ PartyInfo = {}
 --- @field damagedEvent Event @Fired when the object takes damage.
 --- @field diedEvent Event @Fired when the object dies.
 --- @field collidedEvent Event @Fired when the object collides with another object. The `HitResult` parameter describes the collision that occurred.
+--- @field damageHook Hook @Hook called when applying damage from a call to `ApplyDamage()`. The incoming damage may be modified or prevented by modifying properties on the `damage` parameter.
 --- @field team number @Assigns the physics object to a team. Value range from `0` to `4`. `0` is neutral team.
 --- @field isTeamCollisionEnabled boolean @If `false`, and the physics object has been assigned to a valid team, players on that team will not collide with the object.
 --- @field isEnemyCollisionEnabled boolean @If `false`, and the physics object has been assigned to a valid team, players on other teams will not collide with the object.
@@ -1614,7 +2051,7 @@ local PhysicsObjectInstance = {}
 function PhysicsObjectInstance:ApplyDamage(damage) end
 
 --- Kills the object, unless it is immortal. The optional Damage parameter is a way to communicate cause of death.
---- @overload fun()
+--- @overload fun(self: PhysicsObject)
 --- @param damage Damage
 function PhysicsObjectInstance:Die(damage) end
 
@@ -1631,16 +2068,19 @@ PhysicsObject = {}
 --- @field diedEvent Event @Fired when the Player dies.
 --- @field spawnedEvent Event @Fired when the Player spawns. Indicates the start point at which they spawned and the spawn key used to select the start point. The start point may be nil if a position was specified when spawning the player.
 --- @field respawnedEvent Event @Player.respawnedEvent is deprecated. Please use Player.spawnedEvent instead.
---- @field bindingPressedEvent Event @Fired when an action binding is pressed. Second parameter tells you which binding. Possible values of the bindings are listed on the [Ability binding](../api/key_bindings.md) page.
---- @field bindingReleasedEvent Event @Fired when an action binding is released. Second parameter tells you which binding.
+--- @field bindingPressedEvent Event @Player.bindingPressedEvent is deprecated. Please use Input.actionPressedEvent instead, but note that it does not use the same binding names.
+--- @field bindingReleasedEvent Event @Player.bindingReleasedEvent is deprecated. Please use Input.actionReleasedEvent instead, but note that it does not use the same binding names.
 --- @field resourceChangedEvent Event @Fired when a resource changed, indicating the type of the resource and its new amount.
 --- @field movementModeChangedEvent Event @Fired when a Player's movement mode changes. The first parameter is the Player being changed. The second parameter is the "new" movement mode. The third parameter is the "previous" movement mode. Possible values for MovementMode are: MovementMode.NONE, MovementMode.WALKING, MovementMode.FALLING, MovementMode.SWIMMING, MovementMode.FLYING.
---- @field animationEvent Event @Some animations have events specified at important points of the animation (e.g. the impact point in a punch animation). This event is fired with the Player that triggered it, the name of the event at those points, and the name of the animation itself. Events generated from default stances on the player will return "animation_stance" as the animation name.
+--- @field animationEvent Event @Some animations have events specified at important points of the animation (for example the impact point in a punch animation). This event is fired with the Player that triggered it, the name of the event at those points, and the name of the animation itself. Events generated from default stances on the player will return "animation_stance" as the animation name.
 --- @field emoteStartedEvent Event @Fired when the Player begins playing an emote.
 --- @field emoteStoppedEvent Event @Fired when the Player stops playing an emote or an emote is interrupted.
 --- @field perkChangedEvent Event @Fired when a player's list of owned perks has changed, indicating which perk's amount has changed. Do not expect this event to fire for perks that a player already has when they join a game. Use the `HasPerk(NetReference)` or `GetPerkCount(NetReference)` function for any initial logic that needs to be handled when joining. Also, this event may not actively fire when a perk expires, but it may fire for an expired perk as a result of purchasing a different perk.
+--- @field interactableFocusedEvent Event @Fired when a player has focused on an interactable Trigger and may interact with it.
+--- @field interactableUnfocusedEvent Event @Fired when a player is no longer focused on a previously focused interactable Trigger.
 --- @field privateNetworkedDataChangedEvent Event @Fired when the player's private data changes. On the client, only the local player's private data is available.
 --- @field movementHook Hook @Hook called when processing a Player's movement. The `parameters` table contains a `Vector3` named "direction", indicating the direction the player will move.
+--- @field damageHook Hook @Hook called when applying damage from a call to `ApplyDamage()`. The incoming damage may be modified or prevented by modifying properties on the `damage` parameter.
 --- @field id string @The unique id of the Player. Consistent across sessions.
 --- @field name string @The Player's name.
 --- @field team number @The number of the team to which the Player is assigned. By default, this value is 255 in FFA mode.
@@ -1661,7 +2101,6 @@ PhysicsObject = {}
 --- @field isMounted boolean @True if the Player is mounted on another object.
 --- @field isSwimming boolean @True if the Player is swimming in water.
 --- @field isWalking boolean @True if the Player is in walking mode.
---- @field isSliding boolean
 --- @field maxWalkSpeed number @Maximum speed while the player is on the ground. Clients can only read. Default = 640.
 --- @field stepHeight number @Maximum height in centimeters the Player can step up. Range is 0-100. Default = 45.
 --- @field maxAcceleration number @Max Acceleration (rate of change of velocity). Clients can only read. Default = 1800. Acceleration is expressed in centimeters per second squared.
@@ -1677,8 +2116,7 @@ PhysicsObject = {}
 --- @field currentFacingMode FacingMode @Current mode applied to player, including possible overrides. Possible values are FacingMode.FACE_AIM_WHEN_ACTIVE, FacingMode.FACE_AIM_ALWAYS, and FacingMode.FACE_MOVEMENT. See desiredFacingMode for details.
 --- @field desiredFacingMode FacingMode @Which controls mode to use for this Player. May be overridden by certain movement modes like MovementMode.SWIMMING or when mounted. Possible values are FacingMode.FACE_AIM_WHEN_ACTIVE, FacingMode.FACE_AIM_ALWAYS, and FacingMode.FACE_MOVEMENT.
 --- @field maxJumpCount number @Max number of jumps, to enable multiple jumps. Set to 0 to disable jumping.
---- @field flipOnMultiJump boolean
---- @field shouldFlipOnMultiJump boolean
+--- @field shouldFlipOnMultiJump boolean @Set to `false` to disable flip animation when player performs double-jump, triple-jump, etc. Defaults to `true`, enabling flip animation.
 --- @field jumpVelocity number @Vertical speed applied to Player when they jump. Default = 900. Speed is expressed in centimeters per second.
 --- @field gravityScale number @Multiplier on gravity applied. Default = 1.9.
 --- @field maxSwimSpeed number @Maximum speed while the player is swimming. Default = 420.
@@ -1763,6 +2201,10 @@ function PlayerInstance:GetEquipment() end
 --- @return table<number, CoreObject>
 function PlayerInstance:GetAttachedObjects() end
 
+--- Returns a list of Inventory objects assigned to the player. If the player has no assigned inventories, this list is empty.
+--- @return table<number, Inventory>
+function PlayerInstance:GetInventories() end
+
 --- Returns an array of all IKAnchor objects activated on this player.
 --- @return table<number, IKAnchor>
 function PlayerInstance:GetIKAnchors() end
@@ -1783,8 +2225,8 @@ function PlayerInstance:ResetVelocity() end
 function PlayerInstance:ApplyDamage(damage) end
 
 --- Enables ragdoll for the Player, starting on `socketName` weighted by `weight` (between 0.0 and 1.0). This can cause the Player capsule to detach from the mesh. All parameters are optional; `socketName` defaults to the root and `weight` defaults to 1.0. Multiple bones can have ragdoll enabled simultaneously. See [Socket Names](../api/animations.md#socket-names) for the list of possible values.
---- @overload fun(socketName: string)
---- @overload fun()
+--- @overload fun(self: Player,socketName: string)
+--- @overload fun(self: Player)
 --- @param socketName string
 --- @param weight number
 function PlayerInstance:EnableRagdoll(socketName, weight) end
@@ -1793,7 +2235,7 @@ function PlayerInstance:EnableRagdoll(socketName, weight) end
 function PlayerInstance:DisableRagdoll() end
 
 --- *This function is deprecated. Please use the `.isVisible` property instead.* Shows or hides the Player. The second parameter is optional, defaults to true, and determines if attachments to the Player are hidden as well as the Player.
---- @overload fun(isVisible: boolean)
+--- @overload fun(self: Player,isVisible: boolean)
 --- @param isVisible boolean
 --- @param includeAttachments boolean
 function PlayerInstance:SetVisibility(isVisible, includeAttachments) end
@@ -1811,7 +2253,7 @@ function PlayerInstance:GetViewWorldPosition() end
 function PlayerInstance:GetViewWorldRotation() end
 
 --- Kills the Player. They will ragdoll and ignore further Damage. The optional Damage parameter is a way to communicate cause of death.
---- @overload fun()
+--- @overload fun(self: Player)
 --- @param damage Damage
 function PlayerInstance:Die(damage) end
 
@@ -1824,7 +2266,7 @@ function PlayerInstance:Die(damage) end
 --- `scale (Vector3)`: Sets the player's scale after respawning. Defaults to the Player Scale Multiplier of the selected spawn point, or the player's current scale if no spawn point was selected. Player scale must be uniform. (All three components must be equal.)
 --- 
 --- `spawnKey (string)`: Only spawn points with the given `spawnKey` will be considered. If omitted, only spawn points with a blank `spawnKey` are used.
---- @overload fun()
+--- @overload fun(self: Player)
 --- @param optionalParameters table
 function PlayerInstance:Spawn(optionalParameters) end
 
@@ -1837,8 +2279,8 @@ function PlayerInstance:Spawn(optionalParameters) end
 --- `scale (Vector3)`: Sets the player's scale after respawning. Defaults to the Player Scale Multiplier of the selected spawn point, or the player's current scale if no spawn point was selected. Player scale must be uniform. (All three components must be equal.)
 --- 
 --- `spawnKey (string)`: Only spawn points with the given `spawnKey` will be considered. If omitted, only spawn points with a blank `spawnKey` are used.
---- @overload fun(optionalParameters: table)
---- @overload fun()
+--- @overload fun(self: Player,optionalParameters: table)
+--- @overload fun(self: Player)
 --- @param position Vector3
 --- @param rotation Rotation
 function PlayerInstance:Respawn(position, rotation) end
@@ -1884,8 +2326,8 @@ function PlayerInstance:GetResourceNames() end
 function PlayerInstance:GetResourceNamesStartingWith(resourceNamePrefix) end
 
 --- Does not work in preview mode or in games played locally. Transfers player to the game specified by the passed-in game ID. Example: The game ID for the URL `https://www.coregames.com/games/577d80/core-royale` is `577d80/core-royale`. This function will raise an error if called from a client script on a player other than the local player.
---- @overload fun(gameInfo: CoreGameInfo)
---- @overload fun(gameId: string)
+--- @overload fun(self: Player,gameInfo: CoreGameInfo)
+--- @overload fun(self: Player,gameId: string)
 --- @param gameCollectionEntry CoreGameCollectionEntry
 function PlayerInstance:TransferToGame(gameCollectionEntry) end
 
@@ -1929,6 +2371,10 @@ function PlayerInstance:ActivateWalking() end
 --- @param isMounted boolean
 function PlayerInstance:SetMounted(isMounted) end
 
+--- Returns the Ability that is currently active on the player, or `nil` if no ability is currently active. Abilities are considered active if they are in `CAST`, `EXECUTE`, or `RECOVERY` phases. Abilities in `COOLDOWN` or `READY` phase are not considered active.
+--- @return Ability
+function PlayerInstance:GetActiveAbility() end
+
 --- Returns whichever camera is currently active for the Player.
 --- @return Camera
 function PlayerInstance:GetActiveCamera() end
@@ -1938,7 +2384,7 @@ function PlayerInstance:GetActiveCamera() end
 function PlayerInstance:GetDefaultCamera() end
 
 --- Sets the default Camera object for the Player.
---- @overload fun(camera: Camera,lerpTime: number)
+--- @overload fun(self: Player,camera: Camera,lerpTime: number)
 --- @param camera Camera
 function PlayerInstance:SetDefaultCamera(camera) end
 
@@ -1947,12 +2393,12 @@ function PlayerInstance:SetDefaultCamera(camera) end
 function PlayerInstance:GetOverrideCamera() end
 
 --- Sets the override Camera object for the Player.
---- @overload fun(camera: Camera,lerpTime: number)
+--- @overload fun(self: Player,camera: Camera,lerpTime: number)
 --- @param camera Camera
 function PlayerInstance:SetOverrideCamera(camera) end
 
 --- Clears the override Camera object for the Player (to revert back to the default camera).
---- @overload fun(lerpTime: number)
+--- @overload fun(self: Player,lerpTime: number)
 function PlayerInstance:ClearOverrideCamera() end
 
 --- Get the rotation for the direction the Player is facing.
@@ -1963,7 +2409,7 @@ function PlayerInstance:GetLookWorldRotation() end
 --- @param newLookRotation Rotation
 function PlayerInstance:SetLookWorldRotation(newLookRotation) end
 
---- Returns `true` if the player is currently pressing the named binding. Possible values of the bindings are listed on the [Ability binding](../api/key_bindings.md) page. Note that when called on a client, this function will only work for the local player.
+--- *This function is deprecated. Please use Input.IsActionHeld() instead, but note that it does not use the same binding names.* Returns `true` if the player is currently pressing the named binding. Possible values of the bindings are listed on the [Ability binding](../api/key_bindings.md) page. Note that when called on a client, this function will only work for the local player.
 --- @param bindingName string
 --- @return boolean
 function PlayerInstance:IsBindingPressed(bindingName) end
@@ -2001,6 +2447,10 @@ function PlayerInstance:GetPrivateNetworkedDataKeys() end
 --- Returns the number of bytes used by private networked data on this player. Returns 0 if private networked data is not available.
 --- @return number
 function PlayerInstance:GetPrivateNetworkedDataSize() end
+
+--- If the player is currently focused on an interactable Trigger, returns that Trigger. Returns `nil` if the player is not currently focused on an interactable Trigger.
+--- @return Trigger
+function PlayerInstance:GetInteractableTarget() end
 
 --- @param typeName string
 --- @return boolean
@@ -2188,7 +2638,7 @@ function RandomStreamInstance:Reset() end
 function RandomStreamInstance:Mutate() end
 
 --- Returns a floating point number between `min` and `max` (inclusive), defaults to `0` and `1` (exclusive).
---- @overload fun(min: number,max: number): number
+--- @overload fun(self: RandomStream,min: number,max: number): number
 --- @return number
 function RandomStreamInstance:GetNumber() end
 
@@ -2203,7 +2653,7 @@ function RandomStreamInstance:GetInteger(min, max) end
 function RandomStreamInstance:GetVector3() end
 
 --- Returns a random unit vector, uniformly distributed, from inside a cone defined by `direction`, `horizontalHalfAngle` and `verticalHalfAngle` (in degrees).
---- @overload fun(direction: Vector3,coneHalfAngle: number): Vector3
+--- @overload fun(self: RandomStream,direction: Vector3,coneHalfAngle: number): Vector3
 --- @param direction Vector3
 --- @param horizontalHalfAngle number
 --- @param verticalHalfAngle number
@@ -2221,6 +2671,36 @@ RandomStream = {}
 --- @param seed number
 --- @return RandomStream
 function RandomStream.New(seed) end
+
+
+--- @class Rectangle @A rectangle defined by upper-left and lower-right corners. Generally assumed to be used within screen space, so the Y axis points down. This means the bottom of the rectangle is expected to be a higher value than the top.
+--- @field left number @The position of the left edge of the rectangle.
+--- @field top number @The position of the top edge of the rectangle.
+--- @field right number @The position of the right edge of the rectangle.
+--- @field bottom number @The position of the bottom edge of the rectangle.
+--- @field type string
+local RectangleInstance = {}
+--- Returns a Vector2 indicating the width and height of the rectangle.
+--- @return Vector2
+function RectangleInstance:GetSize() end
+
+--- Returns a Vector2 indicating the coordinates of the center of the rectangle.
+--- @return Vector2
+function RectangleInstance:GetCenter() end
+
+--- @param typeName string
+--- @return boolean
+function RectangleInstance:IsA(typeName) end
+
+--- @class GlobalRectangle @A rectangle defined by upper-left and lower-right corners. Generally assumed to be used within screen space, so the Y axis points down. This means the bottom of the rectangle is expected to be a higher value than the top.
+Rectangle = {}
+--- Constructs a Rectangle with the given `left`, `top`, `right`, `bottom` values, defaults to (0, 0, 0, 0).
+--- @overload fun(rectangle: Rectangle): Rectangle
+--- @overload fun(left: number,top: number,right: number,bottom: number): Rectangle
+--- @overload fun(): Rectangle
+--- @param vector Vector4
+--- @return Rectangle
+function Rectangle.New(vector) end
 
 
 --- @class Rotation @An euler-based rotation around `x`, `y`, and `z` axes.
@@ -2425,6 +2905,15 @@ function StaticMeshInstance:GetMaterialSlots() end
 --- @param slotName string
 function StaticMeshInstance:ResetMaterialSlot(slotName) end
 
+--- Returns a `Box` describing the mesh bounds. The `Box` span may exceed the exact extrema of the object. Optional parameters can be provided to control the results:
+--- 
+--- `inLocalSpace (boolean)`: If true, the box will describe the bounds in the mesh's local coordinate system. Defaults to false.
+--- 
+--- `onlyCollidable (boolean)`: If true, the box will only describe the bounds of the mesh's collidable geometry. This can be affected by collision settings and network context. Defaults to false.
+--- @param optionalParameters table
+--- @return Box
+function StaticMeshInstance:GetBoundingBox(optionalParameters) end
+
 --- @param typeName string
 --- @return boolean
 function StaticMeshInstance:IsA(typeName) end
@@ -2567,10 +3056,12 @@ function TreadedVehicleInstance:IsA(typeName) end
 --- @class GlobalTreadedVehicle : Vehicle @TreadedVehicle is a Vehicle with treads, such as a tank or a tonk.
 TreadedVehicle = {}
 
---- @class Trigger : CoreObject @A trigger is an invisible and non-colliding CoreObject which fires events when it interacts with another object (e.g. A Player walks into it):
+--- @class Trigger : CoreObject @A trigger is an invisible and non-colliding CoreObject which fires events when it interacts with another object (for example a Player walks into it):
 --- @field beginOverlapEvent Event @Fired when an object enters the Trigger volume. The first parameter is the Trigger itself. The second is the object overlapping the Trigger, which may be a CoreObject, a Player, or some other type. Call `other:IsA()` to check the type.
 --- @field endOverlapEvent Event @Fired when an object exits the Trigger volume. Parameters the same as `beginOverlapEvent.`
 --- @field interactedEvent Event @Fired when a player uses the interaction on a trigger volume (<kbd>F</kbd> key). The first parameter is the Trigger itself and the second parameter is a Player.
+--- @field interactableFocusedEvent Event @Fired when a player has focused on an interactable Trigger and may interact with it.
+--- @field interactableUnfocusedEvent Event @Fired when a player is no longer focused on a previously focused interactable Trigger.
 --- @field isInteractable boolean @Interactable Triggers expect Players to walk up and press the <kbd>F</kbd> key to activate them.
 --- @field interactionLabel string @The text players will see in their HUD when they come into range of interacting with this trigger.
 --- @field team number @Assigns the trigger to a team. Value range from 0 to 4. 0 is neutral team.
@@ -2591,7 +3082,7 @@ function TriggerInstance:GetOverlappingObjects() end
 --- @return boolean
 function TriggerInstance:IsA(typeName) end
 
---- @class GlobalTrigger : CoreObject @A trigger is an invisible and non-colliding CoreObject which fires events when it interacts with another object (e.g. A Player walks into it):
+--- @class GlobalTrigger : CoreObject @A trigger is an invisible and non-colliding CoreObject which fires events when it interacts with another object (for example a Player walks into it):
 Trigger = {}
 
 --- @class UIButton : UIControl @A UIControl for a button, should be inside client context. Inherits from [UIControl](uicontrol.md).
@@ -2600,12 +3091,21 @@ Trigger = {}
 --- @field releasedEvent Event @Fired when button is released. (mouse button up)
 --- @field hoveredEvent Event @Fired when button is hovered.
 --- @field unhoveredEvent Event @Fired when button is unhovered.
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
 --- @field text string @Returns the button's label text.
 --- @field fontSize number @Returns the font size of the label text.
 --- @field isInteractable boolean @Returns whether the Button can interact with the cursor (click, hover, etc).
 --- @field shouldClipToSize boolean @Whether or not the button and its shadow should be clipped when exceeding the bounds of this control.
 --- @field shouldScaleToFit boolean @Whether or not the button's label should scale down to fit within the bounds of this control.
 --- @field boundAction string @Returns the name of the action binding that is toggled when the button is pressed or released, or `nil` if no binding has been set.
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UIButtonInstance = {}
 --- Sets the image to a new MUID. You can get this MUID from an Asset Reference.
@@ -2672,6 +3172,10 @@ function UIButtonInstance:GetShadowOffset() end
 --- @param vector2 Vector2
 function UIButtonInstance:SetShadowOffset(vector2) end
 
+--- Returns the touch index currently interacting with this button. Returns `nil` if the button is not currently being interacted with.
+--- @return number
+function UIButtonInstance:GetCurrentTouchIndex() end
+
 --- @param typeName string
 --- @return boolean
 function UIButtonInstance:IsA(typeName) end
@@ -2682,6 +3186,7 @@ UIButton = {}
 --- @class UIContainer : UIControl @A UIContainer is a type of UIControl. All other UI elements must be a descendant of a UIContainer to be visible. It does not have a position or size. It is always the size of the entire screen. It has no properties or functions of its own, but inherits everything from CoreObject. Inherits from [UIControl](uicontrol.md).
 --- @field opacity number @Controls the opacity of the container's contents by multiplying the alpha component of descendants' colors. Note that other UIPanels and UIContainers in the hierarchy may also contribute their own opacity values. A resulting alpha value of 1 or greater is fully opaque, 0 is fully transparent.
 --- @field cylinderArcAngle number @When the container is rendered in 3D space, this adjusts the curvature of the canvas in degrees. Changing this value will force a redraw.
+--- @field useSafeArea boolean @When `true`, the size and position of the container is inset to avoid overlapping with a device's display elements, such as a mobile phone's notch. When `false`, the container is the same size and shape as the device's display regardless of a device's display features. This property has no effect on containers rendered in 3D space.
 --- @field type string
 local UIContainerInstance = {}
 --- Returns the size of the canvas when drawn in 3D space.
@@ -2691,6 +3196,10 @@ function UIContainerInstance:GetCanvasSize() end
 --- Sets the size of the canvas when drawn in 3D space.
 --- @param size Vector2
 function UIContainerInstance:SetCanvasSize(size) end
+
+--- Returns `true` if the container has completed initialization, otherwise returns `false`. Calls to get or set the absolute position of controls within a container may not perform correctly before the container has finished initialization.
+--- @return boolean
+function UIContainerInstance:IsCanvasReady() end
 
 --- @param typeName string
 --- @return boolean
@@ -2709,6 +3218,22 @@ UIContainer = {}
 --- @field dock UIPivot @The pivot point on this control to which children attach. Can be one of `UIPivot.TOP_LEFT`, `UIPivot.TOP_CENTER`, `UIPivot.TOP_RIGHT`, `UIPivot.MIDDLE_LEFT`, `UIPivot.MIDDLE_CENTER`, `UIPivot.MIDDLE_RIGHT`, `UIPivot.BOTTOM_LEFT`, `UIPivot.BOTTOM_CENTER`, `UIPivot.BOTTOM_RIGHT`, or `UIPivot.CUSTOM`.
 --- @field type string
 local UIControlInstance = {}
+--- Returns the absolute screen position of the pivot for this control.
+--- @return Vector2
+function UIControlInstance:GetAbsolutePosition() end
+
+--- Sets the absolute screen position of the pivot for this control.
+--- @param position Vector2
+function UIControlInstance:SetAbsolutePosition(position) end
+
+--- Returns the absolute rotation in degrees (clockwise) for this control.
+--- @return number
+function UIControlInstance:GetAbsoluteRotation() end
+
+--- Sets the absolute rotation in degrees (clockwise) for this control.
+--- @param rotation number
+function UIControlInstance:SetAbsoluteRotation(rotation) end
+
 --- @param typeName string
 --- @return boolean
 function UIControlInstance:IsA(typeName) end
@@ -2722,10 +3247,23 @@ UIControl = {}
 --- @field releasedEvent Event @Fired when button is released. (mouse button up)
 --- @field hoveredEvent Event @Fired when button is hovered.
 --- @field unhoveredEvent Event @Fired when button is unhovered.
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
 --- @field isInteractable boolean @Returns whether the button can interact with the cursor (click, hover, etc).
 --- @field eventId string @Returns the ID of the event for which this button is currently configured. This ID can be found in the creator dashboard or using the `CoreGameEvent.id` property of an event returned from various `CorePlatform` functions.
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UIEventRSVPButtonInstance = {}
+--- Returns the touch index currently interacting with this button. Returns `nil` if the button is not currently being interacted with.
+--- @return number
+function UIEventRSVPButtonInstance:GetCurrentTouchIndex() end
+
 --- @param typeName string
 --- @return boolean
 function UIEventRSVPButtonInstance:IsA(typeName) end
@@ -2734,11 +3272,20 @@ function UIEventRSVPButtonInstance:IsA(typeName) end
 UIEventRSVPButton = {}
 
 --- @class UIImage : UIControl @A UIControl for displaying an image. Inherits from [UIControl](uicontrol.md).
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
 --- @field isTeamColorUsed boolean @If `true`, the image will be tinted blue if its team matches the Player, or red if not.
 --- @field team number @the team of the image, used for `isTeamColorUsed`.
 --- @field shouldClipToSize boolean @Whether or not the image and its shadow should be clipped when exceeding the bounds of this control.
 --- @field isFlippedHorizontal boolean @Whether or not the image is flipped horizontally.
 --- @field isFlippedVertical boolean @Whether or not the image is flipped vertically.
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UIImageInstance = {}
 --- Returns the current color of the UIImage.
@@ -2750,14 +3297,14 @@ function UIImageInstance:GetColor() end
 function UIImageInstance:SetColor(color) end
 
 --- Sets the UIImage to a new image asset ID. You can get this ID from an Asset Reference.
---- @overload fun(imageId: string)
+--- @overload fun(self: UIImage,imageId: string)
 --- @param player Player
 function UIImageInstance:SetImage(player) end
 
 --- Downloads and sets a Player's profile picture as the texture for this UIImage control.
---- @overload fun(playerId: string)
---- @overload fun(friend: CoreFriendCollectionEntry)
---- @overload fun(playerProfile: CorePlayerProfile)
+--- @overload fun(self: UIImage,playerId: string)
+--- @overload fun(self: UIImage,friend: CoreFriendCollectionEntry)
+--- @overload fun(self: UIImage,playerProfile: CorePlayerProfile)
 --- @param player Player
 function UIImageInstance:SetPlayerProfile(player) end
 
@@ -2791,9 +3338,17 @@ function UIImageInstance:GetShadowOffset() end
 --- @param vector2 Vector2
 function UIImageInstance:SetShadowOffset(vector2) end
 
+--- Downloads and sets a blockchain token image as the texture for this UIImage control.
+--- @param blockchainToken BlockchainToken
+function UIImageInstance:SetBlockchainToken(blockchainToken) end
+
 --- Sets the UIImage to display the given camera capture. If the given capture is not valid, it will be ignored. If the capture is released while in use, this UIImage will revert to its default image.
 --- @param cameraCapture CameraCapture
 function UIImageInstance:SetCameraCapture(cameraCapture) end
+
+--- Returns the touch index currently interacting with this image. Returns `nil` if the image is not currently being interacted with.
+--- @return number
+function UIImageInstance:GetCurrentTouchIndex() end
 
 --- @param typeName string
 --- @return boolean
@@ -2820,7 +3375,16 @@ UIPanel = {}
 --- @field releasedEvent Event @Fired when button is released. (mouse button up)
 --- @field hoveredEvent Event @Fired when button is hovered.
 --- @field unhoveredEvent Event @Fired when button is unhovered.
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
 --- @field isInteractable boolean @Returns whether the button can interact with the cursor (click, hover, etc).
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UIPerkPurchaseButtonInstance = {}
 --- Configures this button to use the specified perk.
@@ -2831,6 +3395,10 @@ function UIPerkPurchaseButtonInstance:SetPerkReference(perkReference) end
 --- @return NetReference
 function UIPerkPurchaseButtonInstance:GetPerkReference() end
 
+--- Returns the touch index currently interacting with this button. Returns `nil` if the button is not currently being interacted with.
+--- @return number
+function UIPerkPurchaseButtonInstance:GetCurrentTouchIndex() end
+
 --- @param typeName string
 --- @return boolean
 function UIPerkPurchaseButtonInstance:IsA(typeName) end
@@ -2839,10 +3407,19 @@ function UIPerkPurchaseButtonInstance:IsA(typeName) end
 UIPerkPurchaseButton = {}
 
 --- @class UIProgressBar : UIControl @A UIControl that displays a filled rectangle which can be used for things such as a health indicator. Inherits from [UIControl](uicontrol.md).
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
 --- @field progress number @From 0 to 1, how full the bar should be.
 --- @field fillType ProgressBarFillType @Controls the direction in which the progress bar fills.
 --- @field fillTileType ImageTileType @How the fill texture is tiled.
 --- @field backgroundTileType ImageTileType @How the background texture is tiled.
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UIProgressBarInstance = {}
 --- Sets the progress bar fill to use the image specified by the given asset ID.
@@ -2877,6 +3454,10 @@ function UIProgressBarInstance:GetBackgroundColor() end
 --- @param color Color
 function UIProgressBarInstance:SetBackgroundColor(color) end
 
+--- Returns the touch index currently interacting with this control. Returns `nil` if the control is not currently being interacted with.
+--- @return number
+function UIProgressBarInstance:GetCurrentTouchIndex() end
+
 --- @param typeName string
 --- @return boolean
 function UIProgressBarInstance:IsA(typeName) end
@@ -2885,8 +3466,21 @@ function UIProgressBarInstance:IsA(typeName) end
 UIProgressBar = {}
 
 --- @class UIRewardPointsMeter : UIControl @A UIControl that displays the a players progress towards the daily Reward Points cap. Inherits from [UIControl](uicontrol.md).
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UIRewardPointsMeterInstance = {}
+--- Returns the touch index currently interacting with this control. Returns `nil` if the control is not currently being interacted with.
+--- @return number
+function UIRewardPointsMeterInstance:GetCurrentTouchIndex() end
+
 --- @param typeName string
 --- @return boolean
 function UIRewardPointsMeterInstance:IsA(typeName) end
@@ -2909,6 +3503,14 @@ function UIScrollPanelInstance:IsA(typeName) end
 UIScrollPanel = {}
 
 --- @class UIText : UIControl @A UIControl which displays a basic text label. Inherits from [UIControl](uicontrol.md).
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on the control on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on the control on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field touchStartedEvent Event @Fired when the player starts touching the control on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the control on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps the control on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on the control on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
 --- @field text string @The actual text string to show.
 --- @field fontSize number @The font size of the UIText control.
 --- @field outlineSize number @The thickness of the outline around text in this control. A value of 0 means no outline.
@@ -2916,6 +3518,7 @@ UIScrollPanel = {}
 --- @field shouldWrapText boolean @Whether or not text should be wrapped within the bounds of this control.
 --- @field shouldClipText boolean @Whether or not text should be clipped when exceeding the bounds of this control.
 --- @field shouldScaleToFit boolean @Whether or not text should scale down to fit within the bounds of this control.
+--- @field isHittable boolean @When set to `true`, this control can receive input from the cursor and blocks input to controls behind it. When set to `false`, the cursor ignores this control and can interact with controls behind it.
 --- @field type string
 local UITextInstance = {}
 --- Returns the color of the Text.
@@ -2958,6 +3561,10 @@ function UITextInstance:GetOutlineColor() end
 --- @param color Color
 function UITextInstance:SetOutlineColor(color) end
 
+--- Returns the touch index currently interacting with this control. Returns `nil` if the control is not currently being interacted with.
+--- @return number
+function UITextInstance:GetCurrentTouchIndex() end
+
 --- @param typeName string
 --- @return boolean
 function UITextInstance:IsA(typeName) end
@@ -2972,6 +3579,10 @@ UIText = {}
 --- @field sizeSquared number @The squared magnitude of the Vector2.
 --- @field type string
 local Vector2Instance = {}
+--- Returns a new Vector2 with each component the absolute value of the component from this Vector2.
+--- @return Vector2
+function Vector2Instance:GetAbs() end
+
 --- Returns a new Vector2 with size 1, but still pointing in the same direction. Returns (0, 0) if the vector is too small to be normalized.
 --- @return Vector2
 function Vector2Instance:GetNormalized() end
@@ -3009,6 +3620,10 @@ function Vector2.New(xy) end
 --- @field sizeSquared number @The squared magnitude of the Vector3.
 --- @field type string
 local Vector3Instance = {}
+--- Returns a new Vector3 with each component the absolute value of the component from this Vector3.
+--- @return Vector3
+function Vector3Instance:GetAbs() end
+
 --- Returns a new Vector3 with size 1, but still pointing in the same direction. Returns (0, 0, 0) if the vector is too small to be normalized.
 --- @return Vector3
 function Vector3Instance:GetNormalized() end
@@ -3051,6 +3666,10 @@ function Vector3.New(xyz) end
 --- @field sizeSquared number @The squared magnitude of the Vector4.
 --- @field type string
 local Vector4Instance = {}
+--- Returns a new Vector4 with each component the absolute value of the component from this Vector4.
+--- @return Vector4
+function Vector4Instance:GetAbs() end
+
 --- Returns a new Vector4 with size 1, but still pointing in the same direction. Returns (0, 0, 0, 0) if the vector is too small to be normalized.
 --- @return Vector4
 function Vector4Instance:GetNormalized() end
@@ -3090,6 +3709,8 @@ function Vector4.New(xy, zw) end
 --- @field diedEvent Event @Fired when the vehicle dies.
 --- @field clientMovementHook Hook @Hook called when processing the driver's input. The `parameters` table contains "throttleInput", "steeringInput", and "isHandbrakeEngaged". This is only called on the driver's client. "throttleInput" is a number -1.0, to 1.0, with positive values indicating forward input. "steeringInput" is the same, and positive values indicate turning to the right. "isHandbrakeEngaged" is a boolean.
 --- @field serverMovementHook Hook @Hook called when on the server for a vehicle with no driver. This has the same parameters as clientMovementHook.
+--- @field damageHook Hook @Hook called when applying damage from a call to `ApplyDamage()`. The incoming damage may be modified or prevented by modifying properties on the `damage` parameter.
+--- @field canExit boolean @Returns `true` if the driver of the vehicle is allowed to exit using the Vehicle Exit binding.
 --- @field isAccelerating boolean @Returns `true` if the vehicle is currently accelerating.
 --- @field driver Player @The Player currently driving the vehicle, or `nil` if there is no driver.
 --- @field mass number @Returns the mass of the vehicle in kilograms.
@@ -3157,7 +3778,7 @@ function VehicleInstance:SetCenterOfMassOffset(offset) end
 function VehicleInstance:ApplyDamage(damage) end
 
 --- Kills the vehicle, unless it is immortal. The optional Damage parameter is a way to communicate cause of death.
---- @overload fun()
+--- @overload fun(self: Vehicle)
 --- @param damage Damage
 function VehicleInstance:Die(damage) end
 
@@ -3228,7 +3849,7 @@ VoiceChatChannel = {}
 
 --- @class Weapon : Equipment @A Weapon is an Equipment that comes with built-in Abilities and fires Projectiles.
 --- @field projectileSpawnedEvent Event @Fired when a Weapon spawns a projectile.
---- @field targetImpactedEvent Event @Fired when a Weapon interacts with something. E.g. a shot hits a wall. The `ImpactData` parameter contains information such as which object was hit, who owns the Weapon, which ability was involved in the interaction, etc.
+--- @field targetImpactedEvent Event @Fired when a Weapon interacts with something. For example a shot hits a wall. The `ImpactData` parameter contains information such as which object was hit, who owns the Weapon, which ability was involved in the interaction, etc.
 --- @field targetInteractionEvent Event @targetInteractionEvent is deprecated. Please use targetImpactedEvent instead.
 --- @field attackCooldownDuration number @Interval between separate burst sequences. The value is set by the Shoot ability's Cooldown duration.
 --- @field animationStance string @When the Weapon is equipped this animation stance is applied to the Player.
@@ -3275,9 +3896,9 @@ local WeaponInstance = {}
 function WeaponInstance:HasAmmo() end
 
 --- Triggers the main ability of the Weapon. Optional target parameter can be a Vector3 world position, a Player, or a CoreObject.
---- @overload fun(targetObject: CoreObject)
---- @overload fun(targetWorldPosition: Vector3)
---- @overload fun()
+--- @overload fun(self: Weapon,targetObject: CoreObject)
+--- @overload fun(self: Weapon,targetWorldPosition: Vector3)
+--- @overload fun(self: Weapon)
 --- @param targetPlayer Player
 function WeaponInstance:Attack(targetPlayer) end
 
@@ -3310,6 +3931,58 @@ function WorldTextInstance:IsA(typeName) end
 
 --- @class GlobalWorldText : CoreObject @WorldText is an in-world text CoreObject.
 WorldText = {}
+
+--- @class Blockchain
+local BlockchainInstance = {}
+--- @class GlobalBlockchain
+Blockchain = {}
+--- Looks up a single blockchain token given its contract address and token ID. This function may yield while fetching token data. May return nil if the requested token does not exist, or if an error occurs while fetching data. The status code in the second return value indicates whether the request succeeded or failed, with an optional error message in the third return value.
+--- @param contractAddress string
+--- @param tokenId string
+--- @return BlockchainToken|BlockchainTokenResultCode|string
+function Blockchain.GetToken(contractAddress, tokenId) end
+
+--- Searches for blockchain tokens owned by the specified player. This function may yield while fetching token data. May return nil if an error occurs while fetching data. The status code in the second return value indicates whether the request succeeded or failed, with an optional error message in the third return value.
+--- 
+--- Optional parameters can be provided to filter the results:
+--- 
+--- `contractAddress (string)`: Only return tokens with the specified contract address.
+--- 
+--- `tokenIds (string or Array<string>)`: Only return tokens with the specified token IDs.
+--- @overload fun(player: Player): BlockchainTokenCollection|BlockchainTokenResultCode|string
+--- @param player Player
+--- @param optionalParameters table
+--- @return BlockchainTokenCollection|BlockchainTokenResultCode|string
+function Blockchain.GetTokensForPlayer(player, optionalParameters) end
+
+--- Searches for blockchain tokens owned by the specified wallet address. This function may yield while fetching token data. May return nil if an error occurs while fetching data. The status code in the second return value indicates whether the request succeeded or failed, with an optional error message in the third return value.
+--- 
+--- Optional parameters can be provided to filter the results:
+--- 
+--- `contractAddress (string)`: Only return tokens with the specified contract address.
+--- 
+--- `tokenIds (string or Array<string>)`: Only return tokens with the specified token IDs.
+--- @overload fun(ownerAddress: string): BlockchainTokenCollection|BlockchainTokenResultCode|string
+--- @param ownerAddress string
+--- @param optionalParameters table
+--- @return BlockchainTokenCollection|BlockchainTokenResultCode|string
+function Blockchain.GetTokensForOwner(ownerAddress, optionalParameters) end
+
+--- Searches for blockchain tokens belonging to the specified contract address. This function may yield while fetching token data. May return nil if an error occurs while fetching data. The status code in the second return value indicates whether the request succeeded or failed, with an optional error message in the third return value.
+--- 
+--- Optional parameters can be provided to filter the results:
+--- 
+--- `tokenIds (string or Array<string>)`: Only return tokens with the specified token IDs.
+--- @overload fun(contractAddress: string): BlockchainTokenCollection|BlockchainTokenResultCode|string
+--- @param contractAddress string
+--- @param optionalParameters table
+--- @return BlockchainTokenCollection|BlockchainTokenResultCode|string
+function Blockchain.GetTokens(contractAddress, optionalParameters) end
+
+--- Looks up a blockchain contract given the contract address. This function may yield while fetching the contract data. May return nil if the requested contract does not exist, or if an error occurs while fetching data. The status code in the second return value indicates whether the request succeeded or failed, with an optional error message in the third return value.
+--- @param contractAddress string
+--- @return BlockchainContract|BlockchainTokenResultCode|string
+function Blockchain.GetContract(contractAddress) end
 
 --- @class Chat
 local ChatInstance = {}
@@ -3366,6 +4039,11 @@ function CoreDebug.GetStackTrace() end
 --- @return string
 function CoreDebug.GetTaskStackTrace() end
 
+--- Returns a string representation of the given value. By default this will return the same result as Lua's built-in `tostring()` function, but some types may return additional information useful for debugging. The format of strings returned by this function is subject to change and should never be relied upon to return specific information.
+--- @param object any
+--- @return string
+function CoreDebug.ToString(object) end
+
 --- @class CoreMath
 local CoreMathInstance = {}
 --- @class GlobalCoreMath
@@ -3397,7 +4075,7 @@ function CoreMath.Clamp(x, min, max) end
 local CorePlatformInstance = {}
 --- @class GlobalCorePlatform
 CorePlatform = {}
---- Requests metadata for a game with the given ID. Accepts full game IDs (eg "67442ee5c0654855b51c4f5fc96ab0fd") as well as the shorter slug version ("67442e/farmers-market"). This function may yield until a result is available, and may raise an error if the game ID is invalid or if an error occurs retrieving the information. Results may be cached for later calls.
+--- Requests metadata for a game with the given ID. Accepts full game IDs (for example "67442ee5c0654855b51c4f5fc96ab0fd") as well as the shorter slug version ("67442e/farmers-market"). This function may yield until a result is available, and may raise an error if the game ID is invalid or if an error occurs retrieving the information. Results may be cached for later calls.
 --- @param gameId string
 --- @return CoreGameInfo
 function CorePlatform.GetGameInfo(gameId) end
@@ -3537,6 +4215,10 @@ function Environment.IsLocalGame() end
 --- @return boolean
 function Environment.IsHostedGame() end
 
+--- Returns the Detail Level selected by the player in the Settings menu. Useful for determining whether to spawn templates for VFX or other client-only objects, or selecting templates that are optimized for a particular detail level based on the player's settings.
+--- @return DetailLevel
+function Environment.GetDetailLevel() end
+
 --- @class Events
 local EventsInstance = {}
 --- @class GlobalEvents
@@ -3592,7 +4274,7 @@ function Game.GetLocalPlayer() end
 --- @return Player
 function Game.FindPlayer(playerId) end
 
---- Returns a table containing the players currently in the game. An optional table may be provided containing parameters to filter the list of players returned: ignoreDead(boolean), ignoreLiving(boolean), ignoreSpawned(boolean), ignoreDespawned(boolean), ignoreTeams(integer or table of integer), includeTeams(integer or table of integer), ignorePlayers(Player or table of Player), E.g.: `Game.GetPlayers({ignoreDead = true, ignorePlayers = Game.GetLocalPlayer()})`.
+--- Returns a table containing the players currently in the game. An optional table may be provided containing parameters to filter the list of players returned: ignoreDead(boolean), ignoreLiving(boolean), ignoreSpawned(boolean), ignoreDespawned(boolean), ignoreTeams(integer or table of integer), includeTeams(integer or table of integer), ignorePlayers(Player or table of Player), for example: `Game.GetPlayers({ignoreDead = true, ignorePlayers = Game.GetLocalPlayer()})`.
 --- @overload fun(): table<number, Player>
 --- @param optionalParams table
 --- @return table<number, Player>
@@ -3705,7 +4387,19 @@ local InputInstance = {}
 --- @field actionPressedEvent Event @Fired when a player starts an input action by pressing a key, button, or other input control. The third parameter, `value`, will be a `Vector2` for direction bindings, or a `number` for axis and basic bindings.
 --- @field actionReleasedEvent Event @Fired when a player stops an input action by releasing a key, button, or other input control.
 --- @field inputTypeChangedEvent Event @Fired when the active input device has changed to a new type of input.
+--- @field pinchStartedEvent Event @Fired when the player begins a pinching gesture on a touch input device. `Input.GetPinchValue()` may be polled during the pinch gesture to determine how far the player has pinched.
+--- @field pinchStoppedEvent Event @Fired when the player ends a pinching gesture on a touch input device.
+--- @field rotateStartedEvent Event @Fired when the player begins a rotating gesture on a touch input device. `Input.GetRotateValue()` may be polled during the rotate gesture to determine how far the player has rotated.
+--- @field rotateStoppedEvent Event @Fired when the player ends a rotating gesture on a touch input device.
+--- @field flickedEvent Event @Fired when the player performs a quick flicking gesture on a touch input device. The `angle` parameter indicates the direction of the flick. 0 indicates a flick to the right. Values increase in degrees counter-clockwise, so 90 indicates a flick straight up, 180 indicates a flick to the left, etc.
+--- @field touchStartedEvent Event @Fired when the player starts touching the screen on a touch input device. Parameters are the screen location of the touch and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field touchStoppedEvent Event @Fired when the player stops touching the screen on a touch input device. Parameters are the screen location from which the touch was released and a touch index used to distinguish between separate touches on a multitouch device.
+--- @field tappedEvent Event @Fired when the player taps on a touch input device. Parameters are the screen location of the tap and the touch index with which the tap was performed.
+--- @field pointerMovedEvent Event @Fired when the pointer (either the mouse or a touch input) has moved. Parameters include the change in position since the last time `pointerMovedEvent` was fired for the given pointer, and an optional touch index indicating which touch input moved. `touchIndex` will be `nil` when the mouse has moved.
+--- @field mouseButtonPressedEvent Event @Fired when the user has pressed a mouse button. Parameters indicate the screen position of the cursor when the button was pressed, and an enum value indicating which mouse button was pressed.
+--- @field mouseButtonReleasedEvent Event @Fired when the user has released a mouse button. Parameters indicate the screen position of the cursor when the button was released, and an enum value indicating which mouse button was released.
 --- @field escapeHook Hook @Hook called when the local player presses the Escape key. The `parameters` table contains a `boolean` named "openPauseMenu", which may be set to `false` to prevent the pause menu from being opened. Players may press `Shift-Esc` to force the pause menu to open without calling this hook.
+--- @field actionHook Hook @Hook called each frame with a list of changes in action values since the previous frame. The `actionList` table is an array of tables with the structure {action = "actionName", value = `number` or `Vector2`} for each action whose value has changed since the last frame. If no values have changed, `actionList` will be empty, even if there are actions currently being held. Entries in the table can be added, removed, or changed and will affect whether pressed and released events fire. If a non-zero value is changed to zero then `Input.actionReleasedEvent` will fire for that action. If a zero value changes to non-zero then `Input.actionPressedEvent` will fire.
 Input = {}
 --- Returns the current input value associated with the specified action. This will return a `Vector2` for direction bindings, a `number` for basic and axis bindings, or `nil` for invalid bindings. `nil` may also be returned when called on the server with a non-networked action name or a networked action which simply hasn't been pressed yet.
 --- @param player Player
@@ -3732,6 +4426,71 @@ function Input.IsYAxisInverted(inputType) end
 --- @param action string
 --- @return string
 function Input.GetActionDescription(action) end
+
+--- Returns a string label indicating the key or button assigned to the specified action. Returns `nil` if `actionName` is not a valid action or if an invalid `direction` parameter is specified for axis and direction bindings. Returns "None" for valid actions with no control bound.
+--- 
+--- Supported parameters include:
+--- 
+--- `direction (string)`: *Required* for axis and direction bindings, specifying "positive" or "negative" for axis bindings, or "up", "down", "left", or "right" for direction bindings.
+--- 
+--- `inputType (InputType)`: Specifies whether to return a label for keyboard and mouse or controller. Defaults to the current active input type.
+--- 
+--- `secondary (boolean)`: When `true` and returning a label for keyboard and mouse, returns a label for the secondary input.
+--- @overload fun(action: string): string
+--- @param action string
+--- @param optionalParams table
+--- @return string
+function Input.GetActionInputLabel(action, optionalParams) end
+
+--- Returns a Vector2 with the `x`, `y` coordinates of the mouse cursor on the screen. May return `nil` if the cursor position cannot be determined.
+--- @return Vector2
+function Input.GetCursorPosition() end
+
+--- Returns a Vector2 with the `x`, `y` coordinates of a touch input on the screen. An optional touch index may be provided to specify which touch to return on multitouch devices. If not specified, index 1 is used. Returns `nil` if the requested touch index is not currently active.
+--- @overload fun(fingerIndex: number): Vector2
+--- @return Vector2
+function Input.GetTouchPosition() end
+
+--- When the current input type is `InputType.TOUCH`, returns a Vector2 with the `x`, `y` coordinates of a touch input on the screen. When the current input type is not `InputType.TOUCH`, returns the cursor position. An optional touch index may be provided to specify which touch to return on multitouch devices. If not specified, index 1 is used. Returns `nil` if the requested touch index is not currently active. The touch index is ignored for other input types.
+--- @overload fun(fingerIndex: number): Vector2
+--- @return Vector2
+function Input.GetPointerPosition() end
+
+--- During a pinch gesture with touch input, returns a value indicating the relative progress of the pinch gesture. Pinch gestures start with a pinch value of 1 and approach 0 when pinching together, or increase past 1 when touches move apart from each other. Returns 0 if no pinch is in progress.
+--- @return number
+function Input.GetPinchValue() end
+
+--- During a rotate gesture with touch input, returns a value indicating the angle of rotation from the start of the gesture. Returns 0 if no rotate is in progress.
+--- @return number
+function Input.GetRotateValue() end
+
+--- Enables display of virtual controls on devices with touch input, or in preview mode if device emulation is enabled. Virtual controls default to enabled when using touch input.
+function Input.EnableVirtualControls() end
+
+--- Disables display of virtual controls on devices with touch input, or in preview mode with device emulation enabled.
+function Input.DisableVirtualControls() end
+
+--- Returns `true` when the current device supports the given input type. For example, `Input.IsInputEnabled(InputType.CONTROLLER)` will return `true` if a gamepad is connected.
+--- @param inputType InputType
+--- @return boolean
+function Input.IsInputTypeEnabled(inputType) end
+
+--- Returns a list of the names of each action from currently active binding sets. Actions are included in this list regardless of whether the action is currently held or not.
+--- @return table<number, string>
+function Input.GetActions() end
+
+--- Enables the specified action, if the action exists.
+--- @param action string
+function Input.EnableAction(action) end
+
+--- Disables the specified action, if the action exists. If the action is currently held, this will also release the action.
+--- @param action string
+function Input.DisableAction(action) end
+
+--- Returns `true` if the specified action is enabled. Returns `false` if the action is disabled or does not exist.
+--- @param action string
+--- @return boolean
+function Input.IsActionEnabled(action) end
 
 --- @class Leaderboards
 local LeaderboardsInstance = {}
@@ -3914,14 +4673,18 @@ function UI.ShowFlyUpText(text, worldPosition, optionalParameters) end
 --- @param sourceObject CoreObject
 function UI.ShowDamageDirection(sourceObject) end
 
---- Calculates the location that worldPosition appears on the screen. Returns a Vector2 with the `x`, `y` coordinates, or `nil` if worldPosition is behind the camera. Only gives results from a client context.
+--- Calculates the location that worldPosition appears on the screen. Returns a Vector2 with the `x`, `y` coordinates, or `nil` if worldPosition is behind the camera.
 --- @param worldPosition Vector3
 --- @return Vector2
 function UI.GetScreenPosition(worldPosition) end
 
---- Returns a Vector2 with the size of the Player's screen in the `x`, `y` coordinates. Only gives results from a client context. May return `nil` if the screen size cannot be determined.
+--- Returns a Vector2 with the size of the Player's screen in the `x`, `y` coordinates. May return `nil` if the screen size cannot be determined.
 --- @return Vector2
 function UI.GetScreenSize() end
+
+--- Returns a rectangle in screen space indicating an area on screen that is not obscured by elements such as the notch on a mobile phone.
+--- @return Rectangle
+function UI.GetSafeArea() end
 
 --- Draws a message on the corner of the screen. Second optional Color parameter can change the color from the default white.
 --- @overload fun(message: string)
@@ -3929,20 +4692,33 @@ function UI.GetScreenSize() end
 --- @param color Color
 function UI.PrintToScreen(message, color) end
 
---- Returns a Vector2 with the `x`, `y` coordinates of the mouse cursor on the screen. Only gives results from a client context. May return `nil` if the cursor position cannot be determined.
+--- *This function is deprecated. Please use Input.GetCursorPosition() instead.* Returns a Vector2 with the `x`, `y` coordinates of the mouse cursor on the screen. May return `nil` if the cursor position cannot be determined.
 --- @return Vector2
 function UI.GetCursorPosition() end
 
---- Return hit result from local client's view in direction of the Projected cursor position. Meant for client-side use only, for Ability cast, please use `ability:GetTargetData():GetHitPosition()`, which would contain cursor hit position at time of cast, when in top-down camera mode.
+--- *This function is deprecated. Please use UI.GetHitResult() instead.* Return hit result from local client's view in direction of the Projected cursor position. Meant for client-side use only, for Ability cast, please use `ability:GetTargetData():GetHitPosition()`, which would contain cursor hit position at time of cast, when in top-down camera mode.
 --- @return HitResult
 function UI.GetCursorHitResult() end
 
---- Return intersection from local client's camera direction to given plane, specified by point on plane and optionally its normal. Meant for client-side use only. Example usage: `local hitPos = UI.GetCursorPlaneIntersection(Vector3.New(0, 0, 0))`.
+--- Return hit result from local client's view from the given screen position cast in the camera direction.
+--- @param screenPos Vector2
+--- @return HitResult
+function UI.GetHitResult(screenPos) end
+
+--- *This function is deprecated. Please use UI.GetPlaneIntersection() instead.* Return intersection from local client's camera direction to given plane, specified by point on plane and optionally its normal. Meant for client-side use only. Example usage: `local hitPos = UI.GetCursorPlaneIntersection(Vector3.New(0, 0, 0))`.
 --- @overload fun(pointOnPlane: Vector3): Vector3
 --- @param pointOnPlane Vector3
 --- @param planeNormal Vector3
 --- @return Vector3
 function UI.GetCursorPlaneIntersection(pointOnPlane, planeNormal) end
+
+--- Return intersection from local client's view from the given screen position case in the camera direction to the given plane, specified by point on plane and optionally its normal. Example usage: `local hitPos = UI.GetPlaneIntersection(UI.GetScreenSize()/2, Vector3.ZERO)`.
+--- @overload fun(screenPos: Vector2,pointOnPlane: Vector3): Vector3
+--- @param screenPos Vector2
+--- @param pointOnPlane Vector3
+--- @param planeNormal Vector3
+--- @return Vector3
+function UI.GetPlaneIntersection(screenPos, pointOnPlane, planeNormal) end
 
 --- Returns whether the cursor is visible.
 --- @return boolean
@@ -3993,6 +4769,19 @@ function UI.SetSocialMenuEnabled(isEnabled) end
 --- Returns whether the social menu is enabled.
 --- @return boolean
 function UI.IsSocialMenuEnabled() end
+
+--- Returns whether the voice chat widget is currently visible. Note that this may return `true` when the voice chat widget is not currently displaying anything on the screen.
+--- @return boolean
+function UI.IsVoiceChatWidgetVisible() end
+
+--- Sets whether the voice chat widget is currently visible.
+--- @param isVisible boolean
+function UI.SetVoiceChatWidgetVisible(isVisible) end
+
+--- Looks for a hittable UI control at the given screen position. Returns the top-most control if found. Returns `nil` if no hittable control was found at the specified position.
+--- @param position Vector2
+--- @return UIControl
+function UI.FindControlAtPosition(position) end
 
 --- @class VoiceChat
 local VoiceChatInstance = {}
@@ -4051,6 +4840,20 @@ function VoiceChat.IsPlayerSpeaking(player) end
 --- @param player Player
 --- @return number
 function VoiceChat.GetPlayerSpeakingVolume(player) end
+
+--- Returns `true` if Core has detected a microphone for the given player, otherwise returns `false`.
+--- @param player Player
+--- @return boolean
+function VoiceChat.HasMicrophone(player) end
+
+--- Returns `true` if the given player has enabled voice chat in their settings.
+--- @param player Player
+--- @return boolean
+function VoiceChat.IsVoiceChatEnabled(player) end
+
+--- Returns the method the local player has selected in their settings to activate voice chat.
+--- @return VoiceChatMethod
+function VoiceChat.GetVoiceChatMethod() end
 
 --- @class World
 local WorldInstance = {}
@@ -4127,6 +4930,8 @@ function World.SpawnAsset(assetId, optionalParameters) end
 --- 
 --- `ignoreObjects (Object, Array<Object>)`: Ignore results that are contained in this list.
 --- 
+--- `useCameraCollision (boolean)`: If `true`, results are found based on objects' camera collision property rather than their game collision.
+--- 
 --- `shouldDebugRender (boolean)`: If `true`, enables visualization of the raycast in world space for debugging.
 --- 
 --- `debugRenderDuration (number)`: Number of seconds for which debug rendering should remain on screen. Defaults to 1 second.
@@ -4198,6 +5003,8 @@ function World.BoxcastAll(startPosition, endPosition, boxSize, optionalParameter
 --- `checkObjects (Object, Array<Object>)`: Only return results that are contained in this list.
 --- 
 --- `ignoreObjects (Object, Array<Object>)`: Ignore results that are contained in this list.
+--- 
+--- `useCameraCollision (boolean)`: If `true`, results are found based on objects' camera collision property rather than their game collision.
 --- @overload fun(position: Vector3,radius: number): table<number, Object>
 --- @param position Vector3
 --- @param radius number
@@ -4215,6 +5022,14 @@ function World.FindObjectsOverlappingSphere(position, radius, optionalParameters
 --- @return table<number, Object>
 function World.FindObjectsOverlappingBox(position, boxSize, optionalParameters) end
 
+--- Returns a `Box` describing the combined bounds of a list of objects. The `Box` span may exceed the exact extrema of the objects. Optional parameters can be provided to control the results:
+--- 
+--- `onlyCollidable (boolean)`: If true, the box will only describe the bounds of the mesh's collidable geometry. This can be affected by collision settings and network context. Defaults to false.
+--- @param objects table
+--- @param optionalParameters table
+--- @return Box
+function World.GetBoundingBoxFromObjects(objects, optionalParameters) end
+
 --- @class AbilityFacingMode @Used with `AbilityPhaseSettings` to control how and if a player rotates while executing an ability.
 AbilityFacingMode = {
     NONE = 0,
@@ -4228,6 +5043,11 @@ AbilityPhase = {
     EXECUTE = 2,
     RECOVERY = 3,
     COOLDOWN = 4,
+}
+--- @class BlockchainTokenResultCode @Status code returned by functions in the `Blockchain` namespace when retrieving data.
+BlockchainTokenResultCode = {
+    SUCCESS = 0,
+    FAILURE = 1,
 }
 --- @class BroadcastEventResultCode @Status code returned by functions in the `Events` namespace when broadcasting networked events.
 BroadcastEventResultCode = {
@@ -4295,6 +5115,13 @@ DamageReason = {
     MAP = 3,
     NPC = 4,
 }
+--- @class DetailLevel @Indicates the desired detail level selected by the player in the Settings menu.
+DetailLevel = {
+    LOW = 0,
+    MEDIUM = 1,
+    HIGH = 2,
+    ULTRA = 3,
+}
 --- @class FacingMode @Describes how the player character determines which direction it should face.
 FacingMode = {
     FACE_AIM_WHEN_ACTIVE = 0,
@@ -4320,6 +5147,7 @@ ImageTileType = {
 InputType = {
     KEYBOARD_AND_MOUSE = 0,
     CONTROLLER = 1,
+    TOUCH = 2,
 }
 --- @class LeaderboardType @Identifies a specific leaderboard type associated with a leaderboard key.
 LeaderboardType = {
@@ -4333,6 +5161,14 @@ LookControlMode = {
     NONE = 0,
     RELATIVE = 1,
     LOOK_AT_CURSOR = 2,
+}
+--- @class MouseButton @Identifies a mouse button involved in an input event.
+MouseButton = {
+    LEFT = 1,
+    RIGHT = 2,
+    MIDDLE = 3,
+    THUMB_1 = 4,
+    THUMB_2 = 5,
 }
 --- @class MovementControlMode @Defines how player input controls the player's movement direction.
 MovementControlMode = {
@@ -4349,7 +5185,6 @@ MovementMode = {
     FALLING = 3,
     SWIMMING = 4,
     FLYING = 5,
-    SLIDING = 6,
 }
 --- @class NetReferenceType @Indicates the specific type of a `NetReference`.
 NetReferenceType = {
@@ -4367,6 +5202,7 @@ NetworkContextType = {
     CLIENT_CONTEXT = 3,
     SERVER_CONTEXT = 4,
     STATIC_CONTEXT = 5,
+    LOCAL_CONTEXT = 6,
 }
 --- @class Orientation @Determines the orientation of a `UIScrollPanel`.
 Orientation = {
@@ -4476,6 +5312,11 @@ Visibility = {
 VoiceChannelType = {
     NORMAL = 0,
     POSITIONAL = 1,
+}
+--- @class VoiceChatMethod @Indicates the setting a player uses to activate voice chat.
+VoiceChatMethod = {
+    PUSH_TO_TALK = 0,
+    DETECT_SPEAKING = 2,
 }
 --- @class VoiceChatMode @Controls whether voice chat is enabled in the game.
 VoiceChatMode = {

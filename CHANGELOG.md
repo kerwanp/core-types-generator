@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.0.1](https://github.com/kerwanp/core-types-generator/compare/v1.0.0...v1.0.1) (2022-06-25)
+
+
+### Bug Fixes
+
+* add @types/node to devDependencies ([faad019](https://github.com/kerwanp/core-types-generator/commit/faad0192f1fc45dd1568915cd9d3416f9b499dfd))
+
 ## 1.0.0 (2022-06-25)
 
 
