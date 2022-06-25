@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/kerwanp/core-types-generator#readme",
   "devDependencies": {
+    "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^5.8.1",
     "@typescript-eslint/parser": "^5.8.1",
     "esbuild": "^0.14.10",
