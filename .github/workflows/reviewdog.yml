@@ -12,6 +12,7 @@ jobs:
         with:
           reporter: github-pr-review
           github_token: ${{ secrets.github_token }}
+          workdir: src
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
@@ -21,3 +22,4 @@ jobs:
         with:
           reporter: github-pr-review
           github_token: ${{ secrets.github_token }}
+          workdir: src
