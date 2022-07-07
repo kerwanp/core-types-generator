@@ -16,6 +16,10 @@ export class TypeSignature {
     this.returns.push(typeReturn);
   }
 
+  public getParameters() {
+    return this.parameters;
+  }
+
   public getOverloadAnnotation(skipIfNonOptionalArgument: boolean): string {
     if (
       skipIfNonOptionalArgument &&

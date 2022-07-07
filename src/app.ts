@@ -15,6 +15,7 @@ import { TypeSignature } from './TypeSignature';
 import { TypeParameter } from './TypeParameter';
 import { TypeReturn } from './TypeReturn';
 import { TypeEnum } from './TypeEnum';
+import { TypeMetamethod } from './TypeMetamethod';
 
 const ENVIRONMENT = 'Prod';
 const BASE_URL = `https://manticore${ENVIRONMENT.toLowerCase()}.blob.core.windows.net`;
@@ -96,6 +97,11 @@ function generateClassesLines(classes: Class[]): string[] {
           generateFunction(obj.Name, construct, false),
           true
         );
+      }
+    }
+    if (obj.Metamethods) {
+      for (const metamethod of obj.Metamethods) {
+        typeClass.addMetamethod(generateMetamethod(typeClass, metamethod));
       }
     }
     for (const property of obj.Properties) {
@@ -220,6 +226,26 @@ function generateFunction(
   const signatures = generateSignatures(
     func.Signatures,
     member ? className : undefined
+  );
+  for (const signature of signatures) {
+    typeFunction.addSignature(signature);
+  }
+
+  return typeFunction;
+}
+
+function generateMetamethod(
+  typeClass: TypeClass,
+  func: Func
+): TypeMetamethod {
+  const typeFunction = new TypeMetamethod(
+    typeClass,
+    func.Name,
+    func.Description
+  );
+  const signatures = generateSignatures(
+    func.Signatures,
+    null
   );
   for (const signature of signatures) {
     typeFunction.addSignature(signature);

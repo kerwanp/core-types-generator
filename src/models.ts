@@ -20,6 +20,7 @@ export interface Class {
   Hooks: Hook[];
   Constructors: Func[];
   Constants: Constant[];
+  Metamethods: Metamethod[];
 }
 
 export interface Namespace {
@@ -96,4 +97,10 @@ export interface Hook {
     Type: string;
     Name: string;
   }[];
+}
+
+export interface Metamethod {
+  Name: string;
+  Description: string;
+  Signatures: Signature[];
 }
