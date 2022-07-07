@@ -234,19 +234,13 @@ function generateFunction(
   return typeFunction;
 }
 
-function generateMetamethod(
-  typeClass: TypeClass,
-  func: Func
-): TypeMetamethod {
+function generateMetamethod(typeClass: TypeClass, func: Func): TypeMetamethod {
   const typeFunction = new TypeMetamethod(
     typeClass,
     func.Name,
     func.Description
   );
-  const signatures = generateSignatures(
-    func.Signatures,
-    null
-  );
+  const signatures = generateSignatures(func.Signatures, null);
   for (const signature of signatures) {
     typeFunction.addSignature(signature);
   }
