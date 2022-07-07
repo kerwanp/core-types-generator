@@ -77,3 +77,7 @@ export function getFullDescription(description: string): string[] {
 export function getShortDescription(description: string): string {
   return splitDescription(description).join('. ');
 }
+
+export function outputConsoleWarning(...params) {
+  console.warn(...params);
+}

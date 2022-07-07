@@ -1,4 +1,5 @@
 import { TypeFunction } from './TypeFunction';
+import { TypeMetamethod } from './TypeMetamethod';
 import { TypeField } from './TypeField';
 import { getAnnotation, getShortDescription } from './utils';
 
@@ -10,10 +11,15 @@ export class TypeClass {
     private baseClass?: string,
     private staticFunctions: TypeFunction[] = [],
     private memberFunctions: TypeFunction[] = [],
+    private metaMethods: TypeMetamethod[] = [],
     private memberFields: TypeField[] = [],
     private staticFields: TypeField[] = [],
     private constants: TypeField[] = []
   ) {}
+
+  public getName() {
+    return this.name;
+  }
 
   public addFunction(typeFunction: TypeFunction, isStatic = false) {
     if (isStatic) {
@@ -21,6 +27,10 @@ export class TypeClass {
     } else {
       this.memberFunctions.push(typeFunction);
     }
+  }
+
+  public addMetamethod(typeMetamethod: TypeMetamethod) {
+    this.metaMethods.push(typeMetamethod);
   }
 
   public addField(field: TypeField, isStatic = false) {
@@ -43,6 +53,16 @@ export class TypeClass {
         );
       }
       lines.push(...typeFunction.getLines());
+    }
+    return lines;
+  }
+
+  private getMetamethodLines(ignoreMethods: string[]): string[] {
+    const lines = [];
+    for (const typeMetamethod of this.metaMethods) {
+      if (!ignoreMethods.includes(typeMetamethod.name)) {
+        lines.push(...typeMetamethod.getLines());
+      }
     }
     return lines;
   }
@@ -76,6 +96,7 @@ export class TypeClass {
 
     lines.push(this.toAnnotation(false));
     lines.push(...this.getFieldsLines(false));
+    lines.push(...this.getMetamethodLines(['__tostring', '__eq']));
     lines.push(this.toDefinition(false));
     lines.push(...this.getFunctionsLines(false));
 
