@@ -279,7 +279,7 @@ async function run() {
   lines.push(...generateClassesLines(coreLuaAPI.Classes));
   lines.push(...generateNamespacesLines(coreLuaAPI.Namespaces));
   lines.push(...generateEnumsLines(coreLuaAPI.Enums));
-  lines.push(getAnnotation('type', 'CoreObject'));
+  lines.push(getAnnotation('type', 'Script|ScriptAsset'));
   lines.push('script = nil');
   lines.push('');
 
